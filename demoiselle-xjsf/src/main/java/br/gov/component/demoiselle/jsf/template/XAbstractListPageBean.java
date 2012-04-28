@@ -14,7 +14,7 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 	private LazyDataModel<T> lazyDataModel;
 
 	protected void initLazyDataModel() {
-		
+
 		this.lazyDataModel = new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
@@ -23,11 +23,11 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 				Pagination pagination = getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
-								
-				List<T> list = handleResultList(sortField, sortOrder);
+
+				List<T> list = handleResultList(sortField, sortOrder, filters);
 				this.setRowCount(pagination.getTotalResults());
 				this.setPageSize(pageSize);
-								
+
 				return list;
 			}
 
@@ -36,7 +36,7 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 
 	protected abstract String deleteSelection();
 
-	protected abstract List<T> handleResultList(String sortField, SortOrder sortOrder);
+	protected abstract List<T> handleResultList(String sortField, SortOrder sortOrder, Map<String, String> filters);
 
 	public LazyDataModel<T> getLazyDataModel() {
 		if (lazyDataModel == null) {
