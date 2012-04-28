@@ -6,11 +6,10 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public interface Criterion {
-	public <T> Predicate restriction(CriteriaBuilder cb, Root<T> p);
+public interface Criterion<X> {
+	public Predicate restriction(CriteriaBuilder cb, Root<X> p);
 
-	public <T> Order order(CriteriaBuilder cb, Root<T> p);
+	public Order order(CriteriaBuilder cb, Root<X> p);
 
-	public <T> CompoundSelection<T> projection(CriteriaBuilder cb, Root<T> p);
-
+	public CompoundSelection<X> projection(CriteriaBuilder cb, Root<X> p);
 }
