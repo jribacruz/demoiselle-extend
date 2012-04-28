@@ -1,6 +1,7 @@
 package br.gov.component.demoiselle.xjpa.template;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.TypedQuery;
@@ -11,6 +12,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import br.gov.component.demoiselle.xjpa.CriteriaOrder;
 import br.gov.component.demoiselle.xjpa.Criterion;
 import br.gov.component.demoiselle.xjpa.internal.context.CriteriaContext;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
@@ -32,10 +34,28 @@ public class XJPACrud<T, I> extends JPACrud<T, I> {
 			pagination.setTotalResults(this.countAll().intValue());
 			query.setFirstResult(pagination.getFirstResult());
 			query.setMaxResults(pagination.getPageSize());
-			
 		}
 
 		return query.getResultList();
+	}
+
+
+	public List<T> findAll(Class<? extends Criterion<T>> criterion, int pageSize) {
+		CriteriaBuilder cb = this.getCriteriaBuilder();
+		CriteriaQuery<T> cq = cb.createQuery(getBeanClass());
+		Root<T> p = cq.from(getBeanClass());
+
+		processCriteria(criterion, cb, cq, p);
+		TypedQuery<T> query = this.getEntityManager().createQuery(cq);
+		query.setMaxResults(pageSize);
+
+		return query.getResultList();
+	}
+
+	public List<T> findAll(String sortField, CriteriaOrder order, Map<String, String> filters) {
+		System.out.println("Filters: "+filters);
+		context.criteria(getBeanClass(), order, sortField, filters);
+		return this.findAll();
 	}
 
 	private Long countAll() {
@@ -43,33 +63,34 @@ public class XJPACrud<T, I> extends JPACrud<T, I> {
 		return query.getSingleResult();
 	}
 
-	public List<T> findAll(Class<? extends Criterion> criterion, int pageSize) {
-
-		CriteriaBuilder cb = this.getCriteriaBuilder();
-		CriteriaQuery<T> cq = cb.createQuery(getBeanClass());
-		Root<T> p = cq.from(getBeanClass());
-
-		Criterion c = Beans.getReference(criterion);
-		Predicate predicate = null;
+	private void processCriteria(Class<? extends Criterion<T>> criterion, CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+		Criterion<T> c = Beans.getReference(criterion);
 		if (c != null) {
-			predicate = c.restriction(cb, p);
-			CompoundSelection<T> compoundSelection = c.projection(cb, p);
-			Order order = c.order(cb, p);
-			if (predicate != null) {
-				cq.where(predicate);
-			}
-			if (compoundSelection != null) {
-				cq.select(compoundSelection);
-			}
-			if (order != null) {
-				cq.orderBy(order);
-			}
+			processCriteriaPredicate(c, cb, cq, p);
+			processCriteriaProjection(c, cb, cq, p);
+			processCriteriaOrder(c, cb, cq, p);
 		}
+	}
 
-		TypedQuery<T> query = this.getEntityManager().createQuery(cq);
-		query.setMaxResults(pageSize);
+	private <X> void processCriteriaPredicate(Criterion<T> c, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		Predicate predicate = c.restriction(cb, p);
+		if (predicate != null) {
+			cq.where(predicate);
+		}
+	}
 
-		return query.getResultList();
+	private void processCriteriaProjection(Criterion<T> c, CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+		CompoundSelection<T> compoundSelection = c.projection(cb, p);
+		if (compoundSelection != null) {
+			cq.select(compoundSelection);
+		}
+	}
+
+	private <X> void processCriteriaOrder(Criterion<T> c, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		Order order = c.order(cb, p);
+		if (order != null) {
+			cq.orderBy(order);
+		}
 	}
 
 }
