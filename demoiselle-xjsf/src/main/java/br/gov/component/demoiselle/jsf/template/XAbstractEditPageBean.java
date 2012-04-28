@@ -9,4 +9,6 @@ public abstract class XAbstractEditPageBean<T, I> extends AbstractEditPageBean<T
 	public abstract String create();
 
 	public abstract String edit(I id);
+	
+	public abstract String save();
 }
