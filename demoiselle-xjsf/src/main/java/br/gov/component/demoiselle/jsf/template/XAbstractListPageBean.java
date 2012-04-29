@@ -13,8 +13,10 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 	private static final long serialVersionUID = 1L;
 	private LazyDataModel<T> lazyDataModel;
 
-	protected void initLazyDataModel() {
+	@SuppressWarnings("unused")
+	private int countSelected;
 
+	protected void initLazyDataModel() {
 		this.lazyDataModel = new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
@@ -47,6 +49,14 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 
 	public void setLazyDataModel(LazyDataModel<T> lazyDataModel) {
 		this.lazyDataModel = lazyDataModel;
+	}
+
+	public int getCountSelected() {
+		return countSelected;
+	}
+
+	public void setCountSelected(int countSelected) {
+		this.countSelected = countSelected;
 	}
 
 }
