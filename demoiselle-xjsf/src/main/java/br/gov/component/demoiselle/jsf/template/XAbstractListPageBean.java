@@ -34,7 +34,7 @@ public abstract class XAbstractListPageBean<T, I> extends AbstractListPageBean<T
 		};
 	}
 
-	protected abstract String deleteSelection();
+	public abstract String deleteSelection();
 
 	protected abstract List<T> handleResultList(String sortField, SortOrder sortOrder, Map<String, String> filters);
 
