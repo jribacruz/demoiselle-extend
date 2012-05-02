@@ -53,7 +53,6 @@ public class XJPACrud<T, I> extends JPACrud<T, I> {
 	}
 
 	public List<T> findAll(String sortField, CriteriaOrder order, Map<String, String> filters) {
-		System.out.println("Filters: "+filters);
 		context.criteria(getBeanClass(), order, sortField, filters);
 		return this.findAll();
 	}
