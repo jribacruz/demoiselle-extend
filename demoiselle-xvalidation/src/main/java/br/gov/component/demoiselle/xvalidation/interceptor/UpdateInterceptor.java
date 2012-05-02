@@ -30,12 +30,10 @@ public class UpdateInterceptor {
 	public Object handle(InvocationContext ctx) {
 		Method method = ctx.getMethod();
 		Update update = method.getAnnotation(Update.class);
-		System.out.println("Update Interceptor");
 		validationContext.clearValidation();
 		Object ret = null;
 		try {
 			ret = ctx.proceed();
-			System.out.println("Depois do proceed Update");
 			RequestContext requestContext = RequestContext.getCurrentInstance();
 			if (validationContext.isAllValid()) {
 				String updateSuccessId = update.success();
