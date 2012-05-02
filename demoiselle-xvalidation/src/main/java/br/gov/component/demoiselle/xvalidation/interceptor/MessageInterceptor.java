@@ -12,6 +12,7 @@ import br.gov.component.demoiselle.xvalidation.annotation.Message;
 import br.gov.component.demoiselle.xvalidation.internal.context.ValidationContext;
 import br.gov.frameworkdemoiselle.message.DefaultMessage;
 import br.gov.frameworkdemoiselle.message.MessageContext;
+import br.gov.frameworkdemoiselle.message.SeverityType;
 import br.gov.frameworkdemoiselle.stereotype.Controller;
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -32,21 +33,21 @@ public class MessageInterceptor {
 	public Object handle(InvocationContext ctx) {
 		Method method = ctx.getMethod();
 		Message message = method.getAnnotation(Message.class);
-		System.out.println("Message Interceptor");
 		validationContext.clearValidation();
 		Object ret = null;
 		try {
 			ret = ctx.proceed();
-			System.out.println("Depois do proceed Message");
 			if (validationContext.isAllValid()) {
 				String messageSuccess = message.success();
+				SeverityType type = message.type();
 				if (!Strings.isEmpty(messageSuccess)) {
-					messageContext.add(new DefaultMessage(messageSuccess, param.getSuccessParam()));
+					messageContext.add(new DefaultMessage(messageSuccess, type, param.getSuccessParam()));
 				}
 			} else {
 				String messageFailure = message.failure();
+				SeverityType type = message.type();
 				if (!Strings.isEmpty(messageFailure)) {
-					messageContext.add(new DefaultMessage(messageFailure, param.getSuccessParam()));
+					messageContext.add(new DefaultMessage(messageFailure, type, param.getSuccessParam()));
 				}
 			}
 			return ret;
