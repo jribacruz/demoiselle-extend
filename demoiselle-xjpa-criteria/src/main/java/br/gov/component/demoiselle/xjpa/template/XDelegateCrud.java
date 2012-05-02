@@ -7,7 +7,7 @@ import br.gov.component.demoiselle.xjpa.CriteriaOrder;
 import br.gov.component.demoiselle.xjpa.Criterion;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
 
-public class XDelegateCrud<T, I, C extends XJPACrud<T, I>> extends DelegateCrud<T, I, XJPACrud<T, I>> {
+public class XDelegateCrud<T, I, C extends XJPACrud<T, I>> extends DelegateCrud<T, I, C> {
 	private static final long serialVersionUID = 1L;
 
 	public List<T> findAll(Class<? extends Criterion<T>> criterion, int pageSize) {
