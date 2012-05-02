@@ -25,7 +25,7 @@ import br.gov.frameworkdemoiselle.template.DelegateCrud;
 import br.gov.frameworkdemoiselle.util.Reflections;
 
 @Decorator
-public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, Crud<T, I>> {
+public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, C> {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -78,12 +78,11 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 		fire(beforeDeleEvent, new BeforeDeleteEvent(id), id);
 
 		if (validationContext.isAllValid()) {
-			getDelegate().delete(id);
+			bc.delete(id);
 		}
 
 		fire(afterDeleteEvent, new AfterDeleteEvent(id), id);
-
-		validationContext.clearValidation();
+		// validationContext.clearValidation();
 	}
 
 	@Override
@@ -93,7 +92,7 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 			bc.delete(idList);
 		}
 		fire(afterDeleteEvent, new AfterDeleteEvent(idList), idList);
-		validationContext.clearValidation();
+		// validationContext.clearValidation();
 	}
 
 	@Override
@@ -105,7 +104,7 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 		}
 		fire(AfterSaveEvent, new AfterSaveEvent(bean), bean);
 		fire(afterInsertEvent, new AfterInsertEvent(bean), bean);
-		validationContext.clearValidation();
+		// validationContext.clearValidation();
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 		}
 		fire(AfterSaveEvent, new AfterSaveEvent(bean), bean);
 		fire(afterUpdateEvent, new AfterUpdateEvent(bean), bean);
-		validationContext.clearValidation();
+		// validationContext.clearValidation();
 	}
 
 	@Override
@@ -138,7 +137,8 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 	}
 
 	private <K> void fire(Event<K> event, K eventKlass, Object arg) {
-		logger.info("Disparando evento [{0}] para {1}", new Object[] { eventKlass, arg });
+		// logger.info("Disparando evento [{0}] para {1}", new Object[] {
+		// eventKlass, arg });
 		event.select(new DomainQualifierImpl(getDomainClass())).fire(eventKlass);
 	}
 
