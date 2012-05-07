@@ -137,8 +137,7 @@ public class DelegateCrudDecorator<T, I, C extends Crud<T, I>> extends DelegateC
 	}
 
 	private <K> void fire(Event<K> event, K eventKlass, Object arg) {
-		// logger.info("Disparando evento [{0}] para {1}", new Object[] {
-		// eventKlass, arg });
+		logger.debug("Disparando evento {} para domain {} ", eventKlass, arg);
 		event.select(new DomainQualifierImpl(getDomainClass())).fire(eventKlass);
 	}
 
