@@ -7,17 +7,17 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import org.slf4j.Logger;
+
 import br.gov.component.demoiselle.xvalidation.Param;
 import br.gov.component.demoiselle.xvalidation.annotation.Message;
 import br.gov.component.demoiselle.xvalidation.internal.context.ValidationContext;
 import br.gov.frameworkdemoiselle.message.DefaultMessage;
 import br.gov.frameworkdemoiselle.message.MessageContext;
 import br.gov.frameworkdemoiselle.message.SeverityType;
-import br.gov.frameworkdemoiselle.stereotype.Controller;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-@Controller
-@Message(failure = "", success = "")
+@Message
 @Interceptor
 public class MessageInterceptor {
 	@Inject
@@ -29,6 +29,9 @@ public class MessageInterceptor {
 	@Inject
 	private Param param;
 
+	@Inject
+	private Logger logger;
+
 	@AroundInvoke
 	public Object handle(InvocationContext ctx) {
 		Method method = ctx.getMethod();
@@ -38,23 +41,27 @@ public class MessageInterceptor {
 		try {
 			ret = ctx.proceed();
 			if (validationContext.isAllValid()) {
+				logger.debug("Todas as validações validas. Adicionando mensagem de sucesso ");
 				String messageSuccess = message.success();
 				SeverityType type = message.type();
 				if (!Strings.isEmpty(messageSuccess)) {
 					messageContext.add(new DefaultMessage(messageSuccess, type, param.getSuccessParam()));
 				}
 			} else {
+				logger.debug("Alguma validação invalida. Adicionando mensagem de falha ");
 				String messageFailure = message.failure();
 				SeverityType type = message.type();
 				if (!Strings.isEmpty(messageFailure)) {
-					messageContext.add(new DefaultMessage(messageFailure, type, param.getSuccessParam()));
+					messageContext.add(new DefaultMessage(messageFailure, type, param.getFailureParam()));
 				}
 			}
 			return ret;
 		} catch (Exception e) {
+			logger.debug("Exception disparada. Adicionando mensagem de falha ");
+			validationContext.addValidation(false);
 			String messageFailure = message.failure();
 			if (!Strings.isEmpty(messageFailure)) {
-				messageContext.add(new DefaultMessage(messageFailure, param.getSuccessParam()));
+				messageContext.add(new DefaultMessage(messageFailure, param.getFailureParam()));
 			}
 			return ret;
 		}
