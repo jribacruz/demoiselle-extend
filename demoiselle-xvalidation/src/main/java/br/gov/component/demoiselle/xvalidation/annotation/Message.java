@@ -15,10 +15,10 @@ import br.gov.frameworkdemoiselle.message.SeverityType;
 @InterceptorBinding
 public @interface Message {
 	@Nonbinding
-	String success();
+	String success() default "";
 
 	@Nonbinding
-	String failure();
+	String failure() default "";
 
 	@Nonbinding
 	SeverityType type() default SeverityType.INFO;
