@@ -13,8 +13,8 @@ import javax.interceptor.InterceptorBinding;
 @InterceptorBinding
 public @interface Update {
 	@Nonbinding
-	String success();
+	String success() default "";
 
 	@Nonbinding
-	String failure();
+	String failure() default "";
 }
