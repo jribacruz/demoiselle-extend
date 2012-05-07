@@ -33,7 +33,7 @@ public class ValidationInterceptor {
 	public Object handler(InvocationContext context) throws Exception {
 		Method method = context.getMethod();
 		Validation validation = method.getAnnotation(Validation.class);
-		logger.info("Chamada ao metodo de validacao: [" + method.getName() + "]");
+		logger.debug("Chamada ao método de validação: {}" + method.getName());
 		Object ret = null;
 		try {
 			ret = context.proceed();
@@ -52,6 +52,7 @@ public class ValidationInterceptor {
 			validationContext.addValidation((Boolean) ret);
 			return ret;
 		} catch (Exception e) {
+			logger.debug("A chamada ao método de validação: {} lançou uma exception!", method.getName());
 			validationContext.addValidation(false);
 			e.printStackTrace();
 		}
