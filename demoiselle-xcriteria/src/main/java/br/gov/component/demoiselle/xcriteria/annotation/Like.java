@@ -5,10 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.gov.frameworkdemoiselle.annotation.ViewScoped;
+import br.gov.component.demoiselle.xcriteria.types.LikeType;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = ElementType.TYPE)
-@ViewScoped
-public @interface Criterion {
+@Target(value = ElementType.FIELD)
+public @interface Like {
+	LikeType type() default LikeType.FULL;
 }

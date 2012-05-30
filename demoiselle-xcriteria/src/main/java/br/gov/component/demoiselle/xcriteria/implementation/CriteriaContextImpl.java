@@ -1,22 +1,25 @@
 package br.gov.component.demoiselle.xcriteria.implementation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 
-import br.gov.component.demoiselle.xcriteria.CriteriaContext;
-import br.gov.component.demoiselle.xcriteria.Criterion;
+import br.gov.component.demoiselle.xcriteria.ICriterion;
+import br.gov.component.demoiselle.xcriteria.context.CriteriaContext;
 import br.gov.frameworkdemoiselle.util.Beans;
 
 @SessionScoped
-public class CriteriaContextImpl implements CriteriaContext {
-
+public class CriteriaContextImpl implements CriteriaContext, Serializable {
+	private static final long serialVersionUID = 1L;
 	private Map<String, Object> params;
 	private boolean paginated;
+	private boolean filtered;
+	private int pageSize;
 
 	@SuppressWarnings("rawtypes")
-	private Criterion criterion;
+	private ICriterion criterion;
 
 	private Object criterionBean;
 
@@ -24,6 +27,7 @@ public class CriteriaContextImpl implements CriteriaContext {
 		super();
 		this.params = new HashMap<String, Object>();
 		this.paginated = true;
+		this.pageSize = 0;
 	}
 
 	public void setPaginated(boolean flag) {
@@ -46,22 +50,40 @@ public class CriteriaContextImpl implements CriteriaContext {
 		this.params.clear();
 	}
 
-	public <X> void setCriterion(Class<? extends Criterion<X>> criterion) {
-		this.criterion = Beans.getReference(criterion);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <X> Criterion<X> getCriterion() {
-		return this.criterion;
-	}
-
-	public <X> void setCriterionBean(X criterionBean) {
+	public <T> void setCriteria(Class<? extends ICriterion<T>> criterionClass, Object criterionBean) {
+		this.pageSize = 0;
+		this.criterion = Beans.getReference(criterionClass);
 		this.criterionBean = criterionBean;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <X> X getCriterionBean() {
-		return (X) this.criterionBean;
+	public <T> void setCriteria(Class<? extends ICriterion<T>> criterionClass, Object criterionBean, int pageSize) {
+		this.pageSize = pageSize;
+		this.criterion = Beans.getReference(criterionClass);
+		this.criterionBean = criterionBean;
+	}
+
+	public <T> ICriterion<T> getCriterion() {
+		return this.criterion;
+	}
+
+	public Object getCriterionBean() {
+		return this.criterionBean;
+	}
+
+	public int getPageSize() {
+		return this.pageSize;
+	}
+
+	public boolean isFiltered() {
+		return this.filtered;
+	}
+
+	public void setFiltered(boolean flag) {
+		this.filtered = flag;
+	}
+
+	public void clear() {
+		this.criterionBean = null;
 	}
 
 }
