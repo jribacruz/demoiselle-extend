@@ -61,12 +61,10 @@ public class CriteriaProcessorImpl implements CriteriaProcessor, Serializable {
 		}
 
 		if (getPredicateFromCriterionMapper(criterion, p) != null) {
-			System.out.println("Aqui.......Mapper");
 			predicates.add(getPredicateFromCriterionMapper(criterion, p));
 		}
 
 		if (getPredicateFromCriterionBean(p) != null && !getPredicateFromCriterionBean(p).isEmpty()) {
-			System.out.println("Aqui.......Cb");
 			predicates.addAll(getPredicateFromCriterionBean(p));
 		}
 
@@ -82,7 +80,7 @@ public class CriteriaProcessorImpl implements CriteriaProcessor, Serializable {
 	}
 
 	private <T> List<Predicate> getPredicateFromCriterionBean(Root<T> p) {
-		return criterionBeanProcessor.getRestricition(cb, p);
+		return criterionBeanProcessor.getRestriction(cb, p);
 	}
 
 	/**
