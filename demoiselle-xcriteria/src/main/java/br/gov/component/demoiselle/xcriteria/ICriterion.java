@@ -13,5 +13,5 @@ public interface ICriterion<X> {
 
 	public CompoundSelection<X> projection(CriteriaBuilder cb, Root<X> p);
 
-	public Predicate mapper(CriteriaBuilder cb, Root<X> p , String q);
+	public Predicate restriction(CriteriaBuilder cb, Root<X> p , String q);
 }
