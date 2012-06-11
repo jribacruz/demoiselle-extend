@@ -1,6 +1,5 @@
 package br.gov.component.demoiselle.xcriteria.processor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,38 +11,32 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.beanutils.BeanMap;
 
-import br.gov.component.demoiselle.xcriteria.annotation.Like;
 import br.gov.component.demoiselle.xcriteria.annotation.Mapper;
+import br.gov.component.demoiselle.xcriteria.base.XPredicate;
+import br.gov.component.demoiselle.xcriteria.collect.XCollection;
+import br.gov.component.demoiselle.xcriteria.filters.InFilter;
+import br.gov.component.demoiselle.xcriteria.filters.LikeFilter;
 import br.gov.frameworkdemoiselle.util.Strings;
 
 public class CriterionBeanProcessor {
 	private BeanMap criterionBeanMap;
 	private Object criterionBean;
+	private List<XPredicate<Predicate>> predicatesRestriction;
+	private List<XPredicate<Order>> predicatesOrder;
 
 	public CriterionBeanProcessor(Object criterionBean) {
 		this.criterionBeanMap = new BeanMap(criterionBean);
 		this.criterionBean = criterionBean;
+		registerPredicateRestriction();
+		registerPredicateOrder();
 	}
 
-	public <X> List<Predicate> getRestricition(CriteriaBuilder cb, Root<X> p) {
-		List<Predicate> predicates = new ArrayList<Predicate>();
-		for (Field field : criterionBean.getClass().getFields()) {
-			Object value = criterionBeanMap.get(field.getName());
-			if (value != null) {
-				Annotation[] annotations = field.getAnnotations();
-				for (Annotation annotation : annotations) {
-					if (annotation.getClass() == Like.class) {
-
-					}
-				}
-			}
-		}
-		return predicates;
+	public <X> List<Predicate> getRestriction(CriteriaBuilder cb, Root<X> p) {
+		return XCollection.transform(criterionBeanMap, cb, p, predicatesRestriction);
 	}
 
-	public <T> List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
-		List<Order> orders = new ArrayList<Order>();
-		return orders;
+	public <X> List<Order> getOrder(CriteriaBuilder cb, Root<X> p) {
+		return XCollection.transform(criterionBeanMap, cb, p, predicatesOrder);
 	}
 
 	/**
@@ -67,4 +60,13 @@ public class CriterionBeanProcessor {
 		return null;
 	}
 
+	private void registerPredicateRestriction() {
+		this.predicatesRestriction = new ArrayList<XPredicate<Predicate>>();
+		this.predicatesRestriction.add(new InFilter());
+		this.predicatesRestriction.add(new LikeFilter());
+	}
+
+	private void registerPredicateOrder() {
+		this.predicatesOrder = new ArrayList<XPredicate<Order>>();
+	}
 }
