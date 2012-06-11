@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.BeanMap;
 import br.gov.component.demoiselle.xcriteria.base.XPredicate;
 
 public class XCollection {
+	@SuppressWarnings("unused")
 	public static <X, T> List<T> transform(BeanMap beanMap, CriteriaBuilder cb, Root<X> p, List<XPredicate<T>> predicates) {
 		List<T> predicateList = new ArrayList<T>();
 
