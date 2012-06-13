@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.beanutils.BeanMap;
 
+import br.gov.component.demoiselle.xcriteria.annotation.Attribute;
 import br.gov.component.demoiselle.xcriteria.base.XPredicate;
 
 public class XCollection {
@@ -18,11 +19,13 @@ public class XCollection {
 
 		for (Field field : beanMap.getBean().getClass().getDeclaredFields()) {
 			for (XPredicate<T> predicate : predicates) {
-				String fieldName = field.getName();
+				Attribute attribute = field.getAnnotation(Attribute.class);
+				String fieldName = attribute != null ? attribute.name() : field.getName();
 				Object value = beanMap.get(fieldName);
 				if (predicate.check(beanMap, fieldName, field)) {
 					T predicateValue = predicate.apply(cb, p, fieldName, beanMap.get(fieldName));
-					if(predicateValue != null) {
+					System.out.println("Check for: " + fieldName);
+					if (predicateValue != null) {
 						predicateList.add(predicateValue);
 					}
 				}
