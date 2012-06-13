@@ -74,7 +74,7 @@ public class CriteriaProcessorImpl implements CriteriaProcessor, Serializable {
 	private <T> Predicate getPredicateFromCriterionMapper(ICriterion<T> criterion, Root<T> p) {
 		String query = this.criterionBeanProcessor.getMapper();
 		if (!Strings.isEmpty(query)) {
-			return criterion.mapper(cb, p, query);
+			return criterion.restriction(cb, p, query);
 		}
 		return null;
 	}
