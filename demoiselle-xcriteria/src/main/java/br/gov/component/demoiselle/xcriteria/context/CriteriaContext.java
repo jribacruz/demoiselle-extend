@@ -7,12 +7,6 @@ public interface CriteriaContext {
 
 	public boolean isPaginated();
 
-	public void addParam(String key, Object value);
-
-	public Object getParam(String key);
-
-	public void clearParam();
-
 	public <T> void setCriteria(Class<? extends ICriterion<T>> criterionClass, Object criterionBean);
 
 	public <T> void setCriteria(Class<? extends ICriterion<T>> criterionClass, Object criterionBean, int pageSize);

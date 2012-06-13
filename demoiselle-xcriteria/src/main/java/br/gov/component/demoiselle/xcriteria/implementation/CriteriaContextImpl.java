@@ -38,18 +38,6 @@ public class CriteriaContextImpl implements CriteriaContext, Serializable {
 		return this.paginated;
 	}
 
-	public void addParam(String key, Object value) {
-		this.params.put(key, value);
-	}
-
-	public Object getParam(String key) {
-		return this.params.get(key);
-	}
-
-	public void clearParam() {
-		this.params.clear();
-	}
-
 	public <T> void setCriteria(Class<? extends ICriterion<T>> criterionClass, Object criterionBean) {
 		this.pageSize = 0;
 		this.criterion = Beans.getReference(criterionClass);
