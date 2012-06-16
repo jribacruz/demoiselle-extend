@@ -6,7 +6,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang.StringUtils;
 
 import br.gov.component.demoiselle.xcriteria.annotation.LikeRight;
@@ -14,11 +13,12 @@ import br.gov.component.demoiselle.xcriteria.base.XPredicate;
 
 public class LikeRightFilter implements XPredicate<Predicate> {
 
-	public boolean check(BeanMap beanMap, String name, Field field) {
-		return field.getAnnotation(LikeRight.class) != null && !StringUtils.isEmpty((String) beanMap.get(name));
+	public boolean check(Field field, Class<?> fieldType, String fieldName, Object fieldValue) {
+		return field.isAnnotationPresent(LikeRight.class) && fieldType == String.class
+				&& !StringUtils.isEmpty((String) fieldValue);
 	}
 
-	public <X> Predicate apply(CriteriaBuilder cb, Root<X> p, String fieldName, Object fieldValue) {
+	public <X> Predicate apply(CriteriaBuilder cb, Root<X> p, Class<?> fieldType, String fieldName, Object fieldValue) {
 		return cb.like(p.<String> get(fieldName), fieldValue + "%");
 	}
 
