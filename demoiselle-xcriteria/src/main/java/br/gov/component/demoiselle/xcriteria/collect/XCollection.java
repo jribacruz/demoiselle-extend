@@ -2,7 +2,6 @@ package br.gov.component.demoiselle.xcriteria.collect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,9 +22,9 @@ public class XCollection {
 				Attribute attribute = field.getAnnotation(Attribute.class);
 				String fieldName = attribute != null ? attribute.name() : field.getName();
 				Object value = beanMap.get(field.getName());
-				System.out.println("Check for: " + fieldName + "Value: " + value);
-				if (predicate.check(Arrays.asList(field.getAnnotations()), field.getType() , fieldName, value)) {
-					T predicateValue = predicate.apply(cb, p, fieldName, value);
+				boolean check = predicate.check(field, field.getType(), fieldName, value);
+				if (check) {
+					T predicateValue = predicate.apply(cb, p, field.getType(), fieldName, value);
 					if (predicateValue != null) {
 						predicateList.add(predicateValue);
 					}
