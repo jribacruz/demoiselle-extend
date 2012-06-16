@@ -14,6 +14,7 @@ import org.apache.commons.beanutils.BeanMap;
 import br.gov.component.demoiselle.xcriteria.annotation.Mapper;
 import br.gov.component.demoiselle.xcriteria.base.XPredicate;
 import br.gov.component.demoiselle.xcriteria.collect.XCollection;
+import br.gov.component.demoiselle.xcriteria.filters.GreaterThanFilter;
 import br.gov.component.demoiselle.xcriteria.filters.LikeFilter;
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -62,6 +63,7 @@ public class CriterionBeanProcessor {
 	private void registerPredicateRestriction() {
 		this.predicatesRestriction = new ArrayList<XPredicate<Predicate>>();
 		this.predicatesRestriction.add(new LikeFilter());
+		this.predicatesRestriction.add(new GreaterThanFilter());
 	}
 
 	private void registerPredicateOrder() {
