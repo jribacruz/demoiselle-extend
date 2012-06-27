@@ -1,11 +1,38 @@
 package br.gov.component.demoiselle.jsf.criteria.context;
 
-import br.gov.component.demoiselle.jsf.criteria.AbstractCriteria;
+import java.io.Serializable;
 
-public interface CriteriaContext {
-	public <T, X> void setCriteria(Class<? extends AbstractCriteria<T, X>> criteriaClass);
+import br.gov.component.demoiselle.jsf.template.ICriteria;
 
-	public <T, X> void setCriteria(Class<? extends AbstractCriteria<T, X>> criteriaClass, int pageSize);
+public interface CriteriaContext extends Serializable {
+	/**
+	 * 
+	 * @param criteriaClass
+	 */
+	public void setCriteria(Class<?> criteriaClass);
 
+	/**
+	 * 
+	 * @param criteriaClass
+	 * @param pageSize
+	 */
+	public void setCriteria(Class<?> criteriaClass, int pageSize);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public <T> ICriteria<T> getCriteria();
+
+	/**
+	 * 
+	 * @return
+	 */
 	public int getPageSize();
+
+	/**
+	 * 
+	 * @param size
+	 */
+	public void setPageSize(int size);
 }
