@@ -1,4 +1,4 @@
-package br.gov.component.demoiselle.jsf.template;
+package br.gov.component.demoiselle.jsf.criteria.template;
 
 import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
