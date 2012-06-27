@@ -7,8 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-public @interface Criteria {
-	Class<?> value();
-
-	int pageSize() default 0;
+public @interface Projection {
+	String[] value();
 }
