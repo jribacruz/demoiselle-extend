@@ -1,68 +1,46 @@
 package br.gov.component.demoiselle.jsf.criteria;
 
-import javax.persistence.criteria.CompoundSelection;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.inject.Inject;
 
-public abstract class AbstractCriteria<T, X> {
-	protected CriteriaBuilder cb;
-	protected Root<T> p;
-	protected X criterion;
+import org.primefaces.model.SortOrder;
 
-	/**
-	 * Retorna a restricao da query
-	 * 
-	 * @return
-	 */
-	public abstract Predicate restriction();
+import br.gov.component.demoiselle.jsf.criteria.context.CriteriaContext;
 
-	/**
-	 * Retorna a ordem da query
-	 * 
-	 * @return
-	 */
-	public abstract Order order();
+public abstract class AbstractCriteria<T> {
+	private SortOrder sortOrder;
+	private String sortField;
+	private String query;
 
-	/**
-	 * Retorna a projecao da query
-	 * 
-	 * @return
-	 */
-	public abstract CompoundSelection<T> projection();
+	@Inject
+	private CriteriaContext context;
 
-	/**
-	 * Retorna a restricao da query apenas se o mapper do criterion não for nulo
-	 * ou branco
-	 * 
-	 * @param q
-	 * @return
-	 */
-	public abstract Predicate restriction(String q);
-
-	public X getCriterion() {
-		return this.criterion;
+	public SortOrder getSortOrder() {
+		return sortOrder;
 	}
 
-	public Predicate criterionRestriction() {
-		return null;
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
-	public void setCriteriaBuilder(CriteriaBuilder cb) {
-		this.cb = cb;
+	public String getSortField() {
+		return sortField;
 	}
 
-	public void setRoot(Root<T> p) {
-		this.p = p;
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
 	}
 
-	public void filter() {
-
+	public String getQuery() {
+		return query;
 	}
 
-	public void filter(int pageSize) {
+	public void setQuery(String query) {
+		context.setQuery(query);
+		this.query = query;
+	}
 
+	public void init(Class<?> criteriaClass) {
+		this.context.setCriteria(criteriaClass);
 	}
 
 }
