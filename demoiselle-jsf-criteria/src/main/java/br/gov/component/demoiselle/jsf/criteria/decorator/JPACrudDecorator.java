@@ -9,7 +9,9 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import br.gov.component.demoiselle.jsf.criteria.processor.CriteriaProcessor;
 import br.gov.frameworkdemoiselle.template.JPACrud;
+import br.gov.frameworkdemoiselle.util.Reflections;
 
 @Decorator
 public class JPACrudDecorator<T, I> extends JPACrud<T, I> {
@@ -21,11 +23,15 @@ public class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 	private JPACrud<T, I> dao;
 
 	@Inject
+	private CriteriaProcessor processor;
+
+	@Inject
 	private Logger log;
 
 	@Override
 	public List<T> findAll() {
-		return dao.findAll();
+		Class<T> beanClass = Reflections.getGenericTypeArgument(dao.getClass(), 0);
+		return processor.getResultList(beanClass);
 	}
 
 }
