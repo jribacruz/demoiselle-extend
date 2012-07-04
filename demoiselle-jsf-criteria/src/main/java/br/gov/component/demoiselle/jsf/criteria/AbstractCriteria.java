@@ -12,7 +12,7 @@ public abstract class AbstractCriteria<T> {
 	private String query;
 
 	@Inject
-	private CriteriaContext context;
+	protected CriteriaContext context;
 
 	public SortOrder getSortOrder() {
 		return sortOrder;
@@ -41,6 +41,10 @@ public abstract class AbstractCriteria<T> {
 
 	public void init(Class<?> criteriaClass) {
 		this.context.setCriteria(criteriaClass);
+	}
+
+	protected void restriction(Class<?> restrictionClass) {
+		this.context.setCriteria(restrictionClass);
 	}
 
 }
