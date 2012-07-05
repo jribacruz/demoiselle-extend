@@ -34,4 +34,24 @@ public class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 		return processor.getResultList(beanClass);
 	}
 
+	@Override
+	public void insert(T entity) {
+		dao.insert(entity);
+	}
+
+	@Override
+	public void delete(I id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public void update(T entity) {
+		dao.update(entity);
+	}
+
+	@Override
+	public T load(I id) {
+		return dao.load(id);
+	}
+
 }
