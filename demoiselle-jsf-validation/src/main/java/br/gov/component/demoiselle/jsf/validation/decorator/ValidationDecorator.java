@@ -5,6 +5,7 @@ import java.util.List;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -26,12 +27,17 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	private Validator validator;
 
 	@Inject
+	private FacesContext facesContext;
+
+	@Inject
 	private Logger log;
 
 	@Override
 	public void delete(I id) {
 		if (validator.validateOnDelete(bc, id)) {
 			bc.delete(id);
+		} else {
+			facesContext.validationFailed();
 		}
 	}
 
@@ -39,6 +45,8 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	public void delete(List<I> idList) {
 		if (validator.validateOnDelete(bc, idList)) {
 			bc.delete(idList);
+		} else {
+			facesContext.validationFailed();
 		}
 	}
 
@@ -48,6 +56,8 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 		boolean validOnSave = validator.validateOnSave(bc, bean);
 		if (validOnSave && validOnInsert) {
 			bc.insert(bean);
+		} else {
+			facesContext.validationFailed();
 		}
 	}
 
@@ -57,6 +67,8 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 		boolean validOnSave = validator.validateOnSave(bc, bean);
 		if (validOnSave && validOnInsert) {
 			bc.update(bean);
+		} else {
+			facesContext.validationFailed();
 		}
 	}
 
