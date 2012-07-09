@@ -93,8 +93,8 @@ public class Validator implements Serializable {
 		for (Method method : methods) {
 			if (invoke(method, bc, id) == false) {
 				log.info("Validação falhou no delete com o metodo: {}", method.getName());
-				String message = method.getAnnotation(ValidateOnUpdate.class).message();
-				String clientId = method.getAnnotation(ValidateOnUpdate.class).clientId();
+				String message = method.getAnnotation(ValidateOnDelete.class).message();
+				String clientId = method.getAnnotation(ValidateOnDelete.class).clientId();
 				sendContextMessage(message, clientId);
 				validationFailureCount++;
 			}
@@ -103,6 +103,7 @@ public class Validator implements Serializable {
 	}
 
 	private void sendContextMessage(String message, String clientId) {
+		messageContext.clear();
 		DefaultMessage defaultMessage = new DefaultMessage(message, SeverityType.ERROR);
 		if (Strings.isEmpty(clientId)) {
 			messageContext.add(defaultMessage);
