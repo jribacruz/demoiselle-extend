@@ -103,7 +103,6 @@ public class Validator implements Serializable {
 	}
 
 	private void sendContextMessage(String message, String clientId) {
-		messageContext.clear();
 		DefaultMessage defaultMessage = new DefaultMessage(message, SeverityType.ERROR);
 		if (Strings.isEmpty(clientId)) {
 			messageContext.add(defaultMessage);
