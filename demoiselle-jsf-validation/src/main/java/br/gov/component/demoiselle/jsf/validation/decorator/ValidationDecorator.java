@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.validation.processor.Validator;
+import br.gov.frameworkdemoiselle.message.MessageContext;
 import br.gov.frameworkdemoiselle.template.Crud;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
 
@@ -30,10 +31,14 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	private FacesContext facesContext;
 
 	@Inject
+	private MessageContext messageContext;
+
+	@Inject
 	private Logger log;
 
 	@Override
 	public void delete(I id) {
+		messageContext.clear();
 		if (validator.validateOnDelete(bc, id)) {
 			bc.delete(id);
 		} else {
@@ -43,6 +48,7 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 
 	@Override
 	public void delete(List<I> idList) {
+		messageContext.clear();
 		if (validator.validateOnDelete(bc, idList)) {
 			bc.delete(idList);
 		} else {
@@ -52,6 +58,7 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 
 	@Override
 	public void insert(T bean) {
+		messageContext.clear();
 		boolean validOnInsert = validator.validateOnInsert(bc, bean);
 		boolean validOnSave = validator.validateOnSave(bc, bean);
 		if (validOnSave && validOnInsert) {
@@ -63,6 +70,7 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 
 	@Override
 	public void update(T bean) {
+		messageContext.clear();
 		boolean validOnInsert = validator.validateOnInsert(bc, bean);
 		boolean validOnSave = validator.validateOnSave(bc, bean);
 		if (validOnSave && validOnInsert) {
