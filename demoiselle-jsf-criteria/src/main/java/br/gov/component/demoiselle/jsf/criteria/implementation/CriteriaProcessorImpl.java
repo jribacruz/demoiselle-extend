@@ -93,7 +93,7 @@ public class CriteriaProcessorImpl implements CriteriaProcessor {
 			cq.orderBy(order);
 		}
 
-		CompoundSelection<T> selection = context.getProjection(cb, p);
+		CompoundSelection<T> selection = context.getProjection(cb, cq, p);
 		if (selection != null) {
 			cq.select(selection);
 		}

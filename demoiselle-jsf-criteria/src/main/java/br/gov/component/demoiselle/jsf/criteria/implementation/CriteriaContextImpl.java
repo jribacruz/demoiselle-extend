@@ -7,6 +7,7 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -143,12 +144,12 @@ public class CriteriaContextImpl implements CriteriaContext {
 		return orderList;
 	}
 
-	public <T> CompoundSelection<T> getProjection(CriteriaBuilder cb, Root<T> p) {
+	public <T> CompoundSelection<T> getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
 		ICriteria<T> criteria = getCriteria();
 		if (criteria != null) {
 			if (criteria instanceof IProjection) {
 				IProjection<T> projection = (IProjection<T>) criteria;
-				return projection.projection(cb, p);
+				return projection.projection(cb, cq, p);
 			} else {
 				if (criteria instanceof IRestriction) {
 					try {
