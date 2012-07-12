@@ -31,7 +31,6 @@
 			<artifactId>demoiselle-jsf</artifactId>
 			<version>2.2.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
