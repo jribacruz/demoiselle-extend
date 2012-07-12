@@ -76,10 +76,10 @@ public class EventsInterceptor implements Serializable {
 				sendExecute(execute);
 			}
 			if (method.isAnnotationPresent(OnComplete.class)) {
+				logger.info("Chamada do evento OnComplete para metodo " + method.getName());
 				String message = method.getAnnotation(OnComplete.class).message();
 				String[] updateList = method.getAnnotation(OnComplete.class).update();
 				String execute = method.getAnnotation(OnComplete.class).execute();
-				logger.info("Chamada do evento OnComplete para metodo " + Arrays.asList(updateList));
 				sendMessage(message, SeverityType.INFO);
 				sendUpdate(updateList);
 				sendExecute(execute);
