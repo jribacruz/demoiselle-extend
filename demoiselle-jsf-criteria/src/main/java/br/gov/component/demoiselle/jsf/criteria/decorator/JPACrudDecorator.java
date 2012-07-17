@@ -7,8 +7,6 @@ import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import br.gov.component.demoiselle.jsf.criteria.processor.CriteriaProcessor;
 import br.gov.frameworkdemoiselle.template.JPACrud;
 import br.gov.frameworkdemoiselle.util.Reflections;
@@ -24,9 +22,6 @@ public class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 
 	@Inject
 	private CriteriaProcessor processor;
-
-	@Inject
-	private Logger log;
 
 	@Override
 	public List<T> findAll() {
@@ -51,7 +46,8 @@ public class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 
 	@Override
 	public T load(I id) {
-		return dao.load(id);
+		Class<T> beanClass = Reflections.getGenericTypeArgument(dao.getClass(), 0);
+		return processor.load(beanClass, id);
 	}
 
 }
