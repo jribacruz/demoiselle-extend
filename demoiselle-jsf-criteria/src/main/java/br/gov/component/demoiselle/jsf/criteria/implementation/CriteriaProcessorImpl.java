@@ -1,16 +1,16 @@
 package br.gov.component.demoiselle.jsf.criteria.implementation;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -34,16 +34,32 @@ public class CriteriaProcessorImpl implements CriteriaProcessor {
 	@Inject
 	private EntityManager em;
 
+	@Override
 	public <T> List<T> getResultList(Class<T> beanClass) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
-		processCriteria(cb, cq, p);
+		processProjection(cb, cq, p);
+		processRestriction(cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
 
+		context.clear();
 		return query.getResultList();
+	}
+
+	@Override
+	public <T, I> T load(Class<T> beanClass, I id) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<T> cq = cb.createQuery(beanClass);
+		Root<T> p = cq.from(beanClass);
+		processProjection(cb, cq, p);
+		processRestriction(beanClass, id, cb, cq, p);
+
+		TypedQuery<T> query = em.createQuery(cq);
+		context.clear();
+		return query.getSingleResult();
 	}
 
 	private <T> Long countAll(Class<T> beanClass) {
@@ -51,7 +67,7 @@ public class CriteriaProcessorImpl implements CriteriaProcessor {
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
 		cq.select(cb.count(p));
-		processPredicate(cb, cq, p);
+		processRestriction(cb, cq, p);
 
 		TypedQuery<Long> query = em.createQuery(cq);
 		return query.getSingleResult();
@@ -78,25 +94,36 @@ public class CriteriaProcessorImpl implements CriteriaProcessor {
 		return pagination;
 	}
 
-	protected <T, X> void processPredicate(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		Predicate[] restrictions = context.getRestriction(cb, p);
-		if (restrictions != null && restrictions.length > 0) {
-			cq.where(restrictions);
+	protected <T, X> void processRestriction(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		List<Predicate> restrictions = context.getRestriction(cb, p);
+		if (restrictions != null && !restrictions.isEmpty()) {
+			cq.where(restrictions.toArray(new Predicate[] {}));
 		}
 	}
 
-	protected <T> void processCriteria(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		processPredicate(cb, cq, p);
-
-		List<Order> order = context.getOrder(cb, p);
-		if (order != null && !order.isEmpty()) {
-			cq.orderBy(order);
+	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		List<Predicate> restrictions = context.getRestriction(cb, p);
+		restrictions.add(prepareLoadRestriction(beanClass, id, cb, p));
+		if (restrictions != null && !restrictions.isEmpty()) {
+			cq.where(restrictions.toArray(new Predicate[] {}));
 		}
+	}
 
-		CompoundSelection<T> selection = context.getProjection(cb, cq, p);
-		if (selection != null) {
-			cq.select(selection);
+	protected <T> void processProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+		context.getProjection(cb, cq, p);
+	}
+
+	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {
+		return cb.equal(p.get(getId(beanClass)), id);
+	}
+
+	private <T> String getId(Class<T> beanClass) {
+		for (Field field : beanClass.getDeclaredFields()) {
+			if (field.isAnnotationPresent(Id.class)) {
+				return field.getName();
+			}
 		}
+		return null;
 	}
 
 }
