@@ -3,28 +3,28 @@ package br.gov.component.demoiselle.jsf.criteria.context;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.gov.component.demoiselle.jsf.criteria.template.ICriteria;
+import br.gov.component.demoiselle.jsf.criteria.template.IRestriction;
 
 public interface CriteriaContext extends Serializable {
 	/**
 	 * 
 	 * @param criteriaClass
 	 */
-	public void setCriteria(Class<?> criteriaClass);
+	@SuppressWarnings("rawtypes")
+	public void setRestrictionClass(Class<? extends IRestriction> criteriaClass);
 
 	/**
 	 * 
 	 * @param criteriaClass
 	 * @param pageSize
 	 */
-	public void setCriteria(Class<?> criteriaClass, int pageSize);
+	@SuppressWarnings("rawtypes")
+	public void setRestrictionClass(Class<? extends IRestriction> criteriaClass, int pageSize);
 
 	/**
 	 * 
@@ -32,29 +32,28 @@ public interface CriteriaContext extends Serializable {
 	 * @param p
 	 * @return
 	 */
-	public <T> Predicate[] getRestriction(CriteriaBuilder cb, Root<T> p);
+	public <T, X> List<Predicate> getRestriction(CriteriaBuilder cb, Root<T> p);
 
 	/**
 	 * 
 	 * @param cb
+	 * @param cq
 	 * @param p
 	 * @return
 	 */
-	public <T> List<Order> getOrder(CriteriaBuilder cb, Root<T> p);
-
-	/**
-	 * 
-	 * @param cb
-	 * @param p
-	 * @return
-	 */
-	public <T> CompoundSelection<T> getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p);
+	public <T> void getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p);
 
 	/**
 	 * 
 	 * @return
 	 */
-	public <T> ICriteria<T> getCriteria();
+	@SuppressWarnings("rawtypes")
+	public <T> Class<? extends IRestriction> getRestrictionClass();
+
+	/**
+	 * 
+	 */
+	public <T> IRestriction<T> getRestrictionReference();
 
 	/**
 	 * 
@@ -79,4 +78,9 @@ public interface CriteriaContext extends Serializable {
 	 * @return
 	 */
 	public String getQuery();
+
+	/**
+	 * 
+	 */
+	public void clear();
 }
