@@ -41,13 +41,4 @@ public abstract class AbstractCriteria<T> implements Serializable {
 		context.setQuery(query);
 		this.query = query;
 	}
-
-	public void init(Class<?> criteriaClass) {
-		this.context.setCriteria(criteriaClass);
-	}
-
-	protected void restriction(Class<?> restrictionClass) {
-		this.context.setCriteria(restrictionClass);
-	}
-
 }
