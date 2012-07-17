@@ -112,6 +112,7 @@ public class Validator implements Serializable {
 	}
 
 	private void loadOnSaveValidators(Class<?> bcClass) {
+		cache.clear();
 		Method[] methods = bcClass.getDeclaredMethods();
 		for (Method method : methods) {
 			if (method.isAnnotationPresent(ValidateOnSave.class)) {
@@ -121,6 +122,7 @@ public class Validator implements Serializable {
 	}
 
 	private void loadOnInsertValidators(Class<?> bcClass) {
+		cache.clear();
 		Method[] methods = bcClass.getDeclaredMethods();
 		for (Method method : methods) {
 			if (method.isAnnotationPresent(ValidateOnInsert.class)) {
@@ -130,6 +132,7 @@ public class Validator implements Serializable {
 	}
 
 	private void loadOnUpdateValidators(Class<?> bcClass) {
+		cache.clear();
 		Method[] methods = bcClass.getDeclaredMethods();
 		for (Method method : methods) {
 			if (method.isAnnotationPresent(ValidateOnUpdate.class)) {
@@ -139,6 +142,7 @@ public class Validator implements Serializable {
 	}
 
 	private void loadOnDeleteValidators(Class<?> bcClass) {
+		cache.clear();
 		Method[] methods = bcClass.getDeclaredMethods();
 		for (Method method : methods) {
 			if (method.isAnnotationPresent(ValidateOnDelete.class)) {
