@@ -99,6 +99,7 @@ public class EventsInterceptor implements Serializable {
 	}
 
 	private void sendMessage(String message, SeverityType severityType) {
+		messageContext.clear();
 		if (!Strings.isEmpty(message)) {
 			messageContext.add(message, severityType);
 		}
