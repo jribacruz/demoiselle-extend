@@ -16,13 +16,13 @@ import br.gov.frameworkdemoiselle.template.Crud;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
 
 @Decorator
-public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, C> {
+public class ValidationDecorator<T, Long, C extends Crud<T, Long>> extends DelegateCrud<T, Long, C> {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	@Any
 	@Delegate
-	private DelegateCrud<T, I, C> bc;
+	private DelegateCrud<T, Long, C> bc;
 
 	@Inject
 	private Validator validator;
@@ -37,17 +37,7 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	private Logger log;
 
 	@Override
-	public void delete(I id) {
-		messageContext.clear();
-		if (validator.validateOnDelete(bc, id)) {
-			bc.delete(id);
-		} else {
-			facesContext.validationFailed();
-		}
-	}
-
-	@Override
-	public void delete(List<I> idList) {
+	public void delete(final List<Long> idList) {
 		messageContext.clear();
 		if (validator.validateOnDelete(bc, idList)) {
 			bc.delete(idList);
@@ -57,7 +47,17 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	}
 
 	@Override
-	public void insert(T bean) {
+	public void delete(final Long id) {
+		messageContext.clear();
+		if (validator.validateOnDelete(bc, id)) {
+			bc.delete(id);
+		} else {
+			facesContext.validationFailed();
+		}
+	}
+
+	@Override
+	public void insert(final T bean) {
 		messageContext.clear();
 		boolean validOnInsert = validator.validateOnInsert(bc, bean);
 		boolean validOnSave = validator.validateOnSave(bc, bean);
@@ -69,9 +69,9 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	}
 
 	@Override
-	public void update(T bean) {
+	public void update(final T bean) {
 		messageContext.clear();
-		boolean validOnInsert = validator.validateOnInsert(bc, bean);
+		boolean validOnInsert = validator.validateOnUpdate(bc, bean);
 		boolean validOnSave = validator.validateOnSave(bc, bean);
 		if (validOnSave && validOnInsert) {
 			bc.update(bean);
@@ -86,7 +86,7 @@ public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCru
 	}
 
 	@Override
-	public T load(I id) {
+	public T load(final Long id) {
 		return bc.load(id);
 	}
 
