@@ -17,4 +17,10 @@ public interface Element {
 	public String getStyleClass();
 
 	public void setStyleClass(String styleClass);
+
+	public void setContainer(Element element);
+
+	public Element getContainer();
+
+	public void add(Element element);
 }

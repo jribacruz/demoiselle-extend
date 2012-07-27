@@ -8,6 +8,7 @@ public class ElementImpl implements Element {
 	private String widgetVar;
 	private String style;
 	private String styleClass;
+	private Element container;
 
 	public ElementImpl(String id, String widgetVar, String style, String styleClass) {
 		super();
@@ -47,6 +48,50 @@ public class ElementImpl implements Element {
 
 	public void setStyleClass(String styleClass) {
 		this.styleClass = styleClass;
+	}
+
+	public void setContainer(Element element) {
+		this.container = element;
+	}
+
+	public Element getContainer() {
+		return this.container;
+	}
+
+	public void add(Element element) {
+		element.setContainer(this);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ElementImpl [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (widgetVar != null) {
+			builder.append("widgetVar=");
+			builder.append(widgetVar);
+			builder.append(", ");
+		}
+		if (style != null) {
+			builder.append("style=");
+			builder.append(style);
+			builder.append(", ");
+		}
+		if (styleClass != null) {
+			builder.append("styleClass=");
+			builder.append(styleClass);
+			builder.append(", ");
+		}
+		if (container != null) {
+			builder.append("container=");
+			builder.append(container);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }
