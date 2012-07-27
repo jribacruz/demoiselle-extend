@@ -19,22 +19,46 @@ import br.gov.frameworkdemoiselle.util.Strings;
 public class ElementProducer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private static InjectionPoint ip;
+
 	@Produces
 	@Default
 	public static Element create(final InjectionPoint ip) {
-
-		String preffix = Strings.isEmpty(ip.getBean().getBeanClass().getAnnotation(Component.class).preffix()) ? ip
-				.getBean().getName() : ip.getBean().getBeanClass().getAnnotation(Component.class).preffix();
-
-				Field field = (Field) ip.getMember();
-				String id = field.isAnnotationPresent(ID.class) ? field.getAnnotation(ID.class).value() : Strings
-						.camelCaseToSymbolSeparated(field.getName(), "-").concat("-id");
-				String widgetVar = field.isAnnotationPresent(WidgetVar.class) ? field.getAnnotation(WidgetVar.class).value()
-						: Strings.camelCaseToSymbolSeparated(field.getName(), "_").concat("_wvar");
-				String style = field.isAnnotationPresent(Style.class) ? field.getAnnotation(Style.class).value() : "";
-				String styleClass = field.isAnnotationPresent(StyleClass.class) ? field.getAnnotation(StyleClass.class).value()
-						: "app-ui-" + Strings.camelCaseToSymbolSeparated(field.getName(), "-");
-
-				return new ElementImpl(preffix.concat("-").concat(id), preffix.concat("_").concat(widgetVar), style, styleClass);
+		ElementProducer.ip = ip;
+		return new ElementImpl(getPreffix().concat("-").concat(getId()), getPreffix().concat("_").concat(getWidgetVar()),
+				getStyle(), getStyleClass());
 	}
+
+	private static String getPreffix() {
+		return Strings.isEmpty(ip.getBean().getBeanClass().getAnnotation(Component.class).preffix()) ? ip.getBean()
+				.getName() : ip.getBean().getBeanClass().getAnnotation(Component.class).preffix();
+	}
+
+	private static String getId() {
+		Field field = (Field) ip.getMember();
+		String id = field.isAnnotationPresent(ID.class) ? field.getAnnotation(ID.class).value() : Strings
+				.camelCaseToSymbolSeparated(field.getName(), "-").concat("-id");
+		return id;
+	}
+
+	private static String getWidgetVar() {
+		Field field = (Field) ip.getMember();
+		String widgetVar = field.isAnnotationPresent(WidgetVar.class) ? field.getAnnotation(WidgetVar.class).value()
+				: Strings.camelCaseToSymbolSeparated(field.getName(), "_").concat("_wvar");
+		return widgetVar;
+	}
+
+	private static String getStyle() {
+		Field field = (Field) ip.getMember();
+		String style = field.isAnnotationPresent(Style.class) ? field.getAnnotation(Style.class).value() : "";
+		return style;
+	}
+
+	private static String getStyleClass() {
+		Field field = (Field) ip.getMember();
+		String styleClass = field.isAnnotationPresent(StyleClass.class) ? field.getAnnotation(StyleClass.class).value()
+				: "app-ui-" + Strings.camelCaseToSymbolSeparated(field.getName(), "-");
+		return styleClass;
+	}
+
 }
