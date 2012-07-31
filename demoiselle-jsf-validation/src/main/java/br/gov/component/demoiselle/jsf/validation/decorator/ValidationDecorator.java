@@ -1,7 +1,5 @@
 package br.gov.component.demoiselle.jsf.validation.decorator;
 
-import java.util.List;
-
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
@@ -16,13 +14,13 @@ import br.gov.frameworkdemoiselle.template.Crud;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
 
 @Decorator
-public class ValidationDecorator<T, Long, C extends Crud<T, Long>> extends DelegateCrud<T, Long, C> {
+public abstract class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, C> {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	@Any
 	@Delegate
-	private DelegateCrud<T, Long, C> bc;
+	private DelegateCrud<T, I, C> bc;
 
 	@Inject
 	private Validator validator;
@@ -36,18 +34,18 @@ public class ValidationDecorator<T, Long, C extends Crud<T, Long>> extends Deleg
 	@Inject
 	private Logger log;
 
-	@Override
-	public void delete(final List<Long> idList) {
-		messageContext.clear();
-		if (validator.validateOnDelete(bc, idList)) {
-			bc.delete(idList);
-		} else {
-			facesContext.validationFailed();
-		}
-	}
+	// @Override
+	// public void delete(final List<Long> idList) {
+	// messageContext.clear();
+	// if (validator.validateOnDelete(bc, idList)) {
+	// bc.delete(idList);
+	// } else {
+	// facesContext.validationFailed();
+	// }
+	// }
 
 	@Override
-	public void delete(final Long id) {
+	public void delete(final I id) {
 		messageContext.clear();
 		if (validator.validateOnDelete(bc, id)) {
 			bc.delete(id);
@@ -78,16 +76,6 @@ public class ValidationDecorator<T, Long, C extends Crud<T, Long>> extends Deleg
 		} else {
 			facesContext.validationFailed();
 		}
-	}
-
-	@Override
-	public List<T> findAll() {
-		return bc.findAll();
-	}
-
-	@Override
-	public T load(final Long id) {
-		return bc.load(id);
 	}
 
 }
