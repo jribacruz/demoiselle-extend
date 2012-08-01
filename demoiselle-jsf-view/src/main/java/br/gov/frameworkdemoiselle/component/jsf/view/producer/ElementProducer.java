@@ -50,7 +50,7 @@ public class ElementProducer implements Serializable {
 
 	private static String getStyle() {
 		Field field = (Field) ip.getMember();
-		String style = field.isAnnotationPresent(Style.class) ? field.getAnnotation(Style.class).value() : "";
+		String style = field.isAnnotationPresent(Style.class) ? field.getAnnotation(Style.class).value() : null;
 		return style;
 	}
 
