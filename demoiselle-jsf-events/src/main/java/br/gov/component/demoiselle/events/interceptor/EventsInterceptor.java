@@ -18,10 +18,12 @@ import org.slf4j.Logger;
 import br.gov.component.demoiselle.events.OnComplete;
 import br.gov.component.demoiselle.events.OnFailure;
 import br.gov.component.demoiselle.events.OnSuccess;
+import br.gov.component.demoiselle.events.templates.ActionEventBean;
 import br.gov.frameworkdemoiselle.internal.bootstrap.CoreBootstrap;
 import br.gov.frameworkdemoiselle.message.MessageContext;
 import br.gov.frameworkdemoiselle.message.SeverityType;
 import br.gov.frameworkdemoiselle.stereotype.Controller;
+import br.gov.frameworkdemoiselle.util.Beans;
 import br.gov.frameworkdemoiselle.util.Strings;
 
 @Controller
@@ -59,27 +61,30 @@ public class EventsInterceptor implements Serializable {
 		if (method != null) {
 			if (method.isAnnotationPresent(OnFailure.class) && facesContext.isValidationFailed()) {
 				logger.info("Chamada do evento OnFailure para metodo " + method.getName());
-				String message = method.getAnnotation(OnFailure.class).message();
-				String[] updateList = method.getAnnotation(OnFailure.class).update();
-				String execute = method.getAnnotation(OnFailure.class).execute();
+				ActionEventBean eventBean = Beans.getReference(method.getAnnotation(OnFailure.class).value());
+				String message = eventBean.message();
+				String[] updateList = eventBean.update();
+				String execute = eventBean.execute();
 				sendMessage(message, SeverityType.ERROR);
 				sendUpdate(updateList);
 				sendExecute(execute);
 			}
 			if (method.isAnnotationPresent(OnSuccess.class) && !facesContext.isValidationFailed()) {
 				logger.info("Chamada do evento OnSuccess para metodo " + method.getName());
-				String message = method.getAnnotation(OnSuccess.class).message();
-				String[] updateList = method.getAnnotation(OnSuccess.class).update();
-				String execute = method.getAnnotation(OnSuccess.class).execute();
+				ActionEventBean eventBean = Beans.getReference(method.getAnnotation(OnSuccess.class).value());
+				String message = eventBean.message();
+				String[] updateList = eventBean.update();
+				String execute = eventBean.execute();
 				sendMessage(message, SeverityType.INFO);
 				sendUpdate(updateList);
 				sendExecute(execute);
 			}
 			if (method.isAnnotationPresent(OnComplete.class)) {
 				logger.info("Chamada do evento OnComplete para metodo " + method.getName());
-				String message = method.getAnnotation(OnComplete.class).message();
-				String[] updateList = method.getAnnotation(OnComplete.class).update();
-				String execute = method.getAnnotation(OnComplete.class).execute();
+				ActionEventBean eventBean = Beans.getReference(method.getAnnotation(OnComplete.class).value());
+				String message = eventBean.message();
+				String[] updateList = eventBean.update();
+				String execute = eventBean.execute();
 				sendMessage(message, SeverityType.INFO);
 				sendUpdate(updateList);
 				sendExecute(execute);
