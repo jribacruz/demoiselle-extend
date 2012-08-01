@@ -7,13 +7,11 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import br.gov.component.demoiselle.events.templates.ActionEventBean;
+
 @Inherited
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface OnSuccess {
-	String[] update() default "";
-
-	String message() default "";
-
-	String execute() default "";
+	Class<? extends ActionEventBean> value();
 }
