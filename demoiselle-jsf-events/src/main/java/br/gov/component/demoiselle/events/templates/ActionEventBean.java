@@ -1,9 +1,15 @@
 package br.gov.component.demoiselle.events.templates;
 
-public interface ActionEventBean {
-	public String execute();
+public class ActionEventBean {
+	public String execute() {
+		return null;
+	}
 
-	public String[] update();
+	public String[] update() {
+		return null;
+	}
 
-	public String message();
+	public String message() {
+		return null;
+	}
 }
