@@ -76,4 +76,12 @@ public abstract class AbstractViewComponent<T> implements Serializable {
 		this.dialogBody = dialogBody;
 	}
 
+	public Element getDatatable() {
+		return datatable;
+	}
+
+	public void setDatatable(Element datatable) {
+		this.datatable = datatable;
+	}
+
 }
