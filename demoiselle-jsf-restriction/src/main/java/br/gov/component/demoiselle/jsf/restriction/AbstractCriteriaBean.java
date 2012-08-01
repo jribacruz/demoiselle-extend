@@ -28,9 +28,13 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@Inject
 	private Logger logger;
 
-	protected abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
+	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
+		return null;
+	}
 
-	protected abstract void projection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p);
+	protected void projection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
