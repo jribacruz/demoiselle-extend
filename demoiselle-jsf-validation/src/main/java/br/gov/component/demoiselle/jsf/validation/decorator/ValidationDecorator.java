@@ -1,5 +1,7 @@
 package br.gov.component.demoiselle.jsf.validation.decorator;
 
+import java.util.List;
+
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
@@ -14,7 +16,7 @@ import br.gov.frameworkdemoiselle.template.Crud;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
 
 @Decorator
-public abstract class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, C> {
+public class ValidationDecorator<T, I, C extends Crud<T, I>> extends DelegateCrud<T, I, Crud<T, I>> {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -33,16 +35,6 @@ public abstract class ValidationDecorator<T, I, C extends Crud<T, I>> extends De
 
 	@Inject
 	private Logger log;
-
-	// @Override
-	// public void delete(final List<Long> idList) {
-	// messageContext.clear();
-	// if (validator.validateOnDelete(bc, idList)) {
-	// bc.delete(idList);
-	// } else {
-	// facesContext.validationFailed();
-	// }
-	// }
 
 	@Override
 	public void delete(final I id) {
@@ -76,6 +68,16 @@ public abstract class ValidationDecorator<T, I, C extends Crud<T, I>> extends De
 		} else {
 			facesContext.validationFailed();
 		}
+	}
+
+	@Override
+	public List<T> findAll() {
+		return bc.findAll();
+	}
+
+	@Override
+	public T load(I id) {
+		return bc.load(id);
 	}
 
 }
