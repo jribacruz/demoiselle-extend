@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -40,6 +41,7 @@ public class CriteriaProcessor implements Serializable {
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p);
 		processRestriction(cb, cq, p);
+		processOrder(cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
@@ -109,6 +111,15 @@ public class CriteriaProcessor implements Serializable {
 
 	protected <T> void processProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
 		context.getProjection(cb, cq, p);
+	}
+
+	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+		List<Order> orders = context.getOrderList(cb, p);
+		System.out.println("Processando as orders..."+orders);
+		if (orders != null && !orders.isEmpty()) {
+			cq.orderBy(orders);
+		}
+
 	}
 
 	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {

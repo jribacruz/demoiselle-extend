@@ -7,6 +7,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -42,7 +43,7 @@ public class CriteriaContextImpl implements CriteriaContext {
 	public <T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
-			return bean != null ? bean.getPredicateList(cb, p) :  new ArrayList<Predicate>();
+			return bean != null ? bean.getPredicateList(cb, p) : new ArrayList<Predicate>();
 		}
 		return new ArrayList<Predicate>();
 	}
@@ -71,5 +72,16 @@ public class CriteriaContextImpl implements CriteriaContext {
 			}
 		}
 
+	}
+
+	@Override
+	public <T> List<Order> getOrderList(CriteriaBuilder cb, Root<T> p) {
+		if (criteriaBeanClass != null) {
+			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
+			if (bean != null) {
+				return bean.getOrder(cb, p);
+			}
+		}
+		return new ArrayList<Order>();
 	}
 }
