@@ -2,6 +2,7 @@ package br.gov.component.demoiselle.jsf.restriction.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
@@ -25,6 +27,14 @@ public class CriteriaContextImpl implements CriteriaContext {
 	private Logger log;
 
 	private int pageSize;
+
+	private String query;
+
+	private String sortField;
+
+	private SortOrder sortOrder;
+
+	private Map<String, String> filters;
 
 	@SuppressWarnings("rawtypes")
 	private Class<? extends AbstractCriteriaBean> criteriaBeanClass;
@@ -83,5 +93,45 @@ public class CriteriaContextImpl implements CriteriaContext {
 			}
 		}
 		return new ArrayList<Order>();
+	}
+
+	@Override
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	@Override
+	public String getQuery() {
+		return this.query;
+	}
+
+	@Override
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	@Override
+	public SortOrder getSortOrder() {
+		return this.sortOrder;
+	}
+
+	@Override
+	public void setFilters(Map<String, String> filters) {
+		this.filters = filters;
+	}
+
+	@Override
+	public Map<String, String> getFilters() {
+		return this.filters;
+	}
+
+	@Override
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	@Override
+	public String getSortField() {
+		return this.sortField;
 	}
 }
