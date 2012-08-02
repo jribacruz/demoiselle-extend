@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
@@ -27,6 +30,12 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	@Inject
 	private Logger logger;
+
+	private SortOrder sortOrder;
+
+	private String sortField;
+
+	private Map<String, String> filter;
 
 	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
 		return null;
@@ -67,7 +76,50 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		projection(cb, cq, p);
 	}
 
+	public List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
+		List<Order> orders = new ArrayList<Order>();
+		if (sortField != null && !Strings.isEmpty(sortField)) {
+			if (sortOrder == SortOrder.ASCENDING) {
+				orders.add(cb.asc(p.get(sortField)));
+			} else {
+				orders.add(cb.desc(p.get(sortField)));
+			}
+
+		}
+		System.out.println("Sort by: " + sortField+ " orders: "+orders.size());
+		return orders;
+	}
+
 	public void filter() {
 		context.setCriteriaControllerClass(this.getClass());
 	}
+
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	public void setFilter(Map<String, String> filter) {
+		this.filter = filter;
+	}
+
+	protected String get(String fieldName) {
+		return this.filter.get(fieldName);
+	}
+
+	protected boolean has(String fieldName) {
+		return this.filter.get(fieldName) != null;
+	}
+
 }
