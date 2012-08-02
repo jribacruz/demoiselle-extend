@@ -11,7 +11,7 @@ import javax.interceptor.InterceptorBinding;
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD, ElementType.TYPE })
+@Target(value = { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD })
 @InterceptorBinding
 public @interface Criteria {
 	@Nonbinding
