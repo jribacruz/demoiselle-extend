@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -30,12 +29,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	@Inject
 	private Logger logger;
-
-	private SortOrder sortOrder;
-
-	private String sortField;
-
-	private Map<String, String> filter;
 
 	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
 		return null;
@@ -78,15 +71,15 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	public List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
-		if (sortField != null && !Strings.isEmpty(sortField)) {
-			if (sortOrder == SortOrder.ASCENDING) {
-				orders.add(cb.asc(p.get(sortField)));
+		if (getSortField() != null && !Strings.isEmpty(getSortField())) {
+			if (getSortOrder() == SortOrder.ASCENDING) {
+				orders.add(cb.asc(p.get(getSortField())));
 			} else {
-				orders.add(cb.desc(p.get(sortField)));
+				orders.add(cb.desc(p.get(getSortField())));
 			}
 
 		}
-		System.out.println("Sort by: " + sortField+ " orders: "+orders.size());
+		System.out.println("Sort by: " + getSortField() + " orders: " + orders.size());
 		return orders;
 	}
 
@@ -95,31 +88,23 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	public SortOrder getSortOrder() {
-		return sortOrder;
-	}
-
-	public void setSortOrder(SortOrder sortOrder) {
-		this.sortOrder = sortOrder;
+		return context.getSortOrder();
 	}
 
 	public String getSortField() {
-		return sortField;
-	}
-
-	public void setSortField(String sortField) {
-		this.sortField = sortField;
-	}
-
-	public void setFilter(Map<String, String> filter) {
-		this.filter = filter;
+		return context.getSortField();
 	}
 
 	protected String get(String fieldName) {
-		return this.filter.get(fieldName);
+		return context.getFilters().get(fieldName);
 	}
 
 	protected boolean has(String fieldName) {
-		return this.filter.get(fieldName) != null;
+		return context.getFilters().get(fieldName) != null;
+	}
+
+	protected boolean hasQuery() {
+		return !Strings.isEmpty(context.getQuery());
 	}
 
 }
