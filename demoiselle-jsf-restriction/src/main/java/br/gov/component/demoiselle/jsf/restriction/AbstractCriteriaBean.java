@@ -80,7 +80,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			}
 
 		}
-		logger.info("Numero de ordenações da consulta: ", orders.size());
+		logger.info("Numero de ordenações da consulta: {}", orders.size());
 		return orders;
 	}
 
