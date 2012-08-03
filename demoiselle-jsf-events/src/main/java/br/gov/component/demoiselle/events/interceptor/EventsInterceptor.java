@@ -48,8 +48,18 @@ public class EventsInterceptor implements Serializable {
 
 	@AroundInvoke
 	public Object handle(InvocationContext ctx) throws Exception {
-		Object obj = ctx.proceed();
+		Object obj = null;
 
+		try {
+			ctx.proceed();
+			process(ctx);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return obj;
+	}
+
+	protected void process(InvocationContext ctx) {
 		Class<?> type = getType(ctx);
 
 		if (!isLoaded(type)) {
@@ -90,7 +100,7 @@ public class EventsInterceptor implements Serializable {
 				sendExecute(execute);
 			}
 		}
-		return obj;
+
 	}
 
 	private final Method getMethod(final Class<?> type, final String methodName) {
