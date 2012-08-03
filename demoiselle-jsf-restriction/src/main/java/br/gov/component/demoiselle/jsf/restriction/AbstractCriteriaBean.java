@@ -62,6 +62,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 				}
 			}
 		}
+		logger.info("Número de restrições da consulta: {}", predicateList.size());
 		return predicateList;
 	}
 
@@ -79,7 +80,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			}
 
 		}
-		System.out.println("Sort by: " + getSortField() + " orders: " + orders.size());
+		logger.info("Numero de ordenações da consulta: ", orders.size());
 		return orders;
 	}
 
