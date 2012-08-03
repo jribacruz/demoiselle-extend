@@ -40,8 +40,6 @@ public class CriteriaInterceptor implements Serializable {
 			context.setCriteriaControllerClass(criteriaSelectedClass);
 			context.setPageSize(pageSize);
 			setQueryParamIfNecessary(ctx);
-			logger.info("Criteria selecionado {} no método {}", criteriaSelectedClass.getCanonicalName(), ctx.getMethod()
-					.getName());
 		}
 		return ctx.proceed();
 	}

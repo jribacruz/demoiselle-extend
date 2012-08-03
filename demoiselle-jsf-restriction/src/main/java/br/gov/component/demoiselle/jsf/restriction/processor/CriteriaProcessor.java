@@ -2,6 +2,7 @@ package br.gov.component.demoiselle.jsf.restriction.processor;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -31,6 +32,8 @@ public class CriteriaProcessor implements Serializable {
 	private Instance<PaginationContext> paginationContext;
 
 	private Pagination pagination;
+
+	private List<Predicate> predicateList;
 
 	@Inject
 	private EntityManager em;
@@ -67,7 +70,8 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
 		cq.select(cb.count(p));
-		processRestriction(cb, cq, p);
+		// processRestriction(cb, cq, p);
+		cq.where(getPredicateList().toArray(new Predicate[] {}));
 
 		TypedQuery<Long> query = em.createQuery(cq);
 		return query.getSingleResult();
@@ -96,9 +100,9 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T, X> void processRestriction(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		List<Predicate> restrictions = context.getPredicateList(cb, p);
-		if (restrictions != null && !restrictions.isEmpty()) {
-			cq.where(restrictions.toArray(new Predicate[] {}));
+		this.predicateList = context.getPredicateList(cb, p);
+		if (this.predicateList != null && !this.predicateList.isEmpty()) {
+			cq.where(this.predicateList.toArray(new Predicate[] {}));
 		}
 	}
 
@@ -133,6 +137,17 @@ public class CriteriaProcessor implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	public List<Predicate> getPredicateList() {
+		if (predicateList == null) {
+			return new ArrayList<Predicate>();
+		}
+		return predicateList;
+	}
+
+	public void setPredicateList(List<Predicate> predicateList) {
+		this.predicateList = predicateList;
 	}
 
 }
