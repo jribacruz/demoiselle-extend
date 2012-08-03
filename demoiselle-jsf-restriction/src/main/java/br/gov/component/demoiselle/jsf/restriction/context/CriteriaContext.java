@@ -15,8 +15,10 @@ import org.primefaces.model.SortOrder;
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 
 public interface CriteriaContext extends Serializable {
+	@SuppressWarnings("rawtypes")
 	void setCriteriaControllerClass(Class<? extends AbstractCriteriaBean> criteriaBeanClass);
 
+	@SuppressWarnings("rawtypes")
 	Class<? extends AbstractCriteriaBean> getCriteriaControllerClass();
 
 	<T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p);

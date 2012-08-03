@@ -14,6 +14,7 @@ import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 @Target(value = { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD })
 @InterceptorBinding
 public @interface Criteria {
+	@SuppressWarnings("rawtypes")
 	@Nonbinding
 	Class<? extends AbstractCriteriaBean> value();
 
