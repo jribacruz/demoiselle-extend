@@ -65,6 +65,7 @@ public class LazyDataModelProducer implements Serializable {
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 
+
 				criteriaContext.setFilters(filters);
 				criteriaContext.setSortField(sortField);
 				criteriaContext.setSortOrder(sortOrder);
@@ -73,10 +74,10 @@ public class LazyDataModelProducer implements Serializable {
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
-				List<T> lists = invokeHandleResultList(listMB);
+				List<T> list = invokeHandleResultList(listMB);
 				this.setRowCount(pagination.getTotalResults());
 				this.setPageSize(pageSize);
-				return lists;
+				return list;
 			}
 		};
 	}
