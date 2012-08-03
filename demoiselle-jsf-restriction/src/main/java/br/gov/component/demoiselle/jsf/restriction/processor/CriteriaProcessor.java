@@ -83,6 +83,7 @@ public class CriteriaProcessor implements Serializable {
 			}
 		} else {
 			query.setMaxResults(context.getPageSize());
+			context.setPageSize(0);
 		}
 	}
 
@@ -115,7 +116,6 @@ public class CriteriaProcessor implements Serializable {
 
 	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
 		List<Order> orders = context.getOrderList(cb, p);
-		System.out.println("Processando as orders..."+orders);
 		if (orders != null && !orders.isEmpty()) {
 			cq.orderBy(orders);
 		}
