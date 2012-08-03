@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.primefaces.model.SortOrder;
+import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
@@ -20,6 +22,9 @@ import br.gov.frameworkdemoiselle.util.Beans;
 @SessionScoped
 public class CriteriaContextImpl implements CriteriaContext {
 	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private Logger logger;
 
 	private int pageSize;
 
@@ -37,6 +42,7 @@ public class CriteriaContextImpl implements CriteriaContext {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setCriteriaControllerClass(Class<? extends AbstractCriteriaBean> criteriaBeanClass) {
+		logger.info("Criteria {}", criteriaBeanClass.getCanonicalName());
 		this.criteriaBeanClass = criteriaBeanClass;
 	}
 
