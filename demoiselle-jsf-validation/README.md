@@ -18,7 +18,7 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 }
 ```
 
-Caso o método 'validateLinkURL' retorne false a validação é falha e o método insert() ou update() não é executado. 
+Caso o método **validateLinkURL** retorne false a validação é falha e o método insert() ou update() não é executado. 
 
 ###Validando antes do insert(): @ValidateOnInsert
 ```java
@@ -34,5 +34,5 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 }
 ```
 
-Caso o método 'validateLinkPresence'retorne false a validação é falha e o método insert() não é executado;
+Caso o método **validateLinkPresence** retorne false a validação é falha e o método insert() não é executado;
 
