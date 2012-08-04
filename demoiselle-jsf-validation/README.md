@@ -4,6 +4,7 @@ O componente demoiselle-jsf-validation provê mecanismo de validação pra proje
 Tem como objetivo centralizar as regras de validação no BC de forma simples.
 
 ##Como usar
+Validando antes do insert() e antes do update(): 
 ```java
 @BusinessController
 public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
