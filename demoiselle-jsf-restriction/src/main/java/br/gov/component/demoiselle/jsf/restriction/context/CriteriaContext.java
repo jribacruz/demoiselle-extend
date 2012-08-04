@@ -13,6 +13,7 @@ import javax.persistence.criteria.Root;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
+import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 
 public interface CriteriaContext extends Serializable {
 	@SuppressWarnings("rawtypes")
@@ -20,6 +21,12 @@ public interface CriteriaContext extends Serializable {
 
 	@SuppressWarnings("rawtypes")
 	Class<? extends AbstractCriteriaBean> getCriteriaControllerClass();
+
+	@SuppressWarnings("rawtypes")
+	boolean setProjectionClass(Class<? extends ProjectionBean> projectionClass);
+
+	@SuppressWarnings("rawtypes")
+	Class<? extends ProjectionBean> getProjectionClass();
 
 	<T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p);
 

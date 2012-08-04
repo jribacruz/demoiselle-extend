@@ -17,8 +17,10 @@ import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
+import br.gov.component.demoiselle.jsf.restriction.annotation.Projection;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.exception.AnnotationCriteriaNotFoundException;
+import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -37,7 +39,8 @@ public class LazyDataModelProducer implements Serializable {
 		validateCriteriaPresence(field);
 		final AbstractListPageBean listPageBean = getListMB(ip);
 		final Class<? extends AbstractCriteriaBean> criteria = getCriteriaClass(field);
-		return getLazyDataModelInstance(listPageBean, criteria);
+		final Class<? extends ProjectionBean> projection = getProjectionClass(field);
+		return getLazyDataModelInstance(listPageBean, criteria, projection);
 	}
 
 	private void validateCriteriaPresence(Field field) {
@@ -57,18 +60,24 @@ public class LazyDataModelProducer implements Serializable {
 	}
 
 	@SuppressWarnings("rawtypes")
+	private Class<? extends ProjectionBean> getProjectionClass(Field field) {
+		return field.isAnnotationPresent(Projection.class) ? field.getAnnotation(Projection.class).value() : null;
+	}
+
+	@SuppressWarnings("rawtypes")
 	private <T> LazyDataModel<T> getLazyDataModelInstance(final AbstractListPageBean listMB,
-			final Class<? extends AbstractCriteriaBean> criteriaBeanClass) {
+			final Class<? extends AbstractCriteriaBean> criteriaBeanClass, final Class<? extends ProjectionBean> projection) {
 		return new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unused")
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-
 
 				criteriaContext.setFilters(filters);
 				criteriaContext.setSortField(sortField);
 				criteriaContext.setSortOrder(sortOrder);
+				boolean flag = projection != null ? criteriaContext.setProjectionClass(projection) : false;
 				criteriaContext.setCriteriaControllerClass(criteriaBeanClass);
 
 				Pagination pagination = listMB.getPagination();

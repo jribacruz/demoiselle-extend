@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -32,10 +31,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
 		return null;
-	}
-
-	protected void projection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -64,10 +59,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		}
 		logger.info("Número de restrições da consulta: {}", predicateList.size());
 		return predicateList;
-	}
-
-	public void getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		projection(cb, cq, p);
 	}
 
 	public List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {

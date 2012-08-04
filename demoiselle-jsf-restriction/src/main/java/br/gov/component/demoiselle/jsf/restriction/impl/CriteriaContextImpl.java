@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 import br.gov.frameworkdemoiselle.util.Beans;
 
 @SessionScoped
@@ -39,10 +40,13 @@ public class CriteriaContextImpl implements CriteriaContext {
 	@SuppressWarnings("rawtypes")
 	private Class<? extends AbstractCriteriaBean> criteriaBeanClass;
 
+	@SuppressWarnings({ "rawtypes" })
+	private Class<? extends ProjectionBean> projectionClass;
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setCriteriaControllerClass(Class<? extends AbstractCriteriaBean> criteriaBeanClass) {
-		logger.info("Criteria {}", criteriaBeanClass.getCanonicalName());
+		logger.info("Criteria {}", criteriaBeanClass.getName());
 		this.criteriaBeanClass = criteriaBeanClass;
 	}
 
@@ -80,13 +84,12 @@ public class CriteriaContextImpl implements CriteriaContext {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> void getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		if (criteriaBeanClass != null) {
-			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
+		if (projectionClass != null) {
+			ProjectionBean<T> bean = Beans.getReference(projectionClass);
 			if (bean != null) {
-				bean.getProjection(cb, cq, p);
+				bean.projection(cb, cq, p);
 			}
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -140,4 +143,19 @@ public class CriteriaContextImpl implements CriteriaContext {
 	public String getSortField() {
 		return this.sortField;
 	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean setProjectionClass(Class<? extends ProjectionBean> projectionClass) {
+		logger.info("Projection {}", projectionClass.getName());
+		this.projectionClass = projectionClass;
+		return true;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Class<? extends ProjectionBean> getProjectionClass() {
+		return this.projectionClass;
+	}
+
 }
