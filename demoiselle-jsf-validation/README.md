@@ -18,7 +18,7 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 }
 ```
 
-###Validando antes do update(): @ValidateOnInsert
+###Validando antes do insert(): @ValidateOnInsert
 ```java
 @BusinessController
 public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
