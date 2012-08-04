@@ -10,6 +10,12 @@ Tem como objetivo centralizar as regras de validação no BC de forma simples.
 public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Verifica se o bookmark que será persistido inicia com a String 'http://',
+	 * Em caso afirmativo o método retorna true, a validação é sucedida e se nenhuma 
+	 * outra validação no BC falhar (método retornar false) o método insert() ou update()
+	 * é executado.
+	 */
 	@ValidateOnSave(message="{bookmark.link.url.failure}")
 	protected boolean validateLinkURL(Bookmark bookmark) {
 		return bookmark.getLink() != null && bookmark.getLink.startWith("http://") ? true: false;
@@ -26,9 +32,15 @@ Caso o método **validateLinkURL** retorne false a validação é falha e o mét
 public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Verifica se o bookmark que será persistido já existe na base de dados.
+	 * Em caso afirmativo o método retorna false, a validação é falha a mensagem de erro
+	 * do atributo message é adicionada no FacesMessage e o método insert() não será executado.
+	 * Outras validações que validam o insert ainda serão processadas.
+	 */
 	@ValidateOnInsert(message="{bookmark.link.presence.failure}")
 	protected boolean validateLinkPresence(Bookmark bookmark) {
-		return bookmark.getLink() != null && getDelegate().hasLink(bookmark.getLink()) ? true: false;
+		return bookmark.getLink() != null && !getDelegate().hasLink(bookmark.getLink()) ? true: false;
 	}
 	
 }
