@@ -3,4 +3,17 @@ O componente demoiselle-jsf-validation provê mecanismo de validação pra proje
 
 Tem como objetivo centralizar as regras de validação no BC de forma simples.
 
+##Como usar
+```java
+@BusinessController
+public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
+	private static final long serialVersionUID = 1L;
+	
+	@ValidateOnSave(message="{bookmark.link.url.failure}")
+	protected boolean validateLinkURL(Bookmark bookmark) {
+		return bookmark.getLink() != null && bookmark.getLink.startWith("http://") ? true: false;
+	}
+	
+}
+```
 
