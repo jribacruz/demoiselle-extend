@@ -22,6 +22,7 @@ public class CriteriaInterceptor implements Serializable {
 	@Inject
 	private CriteriaContext context;
 
+	@SuppressWarnings("unused")
 	@Inject
 	private Logger logger;
 
