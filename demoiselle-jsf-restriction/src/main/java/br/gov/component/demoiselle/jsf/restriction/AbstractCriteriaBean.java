@@ -14,8 +14,8 @@ import javax.persistence.criteria.Root;
 import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
+import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
-import br.gov.component.demoiselle.jsf.restriction.qualifier.Restriction;
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
