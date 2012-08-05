@@ -10,7 +10,7 @@ import javax.interceptor.InvocationContext;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Projection;
-import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 
 @Interceptor
@@ -20,7 +20,7 @@ public class ProjectionInterceptor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private CriteriaContext context;
+	private CriteriaProcessorContext processorContext;
 
 	@SuppressWarnings("unused")
 	@Inject
@@ -37,14 +37,14 @@ public class ProjectionInterceptor implements Serializable {
 		Class<? extends ProjectionBean> projectionClass = getProjectionClass();
 		Class<? extends ProjectionBean> projectionSelectedClass = getProjectionClass(ctx);
 		if (projectionClass != projectionSelectedClass) {
-			context.setProjectionClass(projectionSelectedClass);
+			processorContext.setProjectionClass(projectionSelectedClass);
 		}
 		return ctx.proceed();
 	}
 
 	@SuppressWarnings({ "rawtypes" })
 	private Class<? extends ProjectionBean> getProjectionClass() {
-		return context.getProjectionClass();
+		return processorContext.getProjectionClass();
 	}
 
 	@SuppressWarnings("rawtypes")

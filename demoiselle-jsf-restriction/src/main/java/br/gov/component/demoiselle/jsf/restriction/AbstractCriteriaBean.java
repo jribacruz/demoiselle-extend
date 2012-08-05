@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
@@ -24,7 +25,10 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private CriteriaContext context;
+	private CriteriaContext criteriaContext;
+
+	@Inject
+	private CriteriaProcessorContext processorContext;
 
 	@Inject
 	private Logger logger;
@@ -76,27 +80,27 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	public void filter() {
-		context.setCriteriaControllerClass(this.getClass());
+		processorContext.setCriteriaControllerClass(this.getClass());
 	}
 
 	public SortOrder getSortOrder() {
-		return context.getSortOrder();
+		return criteriaContext.getSortOrder();
 	}
 
 	public String getSortField() {
-		return context.getSortField();
+		return criteriaContext.getSortField();
 	}
 
 	protected String get(String fieldName) {
-		return context.getFilters().get(fieldName);
+		return criteriaContext.getFilters().get(fieldName);
 	}
 
 	protected boolean has(String fieldName) {
-		return context.getFilters().get(fieldName) != null;
+		return criteriaContext.getFilters().get(fieldName) != null;
 	}
 
 	protected boolean hasQuery() {
-		return !Strings.isEmpty(context.getQuery());
+		return !Strings.isEmpty(criteriaContext.getQuery());
 	}
 
 }

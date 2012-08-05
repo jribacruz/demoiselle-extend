@@ -19,6 +19,7 @@ import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Projection;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.exception.AnnotationCriteriaNotFoundException;
 import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
@@ -30,6 +31,9 @@ public class LazyDataModelProducer implements Serializable {
 
 	@Inject
 	private CriteriaContext criteriaContext;
+
+	@Inject
+	private CriteriaProcessorContext processorContext;
 
 	@SuppressWarnings("rawtypes")
 	@Produces
@@ -77,8 +81,8 @@ public class LazyDataModelProducer implements Serializable {
 				criteriaContext.setFilters(filters);
 				criteriaContext.setSortField(sortField);
 				criteriaContext.setSortOrder(sortOrder);
-				boolean flag = projection != null ? criteriaContext.setProjectionClass(projection) : false;
-				criteriaContext.setCriteriaControllerClass(criteriaBeanClass);
+				boolean flag = projection != null ? processorContext.setProjectionClass(projection) : false;
+				processorContext.setCriteriaControllerClass(criteriaBeanClass);
 
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);

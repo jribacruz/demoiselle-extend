@@ -18,6 +18,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.pagination.PaginationContext;
 
@@ -27,6 +28,9 @@ public class CriteriaProcessor implements Serializable {
 
 	@Inject
 	private CriteriaContext context;
+
+	@Inject
+	private CriteriaProcessorContext processorContext;
 
 	@Inject
 	private Instance<PaginationContext> paginationContext;
@@ -49,7 +53,7 @@ public class CriteriaProcessor implements Serializable {
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
 
-		context.clear();
+		processorContext.clear();
 		return query.getResultList();
 	}
 
@@ -61,7 +65,7 @@ public class CriteriaProcessor implements Serializable {
 		processRestriction(beanClass, id, cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
-		context.clear();
+		processorContext.clear();
 		return query.getSingleResult();
 	}
 
@@ -100,14 +104,14 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T, X> void processRestriction(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		this.predicateList = context.getPredicateList(cb, p);
+		this.predicateList = processorContext.getPredicateList(cb, p);
 		if (this.predicateList != null && !this.predicateList.isEmpty()) {
 			cq.where(this.predicateList.toArray(new Predicate[] {}));
 		}
 	}
 
 	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		List<Predicate> restrictions = context.getPredicateList(cb, p);
+		List<Predicate> restrictions = processorContext.getPredicateList(cb, p);
 		restrictions.add(prepareLoadRestriction(beanClass, id, cb, p));
 		if (restrictions != null && !restrictions.isEmpty()) {
 			cq.where(restrictions.toArray(new Predicate[] {}));
@@ -115,11 +119,11 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T> void processProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		context.getProjection(cb, cq, p);
+		processorContext.getProjection(cb, cq, p);
 	}
 
 	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		List<Order> orders = context.getOrderList(cb, p);
+		List<Order> orders = processorContext.getOrderList(cb, p);
 		if (orders != null && !orders.isEmpty()) {
 			cq.orderBy(orders);
 		}

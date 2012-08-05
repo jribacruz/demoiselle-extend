@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
+import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 
 @Interceptor
 @Criteria(AbstractCriteriaBean.class)
@@ -21,6 +22,9 @@ public class CriteriaInterceptor implements Serializable {
 
 	@Inject
 	private CriteriaContext context;
+
+	@Inject
+	private CriteriaProcessorContext processorContext;
 
 	@SuppressWarnings("unused")
 	@Inject
@@ -38,7 +42,7 @@ public class CriteriaInterceptor implements Serializable {
 		Class<? extends AbstractCriteriaBean> criteriaSelectedClass = getCriteriaBeanClass(ctx);
 		int pageSize = getPageSize(ctx);
 		if (criteriaClass != criteriaSelectedClass) {
-			context.setCriteriaControllerClass(criteriaSelectedClass);
+			processorContext.setCriteriaControllerClass(criteriaSelectedClass);
 			context.setPageSize(pageSize);
 			setQueryParamIfNecessary(ctx);
 		}
@@ -47,7 +51,7 @@ public class CriteriaInterceptor implements Serializable {
 
 	@SuppressWarnings({ "rawtypes" })
 	private Class<? extends AbstractCriteriaBean> getContextCriteriaBeanClass() {
-		return context.getCriteriaControllerClass();
+		return processorContext.getCriteriaControllerClass();
 	}
 
 	@SuppressWarnings("rawtypes")
