@@ -12,4 +12,8 @@ public class ActionEventBean {
 	public String message() {
 		return null;
 	}
+
+	public String[] id(String... ids) {
+		return ids;
+	}
 }
