@@ -48,3 +48,34 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 
 Caso o método **validateLinkPresence** retorne false a validação é falha e o método insert() não é executado;
 
+###Validando antes do update(): @ValidateOnUpdate
+```java
+@BusinessController
+public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
+	private static final long serialVersionUID = 1L;
+	
+	@ValidateOnUpdate(message="{bookmark.link.update.failure}")
+	protected boolean validateLinkUpdate(Bookmark bookmark) {
+		//alguma validação a ser feita antes da chamada do método update()
+		return true;		
+	}
+	
+}
+```
+
+###Validando antes do delete(): @ValidateOnDelete
+```java
+@BusinessController
+public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
+	private static final long serialVersionUID = 1L;
+	
+	@ValidateOnDelete(message="{bookmark.link.delete.failure}")
+	protected boolean validateLinkPresence(Long id) {
+		//Alguma validação a ser feita antes do metodo delete()
+		return true;
+	}
+	
+}
+```
+No método de validação de delete é passado o **id** que será excluido e não a entidade.
+
