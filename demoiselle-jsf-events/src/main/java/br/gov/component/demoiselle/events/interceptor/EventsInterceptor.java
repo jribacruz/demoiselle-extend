@@ -51,7 +51,7 @@ public class EventsInterceptor implements Serializable {
 		Object obj = null;
 
 		try {
-			ctx.proceed();
+			obj = ctx.proceed();
 			process(ctx);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
