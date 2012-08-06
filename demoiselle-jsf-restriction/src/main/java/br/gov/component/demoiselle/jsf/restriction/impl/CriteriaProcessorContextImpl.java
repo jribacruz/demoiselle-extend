@@ -80,6 +80,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 	@Override
 	public void clear() {
 		this.criteriaBeanClass = null;
+		this.projectionClass = null;
 	}
 
 	@SuppressWarnings("rawtypes")
