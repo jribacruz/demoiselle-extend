@@ -3,6 +3,7 @@ package br.gov.component.demoiselle.jsf.restriction;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -101,6 +102,10 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	protected boolean hasQuery() {
 		return !Strings.isEmpty(criteriaContext.getQuery());
+	}
+
+	public void addCollection(Collection<?> collection) {
+		criteriaContext.setCollection(collection);
 	}
 
 }

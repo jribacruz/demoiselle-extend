@@ -1,6 +1,7 @@
 package br.gov.component.demoiselle.jsf.restriction.context;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
 
 import org.primefaces.model.SortOrder;
@@ -43,6 +44,12 @@ public interface CriteriaContext extends Serializable {
 	String getSortField();
 
 	public String getQuery();
+
+	void setCollection(Collection<?> collection);
+
+	Collection<?> getCollection();
+
+	public void clear();
 
 	//	void clear();
 

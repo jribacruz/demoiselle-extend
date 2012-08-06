@@ -1,6 +1,7 @@
 package br.gov.component.demoiselle.jsf.restriction.interceptor;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -44,7 +45,7 @@ public class CriteriaInterceptor implements Serializable {
 		if (criteriaClass != criteriaSelectedClass) {
 			processorContext.setCriteriaControllerClass(criteriaSelectedClass);
 			context.setPageSize(pageSize);
-			setQueryParamIfNecessary(ctx);
+			setParamIfNecessary(ctx);
 		}
 		return ctx.proceed();
 	}
@@ -63,10 +64,12 @@ public class CriteriaInterceptor implements Serializable {
 		return ctx.getMethod().getAnnotation(Criteria.class).pageSize();
 	}
 
-	private void setQueryParamIfNecessary(InvocationContext ctx) {
+	private void setParamIfNecessary(InvocationContext ctx) {
 		if (ctx.getParameters() != null && ctx.getParameters().length > 0) {
 			if (ctx.getParameters()[0].getClass() == String.class) {
 				context.setQuery((String) ctx.getParameters()[0]);
+			} else if(ctx.getParameters()[0].getClass().isAssignableFrom(Collection.class)) {
+				context.setCollection((Collection<?>) ctx.getParameters()[0]);
 			}
 		}
 	}
