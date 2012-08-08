@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
@@ -46,7 +47,7 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
-		processProjection(cb, cq, p);
+		processProjection(cb, cq, p, false);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
 
@@ -61,7 +62,7 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
-		processProjection(cb, cq, p);
+		processProjection(cb, cq, p, false);
 		processRestriction(beanClass, id, cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
@@ -73,8 +74,9 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
-		cq.select(cb.count(p));
-		// processRestriction(cb, cq, p);
+		//cq.select(cb.count(p));
+		this.<T,Long>processProjection(cb, cq, p, true);
+		processRestriction(cb, cq, p);
 		cq.where(getPredicateList().toArray(new Predicate[] {}));
 
 		TypedQuery<Long> query = em.createQuery(cq);
@@ -118,8 +120,15 @@ public class CriteriaProcessor implements Serializable {
 		}
 	}
 
-	protected <T> void processProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		processorContext.getProjection(cb, cq, p);
+	protected <T, X> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p, boolean countAllMethod) {
+		Selection<?> selection = processorContext.getProjection(cb, p);
+		if(selection != null && !countAllMethod) {
+			cq.multiselect(selection);
+		} else if(selection != null && countAllMethod) {
+			cq.multiselect(selection, cb.count(p));
+		} else if(countAllMethod) {
+			cq.multiselect(cb.count(p));
+		}
 	}
 
 	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {

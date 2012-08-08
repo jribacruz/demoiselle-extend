@@ -6,10 +6,10 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 
 import org.slf4j.Logger;
 
@@ -56,13 +56,14 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> void getProjection(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+	public <T> Selection<?> getProjection(CriteriaBuilder cb, Root<T> p) {
 		if (projectionClass != null) {
 			ProjectionBean<T> bean = Beans.getReference(projectionClass);
 			if (bean != null) {
-				bean.projection(cb, cq, p);
+				return bean.projection(cb, p);
 			}
 		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
