@@ -74,8 +74,8 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
-		//cq.select(cb.count(p));
-		this.<T,Long>processProjection(cb, cq, p, true);
+		// cq.select(cb.count(p));
+		this.<T, Long> processProjection(cb, cq, p, true);
 		processRestriction(cb, cq, p);
 		cq.where(getPredicateList().toArray(new Predicate[] {}));
 
@@ -98,10 +98,8 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T> Pagination getPagination(Class<T> beanClass) {
-		if (pagination == null) {
-			PaginationContext context = paginationContext.get();
-			pagination = context.getPagination(beanClass);
-		}
+		PaginationContext context = paginationContext.get();
+		pagination = context.getPagination(beanClass);
 		return pagination;
 	}
 
@@ -112,7 +110,8 @@ public class CriteriaProcessor implements Serializable {
 		}
 	}
 
-	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq,
+			Root<T> p) {
 		List<Predicate> restrictions = processorContext.getPredicateList(cb, p);
 		restrictions.add(prepareLoadRestriction(beanClass, id, cb, p));
 		if (restrictions != null && !restrictions.isEmpty()) {
@@ -122,11 +121,11 @@ public class CriteriaProcessor implements Serializable {
 
 	protected <T, X> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p, boolean countAllMethod) {
 		Selection<?> selection = processorContext.getProjection(cb, p);
-		if(selection != null && !countAllMethod) {
+		if (selection != null && !countAllMethod) {
 			cq.multiselect(selection);
-		} else if(selection != null && countAllMethod) {
+		} else if (selection != null && countAllMethod) {
 			cq.multiselect(selection, cb.count(p));
-		} else if(countAllMethod) {
+		} else if (countAllMethod) {
 			cq.multiselect(cb.count(p));
 		}
 	}

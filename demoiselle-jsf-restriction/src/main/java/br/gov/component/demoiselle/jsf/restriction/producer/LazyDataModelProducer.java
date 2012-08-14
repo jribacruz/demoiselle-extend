@@ -77,12 +77,13 @@ public class LazyDataModelProducer implements Serializable {
 			@SuppressWarnings("unused")
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-
 				criteriaContext.setFilters(filters);
 				criteriaContext.setSortField(sortField);
 				criteriaContext.setSortOrder(sortOrder);
 				boolean flag = projection != null ? processorContext.setProjectionClass(projection) : false;
 				processorContext.setCriteriaControllerClass(criteriaBeanClass);
+
+				System.out.println("first: "+first+ " pageSize: "+pageSize);
 
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);
