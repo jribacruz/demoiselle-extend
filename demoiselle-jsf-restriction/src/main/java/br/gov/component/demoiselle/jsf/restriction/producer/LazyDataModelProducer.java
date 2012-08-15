@@ -83,8 +83,6 @@ public class LazyDataModelProducer implements Serializable {
 				boolean flag = projection != null ? processorContext.setProjectionClass(projection) : false;
 				processorContext.setCriteriaControllerClass(criteriaBeanClass);
 
-				System.out.println("first: "+first+ " pageSize: "+pageSize);
-
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
