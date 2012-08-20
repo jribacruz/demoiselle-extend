@@ -1,6 +1,5 @@
 package br.gov.component.demoiselle.jsf.restriction.impl;
 
-import java.util.Collection;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
@@ -22,8 +21,6 @@ public class CriteriaContextImpl implements CriteriaContext {
 	private SortOrder sortOrder;
 
 	private Map<String, String> filters;
-
-	private Collection<?> collection;
 
 	@Override
 	public int getPageSize() {
@@ -76,23 +73,12 @@ public class CriteriaContextImpl implements CriteriaContext {
 	}
 
 	@Override
-	public void setCollection(Collection<?> collection) {
-		this.collection = collection;
-	}
-
-	@Override
-	public Collection<?> getCollection() {
-		return this.collection;
-	}
-
-	@Override
 	public void clear() {
 		this.pageSize = 0;
 		this.query = null;
 		this.sortField = null;
 		this.sortOrder = null;
 		this.filters.clear();
-		this.collection.clear();
 	}
 
 }
