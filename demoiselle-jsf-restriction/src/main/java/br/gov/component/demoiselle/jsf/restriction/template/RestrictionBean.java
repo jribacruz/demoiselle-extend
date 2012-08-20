@@ -8,7 +8,7 @@ import javax.persistence.criteria.Root;
 
 public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private X value;
+	protected X value;
 
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
