@@ -2,6 +2,7 @@ package br.gov.component.demoiselle.jsf.restriction.producer;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -17,6 +18,18 @@ public class RestrictionBeanProducer implements Serializable {
 	@Produces
 	@Restriction(RestrictionBean.class)
 	public <T,X> RestrictionBean<T, X> create(InjectionPoint ip) {
+		Field field= (Field) ip.getMember();
+		if(field.isAnnotationPresent(Restriction.class)) {
+			RestrictionBean<T,X> bean = Beans.getReference(field.getAnnotation(Restriction.class).value());
+			return bean;
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Produces
+	@Restriction(RestrictionBean.class)
+	public <T,E,X extends Collection<E>> RestrictionBean<T, X> create2(InjectionPoint ip) {
 		Field field= (Field) ip.getMember();
 		if(field.isAnnotationPresent(Restriction.class)) {
 			RestrictionBean<T,X> bean = Beans.getReference(field.getAnnotation(Restriction.class).value());
