@@ -3,6 +3,8 @@ package br.gov.component.demoiselle.jsf.restriction;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,8 +39,12 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
+	protected List<Order> order(CriteriaBuilder cb, Root<T> p) {
+		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+	private List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
 		if (restriction(cb, p) != null) {
 			predicateList.add(restriction(cb, p));
@@ -49,6 +55,13 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 				if (restrictionBean.getValue() != null) {
 					if (restrictionBean.getValue().getClass() == String.class) {
 						if (!Strings.isEmpty((String) restrictionBean.getValue())) {
+							if (restrictionBean.restriction(cb, p) != null) {
+								predicateList.add(restrictionBean.restriction(cb, p));
+							}
+						}
+					} else if (restrictionBean.getValue() instanceof Collection) {
+						Collection collection = (Collection) restrictionBean.getValue();
+						if (!collection.isEmpty()) {
 							if (restrictionBean.restriction(cb, p) != null) {
 								predicateList.add(restrictionBean.restriction(cb, p));
 							}
@@ -65,7 +78,8 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return predicateList;
 	}
 
-	public List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
+	@SuppressWarnings("unused")
+	private List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
 		if (getSortField() != null && !Strings.isEmpty(getSortField())) {
 			if (getSortOrder() == SortOrder.ASCENDING) {
@@ -75,6 +89,10 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			}
 
 		}
+
+		if (this.order(cb, p) != null) {
+			orders.addAll(this.order(cb, p));
+		}
 		logger.info("Numero de ordenações da consulta: {}", orders.size());
 		return orders;
 	}
@@ -83,20 +101,16 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		processorContext.setCriteriaControllerClass(this.getClass());
 	}
 
-	public SortOrder getSortOrder() {
+	private SortOrder getSortOrder() {
 		return criteriaContext.getSortOrder();
 	}
 
-	public String getSortField() {
+	private String getSortField() {
 		return criteriaContext.getSortField();
 	}
 
-	protected String get(String fieldName) {
-		return criteriaContext.getFilters().get(fieldName);
-	}
-
-	protected boolean has(String fieldName) {
-		return criteriaContext.getFilters().get(fieldName) != null;
+	protected List<Order> by(Order... orders) {
+		return Arrays.asList(orders);
 	}
 
 	protected boolean hasQuery() {

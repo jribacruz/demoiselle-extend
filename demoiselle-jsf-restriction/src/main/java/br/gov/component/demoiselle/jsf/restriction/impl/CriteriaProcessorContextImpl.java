@@ -1,5 +1,6 @@
 package br.gov.component.demoiselle.jsf.restriction.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import org.apache.commons.beanutils.MethodUtils;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
@@ -49,9 +51,37 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 	public <T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
-			return bean != null ? bean.getPredicateList(cb, p) : new ArrayList<Predicate>();
+			return bean != null ? invokePredicateList(bean, cb, p) : new ArrayList<Predicate>();
 		}
 		return new ArrayList<Predicate>();
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> List<Predicate> invokePredicateList(AbstractCriteriaBean<T> bean, CriteriaBuilder cb, Root<T> p) {
+		try {
+			return (List<Predicate>) MethodUtils.invokeMethod(bean, "getPredicateList", new Object[] { cb, p });
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Predicate>();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> List<Order> invokeOrderList(AbstractCriteriaBean<T> bean, CriteriaBuilder cb, Root<T> p) {
+		try {
+			return (List<Order>) MethodUtils.invokeMethod(bean, "getOrder", new Object[] { cb, p });
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Order>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,7 +102,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {
-				return bean.getOrder(cb, p);
+				return invokeOrderList(bean, cb, p);
 			}
 		}
 		return new ArrayList<Order>();
