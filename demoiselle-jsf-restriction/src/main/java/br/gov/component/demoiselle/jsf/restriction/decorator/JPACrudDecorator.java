@@ -25,14 +25,16 @@ public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 
 	@Override
 	public List<T> findAll() {
-		Class<T> beanClass = Reflections.getGenericTypeArgument(dao.getClass(), 0);
-		return processor.getResultList(beanClass);
+		return processor.hasCriteria() ? processor.getResultList(getDomainBeanClass()) : dao.findAll();
 	}
 
 	@Override
 	public T load(I id) {
-		Class<T> beanClass = Reflections.getGenericTypeArgument(dao.getClass(), 0);
-		return processor.load(beanClass, id);
+		return processor.hasCriteria() ? processor.load(getDomainBeanClass(), id) : dao.load(id);
+	}
+
+	private Class<T> getDomainBeanClass() {
+		return Reflections.getGenericTypeArgument(dao.getClass(), 0);
 	}
 
 }

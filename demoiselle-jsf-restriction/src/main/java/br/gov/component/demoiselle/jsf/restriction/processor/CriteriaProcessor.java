@@ -162,4 +162,8 @@ public class CriteriaProcessor implements Serializable {
 		this.predicateList = predicateList;
 	}
 
+	public boolean hasCriteria() {
+		return processorContext.getCriteriaControllerClass() != null;
+	}
+
 }
