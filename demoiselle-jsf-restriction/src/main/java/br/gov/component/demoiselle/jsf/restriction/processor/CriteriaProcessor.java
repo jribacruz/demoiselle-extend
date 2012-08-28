@@ -110,8 +110,7 @@ public class CriteriaProcessor implements Serializable {
 		}
 	}
 
-	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq,
-			Root<T> p) {
+	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
 		List<Predicate> restrictions = processorContext.getPredicateList(cb, p);
 		restrictions.add(prepareLoadRestriction(beanClass, id, cb, p));
 		if (restrictions != null && !restrictions.isEmpty()) {
@@ -164,6 +163,10 @@ public class CriteriaProcessor implements Serializable {
 
 	public boolean hasCriteria() {
 		return processorContext.getCriteriaControllerClass() != null;
+	}
+
+	public boolean hasProjection() {
+		return processorContext.getProjectionClass() != null;
 	}
 
 }
