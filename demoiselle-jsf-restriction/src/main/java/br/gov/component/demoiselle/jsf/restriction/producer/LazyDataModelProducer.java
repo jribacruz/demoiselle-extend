@@ -3,6 +3,7 @@ package br.gov.component.demoiselle.jsf.restriction.producer;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -107,6 +108,6 @@ public class LazyDataModelProducer implements Serializable {
 			e.printStackTrace();
 		}
 
-		return null;
+		return new ArrayList<T>();
 	}
 }
