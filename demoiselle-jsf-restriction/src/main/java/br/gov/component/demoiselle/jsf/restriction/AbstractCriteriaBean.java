@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -44,6 +45,14 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
+	protected Expression<?> groupBy(CriteriaBuilder cb, Root<T> p) {
+		return null;
+	}
+
+	protected Predicate having(CriteriaBuilder cb, Root<T> p) {
+		return null;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	private List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
@@ -73,8 +82,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 				}
 			}
 		}
-		// logger.info("Número de restrições da consulta: {}",
-		// predicateList.size());
 		return predicateList;
 	}
 
@@ -93,7 +100,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		if (this.order(cb, p) != null) {
 			orders.addAll(this.order(cb, p));
 		}
-		// logger.info("Numero de ordenações da consulta: {}", orders.size());
 		return orders;
 	}
 
