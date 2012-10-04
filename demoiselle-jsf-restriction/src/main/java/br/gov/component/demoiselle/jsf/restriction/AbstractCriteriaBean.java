@@ -41,7 +41,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
-	protected List<Order> order(CriteriaBuilder cb, Root<T> p) {
+	protected List<Order> orderBy(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 
@@ -97,8 +97,8 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 		}
 
-		if (this.order(cb, p) != null) {
-			orders.addAll(this.order(cb, p));
+		if (this.orderBy(cb, p) != null) {
+			orders.addAll(this.orderBy(cb, p));
 		}
 		return orders;
 	}
