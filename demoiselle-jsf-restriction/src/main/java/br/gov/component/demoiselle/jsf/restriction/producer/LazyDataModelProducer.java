@@ -67,7 +67,6 @@ public class LazyDataModelProducer implements Serializable {
 		return new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
-			@SuppressWarnings("unused")
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 				criteriaContext.setFilters(filters);
