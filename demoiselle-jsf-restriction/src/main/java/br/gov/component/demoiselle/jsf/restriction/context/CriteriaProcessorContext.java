@@ -17,7 +17,7 @@ public interface CriteriaProcessorContext extends Serializable {
 	@SuppressWarnings("rawtypes")
 	Class<? extends AbstractCriteriaBean> getCriteriaControllerClass();
 
-	<T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p);
+	<T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p);
 
 	<T> List<Order> getOrderList(CriteriaBuilder cb, Root<T> p);
 
