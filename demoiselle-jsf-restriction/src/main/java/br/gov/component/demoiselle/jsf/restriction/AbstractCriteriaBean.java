@@ -18,6 +18,7 @@ import javax.persistence.criteria.Selection;
 import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
+import br.gov.component.demoiselle.jsf.restriction.annotation.DefaultRestriction;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
@@ -61,25 +62,39 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			if (field.isAnnotationPresent(Restriction.class)) {
 				RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
 				if (restrictionBean.getValue() != null) {
-					if (restrictionBean.getValue().getClass() == String.class) {
-						if (!Strings.isEmpty((String) restrictionBean.getValue())) {
-							if (restrictionBean.restriction(cb, p) != null) {
-								predicateList.add(restrictionBean.restriction(cb, p));
-							}
-						}
-					} else if (restrictionBean.getValue() instanceof Collection) {
-						Collection collection = (Collection) restrictionBean.getValue();
-						if (!collection.isEmpty()) {
-							if (restrictionBean.restriction(cb, p) != null) {
-								predicateList.add(restrictionBean.restriction(cb, p));
-							}
-						}
-					} else {
-						if (restrictionBean.restriction(cb, p) != null) {
-							predicateList.add(restrictionBean.restriction(cb, p));
-						}
+					processNonDefaultRestrictions(cb, p, restrictionBean);
+				} else {
+					Predicate returnRestriction = restrictionBean.restriction(cb, p);
+					if (field.isAnnotationPresent(DefaultRestriction.class) && returnRestriction != null) {
+						predicateList.add(returnRestriction);
 					}
 				}
+			}
+		}
+		return predicateList;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private List<Predicate> processNonDefaultRestrictions(CriteriaBuilder cb, Root<T> p, RestrictionBean restrictionBean) {
+		List<Predicate> predicateList = new ArrayList<Predicate>();
+
+		if (restrictionBean.getValue().getClass() == String.class) {
+			if (!Strings.isEmpty((String) restrictionBean.getValue())) {
+				if (restrictionBean.restriction(cb, p) != null) {
+					predicateList.add(restrictionBean.restriction(cb, p));
+				}
+			}
+
+		} else if (restrictionBean.getValue() instanceof Collection) {
+			Collection collection = (Collection) restrictionBean.getValue();
+			if (!collection.isEmpty()) {
+				if (restrictionBean.restriction(cb, p) != null) {
+					predicateList.add(restrictionBean.restriction(cb, p));
+				}
+			}
+		} else {
+			if (restrictionBean.restriction(cb, p) != null) {
+				predicateList.add(restrictionBean.restriction(cb, p));
 			}
 		}
 		return predicateList;
