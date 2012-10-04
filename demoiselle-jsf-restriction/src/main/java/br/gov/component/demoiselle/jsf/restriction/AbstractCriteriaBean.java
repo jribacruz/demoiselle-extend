@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 
 import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@Inject
 	private Logger logger;
 
-	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
+	protected Selection<?> projection(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 
@@ -46,9 +47,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	private List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
-		if (restriction(cb, p) != null) {
-			predicateList.add(restriction(cb, p));
-		}
+
 		for (Field field : Reflections.getNonStaticDeclaredFields(this.getClass())) {
 			if (field.isAnnotationPresent(Restriction.class)) {
 				RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
@@ -74,7 +73,8 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 				}
 			}
 		}
-		//logger.info("Número de restrições da consulta: {}", predicateList.size());
+		// logger.info("Número de restrições da consulta: {}",
+		// predicateList.size());
 		return predicateList;
 	}
 
@@ -93,7 +93,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		if (this.order(cb, p) != null) {
 			orders.addAll(this.order(cb, p));
 		}
-		//logger.info("Numero de ordenações da consulta: {}", orders.size());
+		// logger.info("Numero de ordenações da consulta: {}", orders.size());
 		return orders;
 	}
 
