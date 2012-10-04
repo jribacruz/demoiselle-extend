@@ -43,7 +43,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
+	public <T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			return bean != null ? invokePredicateList(bean, cb, p) : new ArrayList<Predicate>();
@@ -81,7 +81,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> List<Order> getOrderList(CriteriaBuilder cb, Root<T> p) {
+	public <T> List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {

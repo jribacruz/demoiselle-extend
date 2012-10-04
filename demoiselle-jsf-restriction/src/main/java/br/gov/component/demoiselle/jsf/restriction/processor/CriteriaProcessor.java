@@ -103,14 +103,14 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T, X> void processRestriction(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		this.predicateList = processorContext.getPredicateList(cb, p);
+		this.predicateList = processorContext.getPredicates(cb, p);
 		if (this.predicateList != null && !this.predicateList.isEmpty()) {
 			cq.where(this.predicateList.toArray(new Predicate[] {}));
 		}
 	}
 
 	protected <T, X, I> void processRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		List<Predicate> restrictions = processorContext.getPredicateList(cb, p);
+		List<Predicate> restrictions = processorContext.getPredicates(cb, p);
 		restrictions.add(prepareLoadRestriction(beanClass, id, cb, p));
 		if (restrictions != null && !restrictions.isEmpty()) {
 			cq.where(restrictions.toArray(new Predicate[] {}));
@@ -129,7 +129,7 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
-		List<Order> orders = processorContext.getOrderList(cb, p);
+		List<Order> orders = processorContext.getOrders(cb, p);
 		if (orders != null && !orders.isEmpty()) {
 			cq.orderBy(orders);
 		}

@@ -19,7 +19,7 @@ public interface CriteriaProcessorContext extends Serializable {
 
 	<T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p);
 
-	<T> List<Order> getOrderList(CriteriaBuilder cb, Root<T> p);
+	<T> List<Order> getOrders(CriteriaBuilder cb, Root<T> p);
 
 	void clear();
 }
