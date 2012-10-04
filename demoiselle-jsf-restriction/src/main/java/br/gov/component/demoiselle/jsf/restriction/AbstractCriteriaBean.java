@@ -54,7 +54,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
-	private List<Predicate> getPredicateList(CriteriaBuilder cb, Root<T> p) {
+	private List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
 
 		for (Field field : Reflections.getNonStaticDeclaredFields(this.getClass())) {
