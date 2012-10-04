@@ -87,6 +87,15 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	@SuppressWarnings("unused")
 	private List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
+		List<Order> orders = getDataTableOrders(cb, p);
+
+		if (this.orderBy(cb, p) != null) {
+			orders.addAll(this.orderBy(cb, p));
+		}
+		return orders;
+	}
+
+	private List<Order> getDataTableOrders(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
 		if (getSortField() != null && !Strings.isEmpty(getSortField())) {
 			if (getSortOrder() == SortOrder.ASCENDING) {
@@ -94,11 +103,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			} else {
 				orders.add(cb.desc(p.get(getSortField())));
 			}
-
-		}
-
-		if (this.orderBy(cb, p) != null) {
-			orders.addAll(this.orderBy(cb, p));
 		}
 		return orders;
 	}
