@@ -86,7 +86,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	@SuppressWarnings("unused")
-	private List<Order> getOrder(CriteriaBuilder cb, Root<T> p) {
+	private List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
 		if (getSortField() != null && !Strings.isEmpty(getSortField())) {
 			if (getSortOrder() == SortOrder.ASCENDING) {
