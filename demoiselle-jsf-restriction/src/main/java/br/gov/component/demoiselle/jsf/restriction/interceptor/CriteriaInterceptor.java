@@ -59,10 +59,25 @@ public class CriteriaInterceptor implements Serializable {
 		return ctx.getMethod().getAnnotation(Criteria.class).value();
 	}
 
+	/**
+	 * Retorna o numero maximo de linhas da consulta. Usado para limitar a
+	 * consulta do componemte autocomplete.
+	 * 
+	 * @param ctx InvocationContext
+	 * @return Numero máximo de linhas da consultas
+	 */
 	private int getPageSize(InvocationContext ctx) {
 		return ctx.getMethod().getAnnotation(Criteria.class).pageSize();
 	}
 
+	/**
+	 * Caso a annotation @Criteria seja colocada em um método e este possua um
+	 * parametro do tipo String, este é colocado no contexto na variavel query
+	 * 
+	 * Utilizado principalmente no componente autocomplete.
+	 * 
+	 * @param ctx InvocationContext
+	 */
 	private void setParamIfNecessary(InvocationContext ctx) {
 		if (ctx.getParameters() != null && ctx.getParameters().length > 0) {
 			if (ctx.getParameters()[0].getClass() == String.class) {
