@@ -10,14 +10,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.slf4j.Logger;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
-import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 import br.gov.frameworkdemoiselle.util.Beans;
 
 @SessionScoped
@@ -29,9 +27,6 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("rawtypes")
 	private Class<? extends AbstractCriteriaBean> criteriaBeanClass;
-
-	@SuppressWarnings({ "rawtypes" })
-	private Class<? extends ProjectionBean> projectionClass;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -86,18 +81,6 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Selection<?> getProjection(CriteriaBuilder cb, Root<T> p) {
-		if (projectionClass != null) {
-			ProjectionBean<T> bean = Beans.getReference(projectionClass);
-			if (bean != null) {
-				return bean.projection(cb, p);
-			}
-		}
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public <T> List<Order> getOrderList(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
@@ -111,21 +94,6 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 	@Override
 	public void clear() {
 		this.criteriaBeanClass = null;
-		this.projectionClass = null;
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean setProjectionClass(Class<? extends ProjectionBean> projectionClass) {
-		logger.info("Projection {}", projectionClass.getName());
-		this.projectionClass = projectionClass;
-		return true;
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Class<? extends ProjectionBean> getProjectionClass() {
-		return this.projectionClass;
 	}
 
 }

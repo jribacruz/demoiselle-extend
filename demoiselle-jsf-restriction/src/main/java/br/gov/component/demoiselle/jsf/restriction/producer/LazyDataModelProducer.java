@@ -18,11 +18,9 @@ import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
-import br.gov.component.demoiselle.jsf.restriction.annotation.Projection;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.exception.AnnotationCriteriaNotFoundException;
-import br.gov.component.demoiselle.jsf.restriction.template.ProjectionBean;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -44,8 +42,7 @@ public class LazyDataModelProducer implements Serializable {
 		validateCriteriaPresence(field);
 		final AbstractListPageBean listPageBean = getListMB(ip);
 		final Class<? extends AbstractCriteriaBean> criteria = getCriteriaClass(field);
-		final Class<? extends ProjectionBean> projection = getProjectionClass(field);
-		return getLazyDataModelInstance(listPageBean, criteria, projection);
+		return getLazyDataModelInstance(listPageBean, criteria);
 	}
 
 	private void validateCriteriaPresence(Field field) {
@@ -65,13 +62,8 @@ public class LazyDataModelProducer implements Serializable {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Class<? extends ProjectionBean> getProjectionClass(Field field) {
-		return field.isAnnotationPresent(Projection.class) ? field.getAnnotation(Projection.class).value() : null;
-	}
-
-	@SuppressWarnings("rawtypes")
 	private <T> LazyDataModel<T> getLazyDataModelInstance(final AbstractListPageBean listMB,
-			final Class<? extends AbstractCriteriaBean> criteriaBeanClass, final Class<? extends ProjectionBean> projection) {
+			final Class<? extends AbstractCriteriaBean> criteriaBeanClass) {
 		return new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
@@ -81,7 +73,6 @@ public class LazyDataModelProducer implements Serializable {
 				criteriaContext.setFilters(filters);
 				criteriaContext.setSortField(sortField);
 				criteriaContext.setSortOrder(sortOrder);
-				boolean flag = projection != null ? processorContext.setProjectionClass(projection) : false;
 				processorContext.setCriteriaControllerClass(criteriaBeanClass);
 
 				Pagination pagination = listMB.getPagination();
