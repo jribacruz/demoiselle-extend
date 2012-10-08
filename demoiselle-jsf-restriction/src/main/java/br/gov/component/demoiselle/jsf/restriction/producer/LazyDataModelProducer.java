@@ -2,8 +2,6 @@ package br.gov.component.demoiselle.jsf.restriction.producer;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,6 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import org.apache.commons.beanutils.MethodUtils;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -21,6 +18,7 @@ import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.exception.AnnotationCriteriaNotFoundException;
+import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -77,27 +75,11 @@ public class LazyDataModelProducer implements Serializable {
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
-				List<T> list = invokeHandleResultList(listMB);
+				List<T> list = Utils.invokeMethodReturnCollection(listMB, "handleResultList");
 				this.setRowCount(pagination.getTotalResults());
 				this.setPageSize(pageSize);
 				return list;
 			}
 		};
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> List<T> invokeHandleResultList(AbstractListPageBean listMB) {
-
-		try {
-			return (List<T>) MethodUtils.invokeMethod(listMB, "handleResultList", null);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-
-		return new ArrayList<T>();
 	}
 }
