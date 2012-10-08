@@ -12,6 +12,8 @@ public interface CriteriaContext extends Serializable {
 
 	void setQuery(String query);
 
+	public String getQuery();
+
 	void setSortOrder(SortOrder sortOrder);
 
 	SortOrder getSortOrder();
@@ -23,8 +25,6 @@ public interface CriteriaContext extends Serializable {
 	void setSortField(String sortField);
 
 	String getSortField();
-
-	public String getQuery();
 
 	public void clear();
 
