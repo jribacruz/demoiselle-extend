@@ -7,8 +7,6 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import org.slf4j.Logger;
-
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
@@ -25,15 +23,6 @@ public class CriteriaInterceptor implements Serializable {
 
 	@Inject
 	private CriteriaProcessorContext processorContext;
-
-	@SuppressWarnings("unused")
-	@Inject
-	private Logger logger;
-
-	@Inject
-	public CriteriaInterceptor(Logger logger) {
-		this.logger = logger;
-	}
 
 	@SuppressWarnings("rawtypes")
 	@AroundInvoke
