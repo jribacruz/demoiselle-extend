@@ -8,8 +8,8 @@ import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
 import br.gov.component.demoiselle.jsf.restriction.processor.CriteriaProcessor;
+import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.template.JPACrud;
-import br.gov.frameworkdemoiselle.util.Reflections;
 
 @Decorator
 public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
@@ -31,7 +31,7 @@ public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 	 */
 	@Override
 	public List<T> findAll() {
-		return processor.hasCriteria() ? processor.getResultList(getDomainBeanClass()) : dao.findAll();
+		return processor.hasCriteria() ? processor.getResultList(Utils.<T> getDomainBeanClass(dao)) : dao.findAll();
 	}
 
 	/**
@@ -42,11 +42,7 @@ public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 	 */
 	@Override
 	public T load(I id) {
-		return processor.hasCriteria() ? processor.load(getDomainBeanClass(), id) : dao.load(id);
-	}
-
-	private Class<T> getDomainBeanClass() {
-		return Reflections.getGenericTypeArgument(dao.getClass(), 0);
+		return processor.hasCriteria() ? processor.load(Utils.<T> getDomainBeanClass(dao), id) : dao.load(id);
 	}
 
 }
