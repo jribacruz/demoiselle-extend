@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,13 +15,12 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
 import org.primefaces.model.SortOrder;
-import org.slf4j.Logger;
 
-import br.gov.component.demoiselle.jsf.restriction.annotation.DefaultRestriction;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
+import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -34,9 +32,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	@Inject
 	private CriteriaProcessorContext processorContext;
-
-	@Inject
-	private Logger logger;
 
 	protected Selection<?> projection(CriteriaBuilder cb, Root<T> p) {
 		return null;
@@ -54,19 +49,22 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 	private List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
 
-		for (Field field : Reflections.getNonStaticDeclaredFields(this.getClass())) {
-			if (field.isAnnotationPresent(Restriction.class)) {
-				RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
+		for (Field field : Utils.getRestrictionFields(this.getClass())) {
+			RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
+			if (restrictionBean != null) {
 				if (restrictionBean.getValue() != null) {
-					processNonDefaultRestrictions(cb, p, restrictionBean);
+					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
+					if(predicate != null) {
+						predicateList.add(predicate);
+					}
 				} else {
-					Predicate returnRestriction = restrictionBean.restriction(cb, p);
-					if (field.isAnnotationPresent(DefaultRestriction.class) && returnRestriction != null) {
-						predicateList.add(returnRestriction);
+					Predicate predicate = restrictionBean.restriction(cb, p);
+					if (predicate != null && !field.getAnnotation(Restriction.class).optional()) {
+						predicateList.add(predicate);
 					}
 				}
 			}
@@ -74,31 +72,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return predicateList;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List<Predicate> processNonDefaultRestrictions(CriteriaBuilder cb, Root<T> p, RestrictionBean restrictionBean) {
-		List<Predicate> predicateList = new ArrayList<Predicate>();
-
-		if (restrictionBean.getValue().getClass() == String.class) {
-			if (!Strings.isEmpty((String) restrictionBean.getValue())) {
-				if (restrictionBean.restriction(cb, p) != null) {
-					predicateList.add(restrictionBean.restriction(cb, p));
-				}
-			}
-
-		} else if (restrictionBean.getValue() instanceof Collection) {
-			Collection collection = (Collection) restrictionBean.getValue();
-			if (!collection.isEmpty()) {
-				if (restrictionBean.restriction(cb, p) != null) {
-					predicateList.add(restrictionBean.restriction(cb, p));
-				}
-			}
-		} else {
-			if (restrictionBean.restriction(cb, p) != null) {
-				predicateList.add(restrictionBean.restriction(cb, p));
-			}
-		}
-		return predicateList;
-	}
 
 	@SuppressWarnings("unused")
 	private List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
@@ -110,6 +83,13 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return orders;
 	}
 
+	/**
+	 * Insere a ordenação padrão do datatable
+	 * 
+	 * @param cb
+	 * @param p
+	 * @return
+	 */
 	private List<Order> getDataTableOrders(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
 		if (getSortField() != null && !Strings.isEmpty(getSortField())) {
