@@ -3,13 +3,20 @@ package br.gov.component.demoiselle.jsf.restrictions.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Id;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.beanutils.MethodUtils;
 
+import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
+import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public class Utils {
 
@@ -36,6 +43,42 @@ public class Utils {
 		for (Field field : beanClass.getDeclaredFields()) {
 			if (field.isAnnotationPresent(Id.class)) {
 				return field.getName();
+			}
+		}
+		return null;
+	}
+
+	public static List<Field> getRestrictionFields(Class<?> klass) {
+		List<Field> fields = new ArrayList<Field>();
+
+		for (Field field : Reflections.getNonStaticDeclaredFields(klass)) {
+			if (field.isAnnotationPresent(Restriction.class)) {
+				fields.add(field);
+			}
+		}
+		return fields;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> Predicate processRestriction(RestrictionBean restrictionBean, CriteriaBuilder cb, Root<T> p) {
+
+		if (restrictionBean.getValue().getClass() == String.class) {
+			if (!Strings.isEmpty((String) restrictionBean.getValue())) {
+				if (restrictionBean.restriction(cb, p) != null) {
+					return restrictionBean.restriction(cb, p);
+				}
+			}
+
+		} else if (restrictionBean.getValue() instanceof Collection) {
+			Collection collection = (Collection) restrictionBean.getValue();
+			if (!collection.isEmpty()) {
+				if (restrictionBean.restriction(cb, p) != null) {
+					return restrictionBean.restriction(cb, p);
+				}
+			}
+		} else {
+			if (restrictionBean.restriction(cb, p) != null) {
+				return restrictionBean.restriction(cb, p);
 			}
 		}
 		return null;
