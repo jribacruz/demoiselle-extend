@@ -1,15 +1,10 @@
 package br.gov.component.demoiselle.jsf.restriction.processor;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,13 +12,14 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaProcessor;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
+import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
-import br.gov.frameworkdemoiselle.pagination.PaginationContext;
 
 @SessionScoped
-public class CriteriaProcessor implements Serializable {
+public class CriteriaProcessor extends AbstractCriteriaProcessor {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -32,45 +28,40 @@ public class CriteriaProcessor implements Serializable {
 	@Inject
 	private CriteriaProcessorContext processorContext;
 
-	@Inject
-	private Instance<PaginationContext> paginationContext;
-
-	private Pagination pagination;
-
 	private List<Predicate> predicateList;
 
-	@Inject
-	private EntityManager em;
-
+	@Override
 	public <T> List<T> getResultList(Class<T> beanClass) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p, false);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
 
-		TypedQuery<T> query = em.createQuery(cq);
+		TypedQuery<T> query = getEntityManager().createQuery(cq);
 		preparePagination(beanClass, query);
 
 		processorContext.clear();
 		return query.getResultList();
 	}
 
+	@Override
 	public <T, I> T load(Class<T> beanClass, I id) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p, false);
 		processRestriction(beanClass, id, cb, cq, p);
 
-		TypedQuery<T> query = em.createQuery(cq);
+		TypedQuery<T> query = getEntityManager().createQuery(cq);
 		processorContext.clear();
 		return query.getSingleResult();
 	}
 
-	private <T> Long countAll(Class<T> beanClass) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+	@Override
+	protected <T> Long countAll(Class<T> beanClass) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
 		// cq.select(cb.count(p));
@@ -78,7 +69,7 @@ public class CriteriaProcessor implements Serializable {
 		processRestriction(cb, cq, p);
 		cq.where(getPredicateList().toArray(new Predicate[] {}));
 
-		TypedQuery<Long> query = em.createQuery(cq);
+		TypedQuery<Long> query = getEntityManager().createQuery(cq);
 		return query.getSingleResult();
 	}
 
@@ -94,12 +85,6 @@ public class CriteriaProcessor implements Serializable {
 			query.setMaxResults(context.getPageSize());
 			context.setPageSize(0);
 		}
-	}
-
-	protected <T> Pagination getPagination(Class<T> beanClass) {
-		PaginationContext context = paginationContext.get();
-		pagination = context.getPagination(beanClass);
-		return pagination;
 	}
 
 	protected <T, X> void processRestriction(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
@@ -137,16 +122,7 @@ public class CriteriaProcessor implements Serializable {
 	}
 
 	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {
-		return cb.equal(p.get(getId(beanClass)), id);
-	}
-
-	private <T> String getId(Class<T> beanClass) {
-		for (Field field : beanClass.getDeclaredFields()) {
-			if (field.isAnnotationPresent(Id.class)) {
-				return field.getName();
-			}
-		}
-		return null;
+		return cb.equal(p.get(Utils.getId(beanClass)), id);
 	}
 
 	public List<Predicate> getPredicateList() {
