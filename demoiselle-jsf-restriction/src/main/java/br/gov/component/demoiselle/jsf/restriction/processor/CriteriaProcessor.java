@@ -1,7 +1,6 @@
 package br.gov.component.demoiselle.jsf.restriction.processor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -11,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -48,6 +48,8 @@ public class CriteriaProcessor implements Serializable {
 		processProjection(cb, cq, p, false);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
+		processHaving(cb, cq, p);
+		processGroupBy(cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
@@ -62,6 +64,7 @@ public class CriteriaProcessor implements Serializable {
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p, false);
 		processRestriction(beanClass, id, cb, cq, p);
+
 
 		TypedQuery<T> query = em.createQuery(cq);
 		processorContext.clear();
@@ -89,9 +92,9 @@ public class CriteriaProcessor implements Serializable {
 
 	private <T> void preparePagination(Class<T> beanClass, TypedQuery<T> query) {
 		if (context.getPageSize() == 0) {
-			final Pagination pagination = this.<T>getPagination(beanClass);
+			final Pagination pagination = this.<T> getPagination(beanClass);
 			if (pagination != null) {
-				pagination.setTotalResults(this.<T>countAll(beanClass).intValue());
+				pagination.setTotalResults(this.<T> countAll(beanClass).intValue());
 				query.setFirstResult(pagination.getFirstResult());
 				query.setMaxResults(pagination.getPageSize());
 			}
@@ -127,7 +130,7 @@ public class CriteriaProcessor implements Serializable {
 		//		}
 	}
 
-	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
+	protected <T, X> void processOrder(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
 		List<Order> orders = processorContext.getOrders(cb, p);
 		if (orders != null && !orders.isEmpty()) {
 			cq.orderBy(orders);
@@ -135,16 +138,30 @@ public class CriteriaProcessor implements Serializable {
 
 	}
 
+	protected <T, X> void processHaving(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		List<Predicate> predicates = processorContext.getHaving(cb, p);
+		if (predicates != null && !predicates.isEmpty()) {
+			cq.having(predicates.toArray(new Predicate[] {}));
+		}
+	}
+
+	protected <T, X> void processGroupBy(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		List<Expression<?>> expressions = processorContext.groupBy(cb, p);
+		if (expressions != null && !expressions.isEmpty()) {
+			cq.groupBy(expressions);
+		}
+	}
+
 	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {
 		return cb.equal(p.get(Utils.getId(beanClass)), id);
 	}
 
-	public List<Predicate> getPredicateList() {
-		if (predicateList == null) {
-			return new ArrayList<Predicate>();
-		}
-		return predicateList;
-	}
+	//	public List<Predicate> getPredicateList() {
+	//		if (predicateList == null) {
+	//			return new ArrayList<Predicate>();
+	//		}
+	//		return predicateList;
+	//	}
 
 	public void setPredicateList(List<Predicate> predicateList) {
 		this.predicateList = predicateList;
