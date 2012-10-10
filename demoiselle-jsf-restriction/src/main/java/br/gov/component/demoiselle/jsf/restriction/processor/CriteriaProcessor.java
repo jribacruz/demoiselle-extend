@@ -1,10 +1,13 @@
 package br.gov.component.demoiselle.jsf.restriction.processor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,14 +15,14 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaProcessor;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
+import br.gov.frameworkdemoiselle.pagination.PaginationContext;
 
 @SessionScoped
-public class CriteriaProcessor extends AbstractCriteriaProcessor {
+public class CriteriaProcessor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -28,56 +31,67 @@ public class CriteriaProcessor extends AbstractCriteriaProcessor {
 	@Inject
 	private CriteriaProcessorContext processorContext;
 
+	@Inject
+	private Instance<PaginationContext> paginationContext;
+
+	private Pagination pagination;
+
+	@Inject
+	private EntityManager em;
+
 	private List<Predicate> predicateList;
 
-	@Override
 	public <T> List<T> getResultList(Class<T> beanClass) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p, false);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
 
-		TypedQuery<T> query = getEntityManager().createQuery(cq);
+		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
 
 		processorContext.clear();
 		return query.getResultList();
 	}
 
-	@Override
 	public <T, I> T load(Class<T> beanClass, I id) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
 		processProjection(cb, cq, p, false);
 		processRestriction(beanClass, id, cb, cq, p);
 
-		TypedQuery<T> query = getEntityManager().createQuery(cq);
+		TypedQuery<T> query = em.createQuery(cq);
 		processorContext.clear();
 		return query.getSingleResult();
 	}
 
-	@Override
 	protected <T> Long countAll(Class<T> beanClass) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
-		// cq.select(cb.count(p));
-		this.<T, Long> processProjection(cb, cq, p, true);
+		cq.select(cb.count(p));
+		//this.<T, Long> processProjection(cb, cq, p, true);
 		processRestriction(cb, cq, p);
-		cq.where(getPredicateList().toArray(new Predicate[] {}));
+		//cq.where(getPredicateList().toArray(new Predicate[] {}));
 
-		TypedQuery<Long> query = getEntityManager().createQuery(cq);
+		TypedQuery<Long> query = em.createQuery(cq);
 		return query.getSingleResult();
+	}
+
+	protected <T> Pagination getPagination(Class<T> beanClass) {
+		PaginationContext context = paginationContext.get();
+		pagination = context.getPagination(beanClass);
+		return pagination;
 	}
 
 	private <T> void preparePagination(Class<T> beanClass, TypedQuery<T> query) {
 		if (context.getPageSize() == 0) {
-			final Pagination pagination = getPagination(beanClass);
+			final Pagination pagination = this.<T>getPagination(beanClass);
 			if (pagination != null) {
-				pagination.setTotalResults(this.countAll(beanClass).intValue());
+				pagination.setTotalResults(this.<T>countAll(beanClass).intValue());
 				query.setFirstResult(pagination.getFirstResult());
 				query.setMaxResults(pagination.getPageSize());
 			}
@@ -103,14 +117,14 @@ public class CriteriaProcessor extends AbstractCriteriaProcessor {
 	}
 
 	protected <T, X> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p, boolean countAllMethod) {
-		// Selection<?> selection = processorContext.getProjection(cb, p);
-		// if (selection != null && !countAllMethod) {
-		// cq.multiselect(selection);
-		// } else if (selection != null && countAllMethod) {
-		// cq.multiselect(selection, cb.count(p));
-		// } else if (countAllMethod) {
-		// cq.multiselect(cb.count(p));
-		// }
+		//		Selection<?> selection = processorContext.getProjection(cb, p);
+		//		if (selection != null && !countAllMethod) {
+		//			cq.multiselect(selection);
+		//		} else if (selection != null && countAllMethod) {
+		//			cq.multiselect(selection, cb.count(p));
+		//		} else if (countAllMethod) {
+		//			cq.multiselect(cb.count(p));
+		//		}
 	}
 
 	protected <T> void processOrder(CriteriaBuilder cb, CriteriaQuery<T> cq, Root<T> p) {
