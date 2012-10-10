@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
@@ -62,6 +64,42 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 	@Override
 	public void clear() {
 		this.criteriaBeanClass = null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Predicate getHaving(CriteriaBuilder cb, Root<T> p) {
+		if (criteriaBeanClass != null) {
+			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
+			if (bean != null) {
+				return Utils.invokeMethod(bean, "having", cb, p);
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Expression<?> groupBy(CriteriaBuilder cb, Root<T> p) {
+		if (criteriaBeanClass != null) {
+			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
+			if (bean != null) {
+				return Utils.invokeMethod(bean, "groupBy", cb, p);
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Selection<?> getProjection(CriteriaBuilder cb, Root<T> p) {
+		if (criteriaBeanClass != null) {
+			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
+			if (bean != null) {
+				return Utils.invokeMethod(bean, "projection", cb, p);
+			}
+		}
+		return null;
 	}
 
 }
