@@ -35,6 +35,21 @@ public class Utils {
 		return new ArrayList<T>();
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> T invokeMethod(Object bean, String name, Object... args) {
+		// TODO inserir codigo para verificar se o metodo realmente existe
+		try {
+			return  (T) MethodUtils.invokeMethod(bean, name, args);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static <T> Class<T> getDomainBeanClass(Object obj) {
 		return Reflections.getGenericTypeArgument(obj.getClass(), 0);
 	}
