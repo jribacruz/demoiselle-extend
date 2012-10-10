@@ -40,7 +40,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 
 			if (bean != null) {
-				return Utils.<Predicate> invokeMethodReturnCollection(bean, "getPredicates");
+				return Utils.<Predicate> invokeMethodReturnCollection(bean, "getPredicates", cb, p);
 			}
 		}
 		return new ArrayList<Predicate>();
