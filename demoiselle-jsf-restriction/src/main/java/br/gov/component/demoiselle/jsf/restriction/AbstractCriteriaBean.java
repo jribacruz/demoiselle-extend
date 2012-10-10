@@ -41,11 +41,11 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
-	protected Expression<?> groupBy(CriteriaBuilder cb, Root<T> p) {
+	protected List<Expression<?>> groupBy(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 
-	protected Predicate having(CriteriaBuilder cb, Root<T> p) {
+	protected List<Predicate> having(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 
@@ -58,7 +58,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			if (restrictionBean != null) {
 				if (restrictionBean.getValue() != null) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
-					if(predicate != null) {
+					if (predicate != null) {
 						predicateList.add(predicate);
 					}
 				} else {
@@ -71,7 +71,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		}
 		return predicateList;
 	}
-
 
 	@SuppressWarnings("unused")
 	private List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
@@ -116,6 +115,14 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	protected List<Order> by(Order... orders) {
 		return Arrays.asList(orders);
+	}
+
+	protected List<Expression<?>> by(Expression<?>... expressions) {
+		return Arrays.asList(expressions);
+	}
+
+	protected List<Predicate> by(Predicate... predicates) {
+		return Arrays.asList(predicates);
 	}
 
 	protected boolean hasQuery() {
