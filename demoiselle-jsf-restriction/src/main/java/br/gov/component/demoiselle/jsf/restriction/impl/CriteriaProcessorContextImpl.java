@@ -68,11 +68,11 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Predicate getHaving(CriteriaBuilder cb, Root<T> p) {
+	public <T> List<Predicate> getHaving(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {
-				return Utils.invokeMethod(bean, "having", cb, p);
+				return Utils.invokeMethodReturnCollection(bean, "having", cb, p);
 			}
 		}
 		return null;
@@ -80,11 +80,11 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Expression<?> groupBy(CriteriaBuilder cb, Root<T> p) {
+	public <T> List<Expression<?>> groupBy(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {
-				return Utils.invokeMethod(bean, "groupBy", cb, p);
+				return Utils.invokeMethodReturnCollection(bean, "groupBy", cb, p);
 			}
 		}
 		return null;
