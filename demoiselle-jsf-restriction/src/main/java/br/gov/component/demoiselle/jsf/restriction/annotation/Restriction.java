@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(value = { ElementType.FIELD, ElementType.METHOD })
 public @interface Restriction {
 	boolean optional() default true;
+
+	String field() default "";
 }

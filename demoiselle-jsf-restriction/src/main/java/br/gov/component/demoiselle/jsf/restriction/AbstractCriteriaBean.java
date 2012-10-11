@@ -14,6 +14,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
@@ -55,6 +56,10 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 		for (Field field : Utils.getRestrictionFields(this.getClass())) {
 			RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
+			String restrictionField = field.getAnnotation(Restriction.class).field();
+			if (!StringUtils.isEmpty(restrictionField)) {
+				restrictionBean.setField(restrictionField);
+			}
 			if (restrictionBean != null) {
 				if (restrictionBean.getValue() != null) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
