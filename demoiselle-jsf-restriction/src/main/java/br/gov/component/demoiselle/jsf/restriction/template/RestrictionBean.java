@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
+	protected String field;
 
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
@@ -19,4 +20,13 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	public void setValue(X value) {
 		this.value = value;
 	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
 }
