@@ -39,7 +39,7 @@ public class Utils {
 	public static <T> T invokeMethod(Object bean, String name, Object... args) {
 		// TODO inserir codigo para verificar se o metodo realmente existe
 		try {
-			return  (T) MethodUtils.invokeMethod(bean, name, args);
+			return (T) MethodUtils.invokeMethod(bean, name, args);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
