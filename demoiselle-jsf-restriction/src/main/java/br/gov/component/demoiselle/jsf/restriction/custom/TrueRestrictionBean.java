@@ -11,7 +11,7 @@ public class TrueRestrictionBean<T> extends RestrictionBean<T, String> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.isTrue(p.<Boolean> get(getField()));
+		return isSelection() && hasField() ? cb.isTrue(p.<Boolean> get(getField())) : null;
 	}
 
 }

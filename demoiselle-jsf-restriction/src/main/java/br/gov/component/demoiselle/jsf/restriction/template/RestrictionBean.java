@@ -12,6 +12,7 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
 	protected String field;
+	protected boolean selection = true;
 
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
@@ -29,6 +30,14 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 
 	public void setField(String field) {
 		this.field = field;
+	}
+
+	public boolean isSelection() {
+		return selection;
+	}
+
+	public void setSelection(boolean selection) {
+		this.selection = selection;
 	}
 
 	protected boolean hasField() {

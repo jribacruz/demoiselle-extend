@@ -11,6 +11,6 @@ public class GreaterThanOrEqualToRestrictionBean<T, X extends Number> extends Re
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return getValue() != null ? cb.ge(p.<Number> get(getField()), getValue()) : null;
+		return getValue() != null && isSelection() && hasField() ? cb.ge(p.<Number> get(getField()), getValue()) : null;
 	}
 }

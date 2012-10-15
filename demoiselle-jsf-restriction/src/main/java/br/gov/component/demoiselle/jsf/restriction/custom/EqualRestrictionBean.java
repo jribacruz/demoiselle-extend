@@ -11,7 +11,7 @@ public class EqualRestrictionBean<T, X> extends RestrictionBean<T, X> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return getValue() != null ? cb.equal(p.get(getField()), getValue()) : null;
+		return getValue() != null && isSelection() && hasField() ? cb.equal(p.get(getField()), getValue()) : null;
 	}
 
 }
