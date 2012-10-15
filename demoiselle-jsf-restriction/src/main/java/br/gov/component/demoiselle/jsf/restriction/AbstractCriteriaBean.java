@@ -67,9 +67,11 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 						predicateList.add(predicate);
 					}
 				} else {
-					Predicate predicate = restrictionBean.restriction(cb, p);
-					if (predicate != null && !field.getAnnotation(Restriction.class).optional()) {
-						predicateList.add(predicate);
+					if (!field.getAnnotation(Restriction.class).optional()) {
+						Predicate predicate = restrictionBean.restriction(cb, p);
+						if (predicate != null) {
+							predicateList.add(predicate);
+						}
 					}
 				}
 			}
