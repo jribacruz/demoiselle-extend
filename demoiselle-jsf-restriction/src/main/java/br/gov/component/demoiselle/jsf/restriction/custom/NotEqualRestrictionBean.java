@@ -11,7 +11,7 @@ public class NotEqualRestrictionBean<T, X> extends RestrictionBean<T, X> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.notEqual(p.get(getField()), getValue());
+		return getValue() != null ? cb.notEqual(p.get(getField()), getValue()) : null;
 	}
 
 }

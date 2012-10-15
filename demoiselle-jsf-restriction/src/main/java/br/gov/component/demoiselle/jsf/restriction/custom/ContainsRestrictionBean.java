@@ -13,7 +13,7 @@ public class ContainsRestrictionBean<T> extends RestrictionBean<T, Collection<T>
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return p.in(getValue());
+		return getValue() != null ? p.in(getValue()) : null;
 	}
 
 }

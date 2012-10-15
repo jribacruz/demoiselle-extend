@@ -13,6 +13,6 @@ public class NotContainsRestrictionBean<T> extends RestrictionBean<T, Collection
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.not(p.in(getValue()));
+		return getValue() != null ? cb.not(p.in(getValue())) : null;
 	}
 }

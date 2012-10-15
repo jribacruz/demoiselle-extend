@@ -4,6 +4,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.StringUtils;
+
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 
 public class LikeLeftRestrictionBean<T> extends RestrictionBean<T, String> {
@@ -11,7 +13,7 @@ public class LikeLeftRestrictionBean<T> extends RestrictionBean<T, String> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.like(cb.lower(p.<String> get(getField())), "%" + getValue().toLowerCase());
+		return !StringUtils.isEmpty(getValue()) ? cb.like(cb.lower(p.<String> get(getField())), "%" + getValue().toLowerCase()) : null;
 	}
 
 }

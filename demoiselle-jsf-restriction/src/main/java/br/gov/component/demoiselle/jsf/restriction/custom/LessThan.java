@@ -11,7 +11,7 @@ public class LessThan<T, X extends Number> extends RestrictionBean<T, X> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.lt(p.<Number> get(getField()), getValue());
+		return getValue() != null ? cb.lt(p.<Number> get(getField()), getValue()) : null;
 	}
 
 }
