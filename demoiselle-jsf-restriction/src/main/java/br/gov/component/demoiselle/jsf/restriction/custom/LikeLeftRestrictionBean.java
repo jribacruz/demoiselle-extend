@@ -11,7 +11,7 @@ public class LikeLeftRestrictionBean<T> extends RestrictionBean<T, String> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return hasField() ? cb.like(cb.lower(p.<String> get(getField())), "%" + getValue().toLowerCase()) : null;
+		return cb.like(cb.lower(p.<String> get(getField())), "%" + getValue().toLowerCase());
 	}
 
 }

@@ -11,7 +11,7 @@ public class NullRestrictionBean<T> extends RestrictionBean<T, String> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return hasField() ? cb.isNull(p.get(getField())) : null;
+		return  cb.isNull(p.get(getField())) ;
 	}
 
 }
