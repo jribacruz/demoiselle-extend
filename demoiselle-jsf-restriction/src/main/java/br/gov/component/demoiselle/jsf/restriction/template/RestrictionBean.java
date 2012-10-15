@@ -6,6 +6,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.StringUtils;
+
 public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
@@ -27,6 +29,10 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 
 	public void setField(String field) {
 		this.field = field;
+	}
+
+	protected boolean hasField() {
+		return !StringUtils.isEmpty(field);
 	}
 
 }
