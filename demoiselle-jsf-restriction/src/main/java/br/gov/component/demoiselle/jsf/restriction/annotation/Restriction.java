@@ -11,4 +11,6 @@ public @interface Restriction {
 	boolean optional() default true;
 
 	String field() default "";
+
+	boolean selectionMode() default false;
 }

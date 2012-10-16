@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
-import br.gov.component.demoiselle.jsf.restriction.annotation.SelectionMode;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
@@ -68,7 +67,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 				setRestrictionField(field, restrictionBean);
 				setRestrictionValue(field, restrictionBean);
 
-				if ((restrictionBean.getValue() != null && !field.isAnnotationPresent(SelectionMode.class))
+				if ((restrictionBean.getValue() != null && !field.getAnnotation(Restriction.class).selectionMode())
 						|| (restrictionBean.getValue() != null && hasSelectionMode(field, restrictionBean))) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
 					if (predicate != null) {
@@ -97,7 +96,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 	@SuppressWarnings("rawtypes")
 	private boolean hasSelectionMode(Field field, RestrictionBean restrictionBean) {
-		return field.isAnnotationPresent(SelectionMode.class) && restrictionBean.isSelection();
+		return field.getAnnotation(Restriction.class).selectionMode() && restrictionBean.isSelection();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
