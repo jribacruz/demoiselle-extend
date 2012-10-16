@@ -12,7 +12,7 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
 	protected String field;
-	protected boolean selection = true;
+	protected boolean selection;
 
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
