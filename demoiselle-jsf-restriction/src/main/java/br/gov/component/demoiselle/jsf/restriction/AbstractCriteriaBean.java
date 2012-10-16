@@ -18,9 +18,17 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
+import br.gov.component.demoiselle.jsf.restriction.annotation.SelectionMode;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
+import br.gov.component.demoiselle.jsf.restriction.value.ByteValue;
+import br.gov.component.demoiselle.jsf.restriction.value.CharValue;
+import br.gov.component.demoiselle.jsf.restriction.value.DoubleValue;
+import br.gov.component.demoiselle.jsf.restriction.value.FloatValue;
+import br.gov.component.demoiselle.jsf.restriction.value.IntegerValue;
+import br.gov.component.demoiselle.jsf.restriction.value.LongValue;
+import br.gov.component.demoiselle.jsf.restriction.value.StringValue;
 import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
@@ -56,9 +64,12 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 		for (Field field : Utils.getRestrictionFields(this.getClass())) {
 			RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
-			setRestrictionField(field, restrictionBean);
 			if (restrictionBean != null) {
-				if (restrictionBean.getValue() != null) {
+				setRestrictionField(field, restrictionBean);
+				setRestrictionValue(field, restrictionBean);
+
+				if ((restrictionBean.getValue() != null && !field.isAnnotationPresent(SelectionMode.class))
+						|| (restrictionBean.getValue() != null && hasSelectionMode(field, restrictionBean))) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
 					if (predicate != null) {
 						predicateList.add(predicate);
@@ -81,6 +92,30 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		String restrictionField = field.getAnnotation(Restriction.class).field();
 		if (!StringUtils.isEmpty(restrictionField)) {
 			restrictionBean.setField(restrictionField);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private boolean hasSelectionMode(Field field, RestrictionBean restrictionBean) {
+		return field.isAnnotationPresent(SelectionMode.class) && restrictionBean.isSelection();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void setRestrictionValue(Field field, RestrictionBean restrictionBean) {
+		if (field.isAnnotationPresent(StringValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(StringValue.class).value());
+		} else if (field.isAnnotationPresent(ByteValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(ByteValue.class).value());
+		} else if (field.isAnnotationPresent(CharValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(CharValue.class).value());
+		} else if (field.isAnnotationPresent(DoubleValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(DoubleValue.class).value());
+		} else if (field.isAnnotationPresent(FloatValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(FloatValue.class).value());
+		} else if (field.isAnnotationPresent(IntegerValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(IntegerValue.class).value());
+		} else if (field.isAnnotationPresent(LongValue.class)) {
+			restrictionBean.setValue(field.getAnnotation(LongValue.class).value());
 		}
 	}
 
