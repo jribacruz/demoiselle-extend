@@ -182,6 +182,9 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ##7. Vinculando o filterColumn do datatable com RestritionBeans
 
+O objetivo da vinculação do filterColumn do datatable é criar  
+
+###classe de criterios
 ```java
 @CriteriaController
 public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
@@ -196,12 +199,11 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 }
 
 ```
+###xhtml do datatable
 
-##8. Projeções
-------------
 
-##9. Ordenação
---------------
+
+##8. Ordenação
 
 Para implementar a ordenação baste sobrescrever o método orderBy da classe de criterios. Utilizando o método auxiliar **by(Order...order)** é possivel
 concatenar várias ordenações.
@@ -221,3 +223,17 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 }
 
 ```
+
+```xml
+<p:dataTable value="#{bookmarkListMB.lazyDataTModel}" var="bean">
+	...
+	<p:column headerText="description" filterBy="#{bean.description}>
+		...
+	</p:column>
+	...
+</p:dataTable>
+```
+
+##9. Projeções
+
+
