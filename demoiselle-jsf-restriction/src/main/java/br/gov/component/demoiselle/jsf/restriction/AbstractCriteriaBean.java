@@ -14,7 +14,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
-import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.annotation.Restriction;
@@ -89,7 +88,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@SuppressWarnings("rawtypes")
 	private void setRestrictionField(Field field, RestrictionBean restrictionBean) {
 		String restrictionField = field.getAnnotation(Restriction.class).field();
-		if (!StringUtils.isEmpty(restrictionField)) {
+		if (!Strings.isEmpty(restrictionField)) {
 			restrictionBean.setField(restrictionField);
 		}
 	}
@@ -102,10 +101,10 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@SuppressWarnings("unchecked")
 	private void setDatatableFilterColumnValue(Field field, RestrictionBean restrictionBean) {
 		String restrictionField = field.getAnnotation(Restriction.class).field();
-		if (!StringUtils.isEmpty(restrictionField) && field.getAnnotation(Restriction.class).datatableFilterColumn()) {
+		if (!Strings.isEmpty(restrictionField) && field.getAnnotation(Restriction.class).datatableFilterColumn()) {
 			if (criteriaContext.getFilters().containsKey(restrictionField)) {
 				String value = criteriaContext.getFilters().get(restrictionField);
-				if (!StringUtils.isEmpty(value)) {
+				if (!Strings.isEmpty(value)) {
 					restrictionBean.setField(restrictionField);
 					restrictionBean.setValue(value);
 				}
