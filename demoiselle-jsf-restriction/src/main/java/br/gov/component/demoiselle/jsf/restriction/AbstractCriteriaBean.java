@@ -98,7 +98,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return field.getAnnotation(Restriction.class).selectionMode() && restrictionBean.isSelection();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setDatatableFilterColumnValue(Field field, RestrictionBean restrictionBean) {
 		String restrictionField = field.getAnnotation(Restriction.class).field();
 		if (!Strings.isEmpty(restrictionField) && field.getAnnotation(Restriction.class).datatableFilterColumn()) {
@@ -108,6 +108,8 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 					restrictionBean.setField(restrictionField);
 					restrictionBean.setValue(value);
 				}
+			} else {
+				restrictionBean.setValue(null);
 			}
 		}
 	}
