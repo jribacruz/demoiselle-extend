@@ -2,18 +2,27 @@ demoiselle-jsf-restriction
 ==========================
 
 ##1. Instalação
--------------
 
 ##2. Classes Criteria
----------------------------
+
+```java
+
+@CriteriaController
+public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
+	private static final long serialVersionUID = 1L;
+}
+
+```
 
 ##3. Utilizando a classe Criteria com o LazyDataModel (Primefaces)
-----------------------------------------------------------------
 Para iniciar o uso da classe Criteria basta injetar o LazyDataModel da seguinte maneira:
 
 ```java
 @ViewController
 public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
+	
+	@Inject
+	private BookmarkBC bc;
 	
 	@Inject
 	@Criteria(BookmarkDataTableCriteria.class)
@@ -24,6 +33,8 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 		return this.bc.findAll();
 	}
 	
+	//getters and setters
+	
 }
 ```
 
@@ -32,7 +43,21 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 -------------------------------------
 
 ##5. Custom RestrictionBeans
---------------------------
+----------------------------
+
+###5.1 ContainsRestrictionBean
+
+###5.2 EmptyRestrictionBean
+
+###5.3 EqualRestrictionBean
+
+###5.4 FalseRestrictionBean
+
+###5.5 EqualRestrictionBean
+
+###5.6 GreaterThanOrEqualToRestrictionBean
+
+
 
 ##6. Modo de seleção
 ------------------
