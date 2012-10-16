@@ -45,7 +45,7 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 	
 }
 ```
-
+**Com o código acima caso o datatable esteja com o sortBy do column atribuido a ordenação ja será realizada.**
 
 ##4. Classe de Restrição (RestrictionBean Class)
 
@@ -59,6 +59,8 @@ de critérios (Criteria Class). A classe recebe como parametro de tipo genérico
 Como exemplo, vamos criar uma restrição que restringe a lista de Bookmarks de acordo com o nome de descrição (atributo description da entidade Bookmark)
 passado por um campo h:inputText
 
+##Exemplo 1
+
 ###classe de restrição
 ```java
 
@@ -67,7 +69,7 @@ public class BookmarkDescriptionRestriction extends RestrictionBean<Bookmark, St
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<Bookmark> p) {
-		return cb.like(p.<String> get("description"), "%" + getValue() + "%");
+		return cb.like(cb.lower(p.<String> get("description")), "%" + getValue().toLowerCase() + "%");
 	}
 
 }
@@ -107,20 +109,22 @@ Com o código acima, cada vez que o usuário digitar um valor no input a restri�
 do input é passado para a restrição realizar a filtragem. É importante observar que quando o valor do campo input é vazio a restrição não é
 executada.
 
-##5. Custom RestrictionBeans
+## Restrições não opcionais ( @Restriction(optional=false) )
+
+##5. Custom Restriction
 ----------------------------
 
 O pacote demoiselle-jsf-restriction possui um conjunto de classes restrictions prontas com restrições comuns, que podem sem injetadas diretamente 
 na classe Criteria.
 
-###5.1 ContainsRestrictionBean
+###5.1 ContainsRestriction
 
 
 
 
-###5.2 EmptyRestrictionBean
+###5.2 EmptyRestriction
 
-###5.3 EqualRestrictionBean
+###5.3 EqualRestriction
 
 ```java
 
@@ -138,43 +142,62 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ```
 
-###5.4 FalseRestrictionBean
+###5.4 FalseRestriction
 
-###5.5 EqualRestrictionBean
+###5.5 EqualRestriction
 
-###5.6 GreaterThanOrEqualToRestrictionBean
+###5.6 GreaterThanOrEqualToRestriction
 
-###5.7 GreaterThanRestrictionBean
+###5.7 GreaterThanRestriction
 
-###5.8 InRestrictionBean
+###5.8 InRestriction
 
-###5.9 LessThanOrEqualToRestrictionBean
+###5.9 LessThanOrEqualToRestriction
 
-###5.10 LessThanRestrictionBean
+###5.10 LessThanRestriction
 
-###5.11 LikeLeftRestrictionBean
+###5.11 LikeLeftRestriction
 
-###5.12 LikeRestritionBean
+###5.12 LikeRestrition
+Reescrevendo o Exemplo 1 utilizando o Custom Restriction LikeRestritionBean
 
-###5.13 LikeRightRestrictionBean
+###classe de criterios
 
-###5.14 MemberRestrictionBean
+```java
 
-###5.15 NotContainsRestrictionBean
+@CriteriaController
+public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	@Restriction(field="description")
+	private LikeRestrictionBean query1;
+	
+	//getters and setters
+	
+}
+```
 
-###5.16 NotEmptyRestrictionBean
 
-###5.17 NotEqualRestrictionBean
+###5.13 LikeRightRestriction
 
-###5.18 NotInRestrictionBean
+###5.14 MemberRestriction
 
-###5.19 NotMemberRestrictionBean
+###5.15 NotContainsRestriction
 
-###5.20 NotNullRestrictionBean
+###5.16 NotEmptyRestriction
 
-###5.21 NullRestrictionBean
+###5.17 NotEqualRestriction
 
-###5.22 TrueRestrictionBean
+###5.18 NotInRestriction
+
+###5.19 NotMemberRestriction
+
+###5.20 NotNullRestriction
+
+###5.21 NullRestriction
+
+###5.22 TrueRestriction
 
 
 ##6. Modo de seleção
@@ -200,8 +223,15 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ```
 ###xhtml do datatable
-
-
+```xml
+<p:dataTable value="#{bookmarkListMB.lazyDataModel}" var="bean">
+	...
+	<p:column headerText="description" filterBy="#{bean.description}>
+		...
+	</p:column>
+	...
+</p:dataTable>
+```
 
 ##8. Ordenação
 
@@ -224,15 +254,6 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ```
 
-```xml
-<p:dataTable value="#{bookmarkListMB.lazyDataTModel}" var="bean">
-	...
-	<p:column headerText="description" filterBy="#{bean.description}>
-		...
-	</p:column>
-	...
-</p:dataTable>
-```
 
 ##9. Projeções
 
