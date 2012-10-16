@@ -45,15 +45,64 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 ```
 
 
-##4. Classe Restrição (RestrictionBean Class)
+##4. Classe de Restrição (RestrictionBean Class)
 ---------------------------------------------
 
 ```java
 public abstract class RestrictionBean<T, X> {...}
 ```
 
-A classe de restrição (extends RestrictionBean) são as que realizarão efetivamente as restrições na pesquisa afetando diretamente a clausura where da query. São agrupadas na classe 
-de critérios (Criteria Class). A classe recebe como parametro de tipo genérico o tipo da entidade (T) e o tipo do atributo (X) que esta presente na classe T
+A classe de restrição (extends RestrictionBean) são as que realizarão efetivamente as restrições na pesquisa, afetando diretamente a clausura where da query. São agrupadas na classe 
+de critérios (Criteria Class). A classe recebe como parametro de tipo genérico o tipo da entidade (T) e o tipo do atributo (X) que esta presente na classe T.
+
+Como exemplo, vamos criar uma restrição que restringe a lista de Bookmarks de acordo com o nome de descrição (atributo description da entidade Bookmark)
+passado por um campo h:inputText
+
+###classe de restrição
+```java
+
+public class BookmarkDescriptionRestriction extends RestrictionBean<Bookmark, String> {
+
+private static final long serialVersionUID = 1L;
+
+	@Override
+	public Predicate restriction(CriteriaBuilder cb, Root<Bookmark> p) {
+		return cb.like(p.<String> get("description"), "%" + getValue() + "%");
+	}
+
+}
+
+```
+
+###classe de criterios
+
+Para utilizarmos a restrição é necessário injeta-la na classe de critérios e anota-la com @Restriction
+
+```java
+
+@CriteriaController
+public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	@Restriction
+	private BookmarkDescriptionRestriction query1;
+	
+	//getters and setters
+	
+}
+
+```
+
+em seguinda realizamos um bind com o h:inputText e o campo value da restrição
+
+###xhtml
+
+```xml
+	<h:inputText value="#{bookmarkDataTableCriteria.query1.value}">
+		<p:ajax event="keyup" listener="#{bookmarkDataTableCriteria.filter}" update="[id-do-datatable]" />
+	</h:inputText>
+```
 
 ##5. Custom RestrictionBeans
 ----------------------------
