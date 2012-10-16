@@ -11,7 +11,7 @@ public class FalseRestrictionBean<T> extends RestrictionBean<T, String> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return isSelection() && hasField() ? cb.isFalse(p.<Boolean> get(getField())) : null;
+		return hasField() ? cb.isFalse(p.<Boolean> get(getField())) : null;
 	}
 
 }
