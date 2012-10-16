@@ -1,6 +1,8 @@
 demoiselle-jsf-restriction
 ==========================
 
+
+
 ##1. Instalação
 
 ##2. Classe de Critérios (Criteria Class)
@@ -46,7 +48,6 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 
 
 ##4. Classe de Restrição (RestrictionBean Class)
----------------------------------------------
 
 ```java
 public abstract class RestrictionBean<T, X> {...}
@@ -62,8 +63,7 @@ passado por um campo h:inputText
 ```java
 
 public class BookmarkDescriptionRestriction extends RestrictionBean<Bookmark, String> {
-
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<Bookmark> p) {
@@ -91,7 +91,6 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 	//getters and setters
 	
 }
-
 ```
 
 em seguinda realizamos um bind com o h:inputText e o campo value da restrição
@@ -99,16 +98,20 @@ em seguinda realizamos um bind com o h:inputText e o campo value da restrição
 ###xhtml
 
 ```xml
-	<h:inputText value="#{bookmarkDataTableCriteria.query1.value}">
-		<p:ajax event="keyup" listener="#{bookmarkDataTableCriteria.filter}" update="[id-do-datatable]" />
-	</h:inputText>
+<h:inputText value="#{bookmarkDataTableCriteria.query1.value}">
+	<p:ajax event="keyup" listener="#{bookmarkDataTableCriteria.filter}" update="[id-do-datatable]" />
+</h:inputText>
 ```
+
+Com o código acima, cada vez que o usuário digitar um valor no input a restrição **BookmarkDescriptionRestriction** é executada e o valor 
+do input é passado para a restrição realizar a filtragem. É importante observar que quando o valor do campo input é vazio a restrição não é
+executada.
 
 ##5. Custom RestrictionBeans
 ----------------------------
 
 O pacote demoiselle-jsf-restriction possui um conjunto de classes restrictions prontas com restrições comuns, que podem sem injetadas diretamente 
-na classe Criteria
+na classe Criteria.
 
 ###5.1 ContainsRestrictionBean
 
@@ -178,11 +181,43 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 ------------------
 
 ##7. Vinculando o filterColumn do datatable com RestritionBeans
--------------------------------------------------------------
+
+```java
+@CriteriaController
+public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	@Restriction(field="description", datatableFilterColumn=true)
+	private LikeRestrictionBean<Bookmark, String> query1;
+	
+	//getters and setters
+	
+}
+
+```
 
 ##8. Projeções
 ------------
 
 ##9. Ordenação
-------------
+--------------
 
+Para implementar a ordenação baste sobrescrever o método orderBy da classe de criterios. Utilizando o método auxiliar **by(Order...order)** é possivel
+concatenar várias ordenações.
+
+```java
+@CriteriaController
+public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
+	private static final long serialVersionUID = 1L;
+	
+	...
+	
+	@Override
+	protected List<Order> orderBy(CriteriaBuilder cb, Root<Bookmark> p) {
+		return by(cb.asc(p.get("description")));
+	}
+
+}
+
+```
