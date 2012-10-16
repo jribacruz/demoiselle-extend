@@ -56,10 +56,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 
 		for (Field field : Utils.getRestrictionFields(this.getClass())) {
 			RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
-			String restrictionField = field.getAnnotation(Restriction.class).field();
-			if (!StringUtils.isEmpty(restrictionField)) {
-				restrictionBean.setField(restrictionField);
-			}
+			setRestrictionField(field, restrictionBean);
 			if (restrictionBean != null) {
 				if (restrictionBean.getValue() != null) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
@@ -77,6 +74,14 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			}
 		}
 		return predicateList;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void setRestrictionField(Field field, RestrictionBean restrictionBean) {
+		String restrictionField = field.getAnnotation(Restriction.class).field();
+		if (!StringUtils.isEmpty(restrictionField)) {
+			restrictionBean.setField(restrictionField);
+		}
 	}
 
 	@SuppressWarnings("unused")
