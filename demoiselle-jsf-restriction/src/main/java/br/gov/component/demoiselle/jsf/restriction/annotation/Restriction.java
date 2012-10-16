@@ -13,4 +13,6 @@ public @interface Restriction {
 	String field() default "";
 
 	boolean selectionMode() default false;
+
+	boolean datatableFilterColumn() default false;
 }

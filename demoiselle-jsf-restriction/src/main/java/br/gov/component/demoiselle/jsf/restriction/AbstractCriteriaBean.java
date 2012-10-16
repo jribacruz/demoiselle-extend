@@ -66,7 +66,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 			if (restrictionBean != null) {
 				setRestrictionField(field, restrictionBean);
 				setRestrictionValue(field, restrictionBean);
-
+				setDatatableFilterColumnValue(field, restrictionBean);
 				if ((restrictionBean.getValue() != null && !field.getAnnotation(Restriction.class).selectionMode())
 						|| (restrictionBean.getValue() != null && hasSelectionMode(field, restrictionBean))) {
 					Predicate predicate = Utils.processRestriction(restrictionBean, cb, p);
@@ -97,6 +97,20 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@SuppressWarnings("rawtypes")
 	private boolean hasSelectionMode(Field field, RestrictionBean restrictionBean) {
 		return field.getAnnotation(Restriction.class).selectionMode() && restrictionBean.isSelection();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setDatatableFilterColumnValue(Field field, RestrictionBean restrictionBean) {
+		String restrictionField = field.getAnnotation(Restriction.class).field();
+		if (!StringUtils.isEmpty(restrictionField) && field.getAnnotation(Restriction.class).datatableFilterColumn()) {
+			if (criteriaContext.getFilters().containsKey(restrictionField)) {
+				String value = criteriaContext.getFilters().get(restrictionField);
+				if (!StringUtils.isEmpty(value)) {
+					restrictionBean.setField(restrictionField);
+					restrictionBean.setValue(value);
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
