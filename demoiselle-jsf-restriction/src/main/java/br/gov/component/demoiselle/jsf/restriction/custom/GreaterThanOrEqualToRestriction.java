@@ -1,19 +1,16 @@
 package br.gov.component.demoiselle.jsf.restriction.custom;
 
-import java.util.Collection;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 
-public class InRestrictionBean<T, X> extends RestrictionBean<T, Collection<X>> {
+public class GreaterThanOrEqualToRestriction<T, X extends Number> extends RestrictionBean<T, X> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return p.get(getField()).in(getValue());
+		return getValue() != null && hasField() ? cb.ge(p.<Number> get(getField()), getValue()) : null;
 	}
-
 }

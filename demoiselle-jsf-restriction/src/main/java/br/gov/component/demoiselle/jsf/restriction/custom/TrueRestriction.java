@@ -6,12 +6,12 @@ import javax.persistence.criteria.Root;
 
 import br.gov.component.demoiselle.jsf.restriction.template.RestrictionBean;
 
-public class LessThanOrEqualToRestrictionBean<T, X extends Number> extends RestrictionBean<T, X> {
+public class TrueRestriction<T> extends RestrictionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return getValue() != null && hasField() ? cb.le(p.<Number> get(getField()), getValue()) : null;
+		return hasField() ? cb.isTrue(p.<Boolean> get(getField())) : null;
 	}
 
 }
