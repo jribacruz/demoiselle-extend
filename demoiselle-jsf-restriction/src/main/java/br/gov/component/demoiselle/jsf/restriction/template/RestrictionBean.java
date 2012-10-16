@@ -1,10 +1,14 @@
 package br.gov.component.demoiselle.jsf.restriction.template;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.apache.commons.lang.StringUtils;
 
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -42,6 +46,18 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 
 	protected boolean hasField() {
 		return !Strings.isEmpty(field);
+	}
+
+	protected Collection<X> list(X... xs) {
+		return Arrays.asList(xs);
+	}
+
+	protected String lowerCase(String str) {
+		return StringUtils.lowerCase(str);
+	}
+
+	protected String upperCase(String str) {
+		return StringUtils.upperCase(str);
 	}
 
 }
