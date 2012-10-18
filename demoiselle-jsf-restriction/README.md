@@ -1,23 +1,25 @@
 demoiselle-jsf-restriction
 ==========================
 
+O pacote demoiselle-jsf-restriction tem com como objetivo facilitar e organizar as consultas JPA. Utiliza
+o Criteria API para a criação de consultas.
 
 
 ##1. Instalação
 
 ##2. Classe de Critérios (Criteria Class)
 
+A classe de critérios é o ponto central onde as restrições (RestrictionBeans) a ordenação, a projeção são declaradas.
+
 ```java
 public abstract class AbstractCriteriaBean<T> {...}
 ```
 
 ```java
-
 @CriteriaController
 public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 	private static final long serialVersionUID = 1L;
 }
-
 ```
 
 ##3. Utilizando a classe Criteria com o LazyDataModel (Primefaces)
@@ -45,6 +47,10 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 	
 }
 ```
+Não é necessário implementar o método load do LazyDataModel, na injeção é realizada a implementação do metodo (load)
+com os dados da paginação, filtros (veremos como utiliza-los mais a frente) e a ordenação. A implementação do método 
+**handleResultList()** com o findAll() como retorno é necessária.
+
 **Com o código acima caso o datatable esteja com o sortBy do column atribuido a ordenação ja será realizada.**
 
 ##4. Classe de Restrição (RestrictionBean Class)
@@ -57,7 +63,9 @@ A classe de restrição (extends RestrictionBean) são as que realizarão efetiv
 de critérios (Criteria Class). A classe recebe como parametro de tipo genérico o tipo da entidade (T) e o tipo do atributo (X) que esta presente na classe T.
 
 Como exemplo, vamos criar uma restrição que restringe a lista de Bookmarks de acordo com o nome de descrição (atributo description da entidade Bookmark)
-passado por um campo h:inputText
+passado por um campo h:inputText.
+
+A classe RestrictionBean possui um atributo chamado *value* do tipo especificado no segundo parametro generico da classe. 
 
 ##Exemplo 1
 
@@ -111,11 +119,15 @@ executada.
 
 ## Restrições não opcionais ( @Restriction(optional=false) )
 
+Por padrão as restrições são opcionais, o que siginifica que se o atributo **value** da classe RestrictionBean seja nulo (em branco em caso de string e vazio em caso de coleções)
+as restrições não entrarão na consulta. As restrições não opcionais, com a inclusão do atributo optional false inclua as restrições mesmo com o valor de **value** como nulo.
+Sua utilidade é para incluir **restrições padrões** nas consultas onde o valor do **value** não provem da camada de visão. Como exemplo,
+no caso de se restringir a consulta a determinado grupo de usuário etc.
+
 ##5. Custom Restriction
 ----------------------------
-
-O pacote demoiselle-jsf-restriction possui um conjunto de classes restrictions prontas com restrições comuns, que podem sem injetadas diretamente 
-na classe Criteria.
+Para facilitar o uso de restrições usualmente utilizadas o pacote demoiselle-jsf-restriction possui um conjunto de classes restrictions prontas com restrições comuns, 
+que podem sem injetadas diretamente na classe Criteria. Ao todo 22 restrições são disponibilizadas.
 
 ###5.1 ContainsRestriction
 
@@ -126,15 +138,16 @@ na classe Criteria.
 
 ###5.3 EqualRestriction
 
-```java
+A classe EqualRestriction injetada no classe de critérios cria uma restrição de igualdade.
 
+```java
 @CriteriaController
 public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
 	@Restriction(field="description")
-	private EqualRestrictionBean<Bookmark, String> query1;
+	private EqualRestriction<Bookmark, String> query1;
 	
 	//getters and setters
 	
@@ -201,11 +214,14 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 
 ##6. Modo de seleção
-------------------
+O modo de seleção tem como objetivo *ativar/processar* a consulta caso a seleção seja verdadeira. Tal funcionalidade é implementada
+para ativar a consulta através de checkbox. Onde queremos que uma restrição entre na consulta caso o checkbox esteja selecionado.
+Para isso a classe RestrictionBean possui um atributo **selection* que deve ser associado ao atributo **value** do checkbox. Segue abaixo
+um exemplo de implementação:
 
 ##7. Vinculando o filterColumn do datatable com RestritionBeans
 
-O objetivo da vinculação do filterColumn do datatable é criar  
+Com a funcionalidade de filterColumn é possível associar  
 
 ###classe de criterios
 ```java
@@ -235,8 +251,8 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ##8. Ordenação
 
-Para implementar a ordenação baste sobrescrever o método orderBy da classe de criterios. Utilizando o método auxiliar **by(Order...order)** é possivel
-concatenar várias ordenações.
+Para implementar a ordenação da consulta basta sobrescrever o método orderBy da classe de criterios. Utilizando o método auxiliar **by(Order...order)** da superclasse
+ é possivel concatenar várias ordenações.
 
 ```java
 @CriteriaController
