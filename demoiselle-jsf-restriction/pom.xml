@@ -4,7 +4,7 @@
 
 	<groupId>br.gov.frameworkdemoiselle.component</groupId>
 	<artifactId>demoiselle-jsf-restriction</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RC1</version>
 	<packaging>jar</packaging>
 
 	<name>demoiselle-jsf-restriction</name>
