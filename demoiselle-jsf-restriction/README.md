@@ -8,10 +8,25 @@ o Criteria API para a criação de consultas. Com a concentração das restriç�
 
 ##1. Instalação
 
+No pom.xml do projeto adicionar as instruções a seguir
+
+```xml
+<dependency>
+	<groupId>br.gov.frameworkdemoiselle.component</groupId>
+	<artifactId>demoiselle-jsf-restriction</artifactId>
+	<version>0.0.1-RC1</version>
+</dependency>
+
+<repository>
+	<id>demoiselle-jsf-restriction-repo</id>
+	<url>http://jribacruz.github.com/maven</url>
+</repository>
+```
+
 ##2. Classe de Critérios (Criteria Class)
 
 A classe de critérios é o ponto central onde as restrições (RestrictionBeans), a ordenação, a projeção são declaradas. Por ser
-um **ManagedBean** é visivel na camada de visão, onde podemos controlar os valores passados as retrições, como veremos mais a frente.
+um **ManagedBean** é visivel na camada de visão, onde podemos controlar os valores passados as restrições, como veremos mais a frente.
 
 ```java
 public abstract class AbstractCriteriaBean<T> {...}
@@ -124,8 +139,8 @@ executada.
 
 ## Restrições não opcionais ( @Restriction(optional=false) )
 
-Por padrão as restrições são opcionais, o que siginifica que se o atributo **value** da classe RestrictionBean seja nulo (em branco em caso de string e vazio em caso de coleções)
-as restrições não entrarão na consulta. As restrições não opcionais, com a inclusão do atributo optional false inclua as restrições mesmo com o valor de **value** como nulo.
+Por padrão as restrições são opcionais, o que siginifica que se o atributo **value** da classe RestrictionBean é nulo (em branco em caso de string e vazio em caso de coleções)
+a restrição não entra na consulta. A restrição não opcional (com a inclusão do atributo optional false) é incluida na consulta mesmo se o valor de **value** é nulo.
 Sua utilidade é para incluir **restrições padrões** nas consultas onde o valor do **value** não provem da camada de visão. Como exemplo,
 no caso de se restringir a consulta a determinado grupo de usuário etc.
 
