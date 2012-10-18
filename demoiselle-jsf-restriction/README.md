@@ -2,14 +2,16 @@ demoiselle-jsf-restriction
 ==========================
 
 O pacote demoiselle-jsf-restriction tem com como objetivo facilitar e organizar as consultas JPA. Utiliza
-o Criteria API para a criação de consultas.
+o Criteria API para a criação de consultas. Com a concentração das restrições das consultas em um único ponto
+
 
 
 ##1. Instalação
 
 ##2. Classe de Critérios (Criteria Class)
 
-A classe de critérios é o ponto central onde as restrições (RestrictionBeans) a ordenação, a projeção são declaradas.
+A classe de critérios é o ponto central onde as restrições (RestrictionBeans), a ordenação, a projeção são declaradas. Por ser
+um **ManagedBean** é visivel na camada de visão, onde podemos controlar os valores passados as retrições, como veremos mais a frente.
 
 ```java
 public abstract class AbstractCriteriaBean<T> {...}
@@ -23,6 +25,9 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 ```
 
 ##3. Utilizando a classe Criteria com o LazyDataModel (Primefaces)
+
+Apenas com criação da classe de critérios 
+
 Para iniciar o uso da classe Criteria basta injetar o LazyDataModel da seguinte maneira:
 
 ###bean de listagem
@@ -51,7 +56,7 @@ Não é necessário implementar o método load do LazyDataModel, na injeção é
 com os dados da paginação, filtros (veremos como utiliza-los mais a frente) e a ordenação. A implementação do método 
 **handleResultList()** com o findAll() como retorno é necessária.
 
-**Com o código acima caso o datatable esteja com o sortBy do column atribuido a ordenação ja será realizada.**
+**Com o código acima (caso o datatable esteja com o sortBy do column atribuido) a ordenação ja será realizada automaticamente.**
 
 ##4. Classe de Restrição (RestrictionBean Class)
 
@@ -65,9 +70,9 @@ de critérios (Criteria Class). A classe recebe como parametro de tipo genérico
 Como exemplo, vamos criar uma restrição que restringe a lista de Bookmarks de acordo com o nome de descrição (atributo description da entidade Bookmark)
 passado por um campo h:inputText.
 
-A classe RestrictionBean possui um atributo chamado *value* do tipo especificado no segundo parametro generico da classe. 
+A classe RestrictionBean possui um atributo chamado *value* (do tipo generico X passado na classe RestrictionBean) do tipo especificado no segundo parametro generico da classe. 
 
-##Exemplo 1
+##Exemplo 
 
 ###classe de restrição
 ```java
@@ -270,7 +275,8 @@ public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
 
 ```
 
+##9.
 
-##9. Projeções
+##10. Projeções
 
 
