@@ -7,12 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import org.primefaces.model.SortOrder;
 
@@ -40,7 +40,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@Inject
 	private CriteriaProcessorContext processorContext;
 
-	protected Selection<?> projection(CriteriaBuilder cb, Root<T> p) {
+	protected <Y> CompoundSelection<Y> projection(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 

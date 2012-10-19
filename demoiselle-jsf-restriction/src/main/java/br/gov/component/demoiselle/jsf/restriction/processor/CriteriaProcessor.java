@@ -8,6 +8,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -45,7 +46,7 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
-		processProjection(cb, cq, p, false);
+		processProjection(cb, cq, p);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
 		processHaving(cb, cq, p);
@@ -62,9 +63,8 @@ public class CriteriaProcessor implements Serializable {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
-		processProjection(cb, cq, p, false);
+		//		processProjection(cb, cq, p, false);
 		processRestriction(beanClass, id, cb, cq, p);
-
 
 		TypedQuery<T> query = em.createQuery(cq);
 		processorContext.clear();
@@ -119,15 +119,11 @@ public class CriteriaProcessor implements Serializable {
 		}
 	}
 
-	protected <T, X> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p, boolean countAllMethod) {
-		//		Selection<?> selection = processorContext.getProjection(cb, p);
-		//		if (selection != null && !countAllMethod) {
-		//			cq.multiselect(selection);
-		//		} else if (selection != null && countAllMethod) {
-		//			cq.multiselect(selection, cb.count(p));
-		//		} else if (countAllMethod) {
-		//			cq.multiselect(cb.count(p));
-		//		}
+	protected <T, X, Y> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		CompoundSelection<Y> compoundSelection = processorContext.getProjection(cb, p);
+		if (compoundSelection != null) {
+			cq.multiselect(compoundSelection);
+		}
 	}
 
 	protected <T, X> void processOrder(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {

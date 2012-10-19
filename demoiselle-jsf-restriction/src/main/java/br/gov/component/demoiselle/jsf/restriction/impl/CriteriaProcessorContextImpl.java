@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
+import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
@@ -92,7 +92,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Selection<?> getProjection(CriteriaBuilder cb, Root<T> p) {
+	public <T,Y> CompoundSelection<Y> getProjection(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {

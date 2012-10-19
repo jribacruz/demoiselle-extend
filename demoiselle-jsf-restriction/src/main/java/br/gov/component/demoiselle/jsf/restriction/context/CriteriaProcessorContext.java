@@ -3,12 +3,12 @@ package br.gov.component.demoiselle.jsf.restriction.context;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 
@@ -27,7 +27,7 @@ public interface CriteriaProcessorContext extends Serializable {
 
 	<T> List<Expression<?>> groupBy(CriteriaBuilder cb, Root<T> p);
 
-	<T> Selection<?> getProjection(CriteriaBuilder cb, Root<T> p);
+	<T, Y> CompoundSelection<Y> getProjection(CriteriaBuilder cb, Root<T> p);
 
 	void clear();
 }
