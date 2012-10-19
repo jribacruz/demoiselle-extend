@@ -40,7 +40,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@Inject
 	private CriteriaProcessorContext processorContext;
 
-	protected <Y> CompoundSelection<Y> projection(CriteriaBuilder cb, Root<T> p) {
+	protected CompoundSelection<T> projection(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 

@@ -119,10 +119,10 @@ public class CriteriaProcessor implements Serializable {
 		}
 	}
 
-	protected <T, X, Y> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		CompoundSelection<Y> compoundSelection = processorContext.getProjection(cb, p);
+	protected <T, X> void processProjection(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
+		CompoundSelection<X> compoundSelection = processorContext.getProjection(cb, p);
 		if (compoundSelection != null) {
-			cq.multiselect(compoundSelection);
+			cq.select(compoundSelection);
 		}
 	}
 

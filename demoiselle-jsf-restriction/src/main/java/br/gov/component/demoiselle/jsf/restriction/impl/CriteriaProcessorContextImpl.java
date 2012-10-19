@@ -92,7 +92,7 @@ public class CriteriaProcessorContextImpl implements CriteriaProcessorContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T,Y> CompoundSelection<Y> getProjection(CriteriaBuilder cb, Root<T> p) {
+	public <T,X> CompoundSelection<X> getProjection(CriteriaBuilder cb, Root<T> p) {
 		if (criteriaBeanClass != null) {
 			AbstractCriteriaBean<T> bean = Beans.getReference(criteriaBeanClass);
 			if (bean != null) {

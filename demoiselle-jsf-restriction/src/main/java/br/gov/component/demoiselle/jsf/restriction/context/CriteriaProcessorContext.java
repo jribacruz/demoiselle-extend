@@ -27,7 +27,7 @@ public interface CriteriaProcessorContext extends Serializable {
 
 	<T> List<Expression<?>> groupBy(CriteriaBuilder cb, Root<T> p);
 
-	<T, Y> CompoundSelection<Y> getProjection(CriteriaBuilder cb, Root<T> p);
+	<T,X> CompoundSelection<X> getProjection(CriteriaBuilder cb, Root<T> p);
 
 	void clear();
 }
