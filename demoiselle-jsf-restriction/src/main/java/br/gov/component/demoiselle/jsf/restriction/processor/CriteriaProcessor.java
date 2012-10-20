@@ -49,8 +49,8 @@ public class CriteriaProcessor implements Serializable {
 		processProjection(cb, cq, p);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
-		processHaving(cb, cq, p);
 		processGroupBy(cb, cq, p);
+		processHaving(cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
@@ -151,13 +151,6 @@ public class CriteriaProcessor implements Serializable {
 	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {
 		return cb.equal(p.get(Utils.getId(beanClass)), id);
 	}
-
-	//	public List<Predicate> getPredicateList() {
-	//		if (predicateList == null) {
-	//			return new ArrayList<Predicate>();
-	//		}
-	//		return predicateList;
-	//	}
 
 	public void setPredicateList(List<Predicate> predicateList) {
 		this.predicateList = predicateList;
