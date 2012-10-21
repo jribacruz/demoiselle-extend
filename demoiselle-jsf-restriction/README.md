@@ -8,7 +8,7 @@ o Criteria API para a criação de consultas. Com a concentração das restriç�
 
 ##1. Instalação
 
-No pom.xml do projeto adicionar as instruções a seguir
+No pom.xml do projeto adicionar a seguinte dependência:
 
 ```xml
 <dependency>
@@ -16,7 +16,10 @@ No pom.xml do projeto adicionar as instruções a seguir
 	<artifactId>demoiselle-jsf-restriction</artifactId>
 	<version>0.0.1-RC1</version>
 </dependency>
+```
 
+E o repositório:
+```xml
 <repository>
 	<id>demoiselle-jsf-restriction-repo</id>
 	<url>http://jribacruz.github.com/maven</url>
@@ -143,95 +146,6 @@ Por padrão as restrições são opcionais, o que siginifica que se o atributo *
 a restrição não entra na consulta. A restrição não opcional (com a inclusão do atributo optional false) é incluida na consulta mesmo se o valor de **value** é nulo.
 Sua utilidade é para incluir **restrições padrões** nas consultas onde o valor do **value** não provem da camada de visão. Como exemplo,
 no caso de se restringir a consulta a determinado grupo de usuário etc.
-
-##5. Custom Restriction
-----------------------------
-Para facilitar o uso de restrições usualmente utilizadas o pacote demoiselle-jsf-restriction possui um conjunto de classes restrictions prontas com restrições comuns, 
-que podem sem injetadas diretamente na classe Criteria. Ao todo 22 restrições são disponibilizadas.
-
-###5.1 ContainsRestriction
-
-
-
-
-###5.2 EmptyRestriction
-
-###5.3 EqualRestriction
-
-A classe EqualRestriction injetada no classe de critérios cria uma restrição de igualdade.
-
-```java
-@CriteriaController
-public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
-	private static final long serialVersionUID = 1L;
-	
-	@Inject
-	@Restriction(field="description")
-	private EqualRestriction<Bookmark, String> query1;
-	
-	//getters and setters
-	
-}
-
-```
-
-###5.4 FalseRestriction
-
-###5.5 EqualRestriction
-
-###5.6 GreaterThanOrEqualToRestriction
-
-###5.7 GreaterThanRestriction
-
-###5.8 InRestriction
-
-###5.9 LessThanOrEqualToRestriction
-
-###5.10 LessThanRestriction
-
-###5.11 LikeLeftRestriction
-
-###5.12 LikeRestrition
-Reescrevendo o Exemplo 1 utilizando o Custom Restriction LikeRestritionBean
-
-###classe de criterios
-
-```java
-
-@CriteriaController
-public class BookmarkDataTableCriteria extends AbstractCriteriaBean<Bookmark> {
-	private static final long serialVersionUID = 1L;
-	
-	@Inject
-	@Restriction(field="description")
-	private LikeRestrictionBean query1;
-	
-	//getters and setters
-	
-}
-```
-
-
-###5.13 LikeRightRestriction
-
-###5.14 MemberRestriction
-
-###5.15 NotContainsRestriction
-
-###5.16 NotEmptyRestriction
-
-###5.17 NotEqualRestriction
-
-###5.18 NotInRestriction
-
-###5.19 NotMemberRestriction
-
-###5.20 NotNullRestriction
-
-###5.21 NullRestriction
-
-###5.22 TrueRestriction
-
 
 ##6. Modo de seleção
 O modo de seleção tem como objetivo *ativar/processar* a consulta caso a seleção seja verdadeira. Tal funcionalidade é implementada
