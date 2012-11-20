@@ -66,8 +66,8 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 	private List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
-		Multimap<String, Predicate> andMap = ArrayListMultimap.create();
-		Multimap<String, Predicate> orMap = ArrayListMultimap.create();
+		ArrayListMultimap<String, Predicate> andMap = ArrayListMultimap.create();
+		ArrayListMultimap<String, Predicate> orMap = ArrayListMultimap.create();
 
 		for (Field field : Utils.getRestrictionFields(this.getClass())) {
 			RestrictionBean restrictionBean = (RestrictionBean) Reflections.getFieldValue(field, this);
@@ -115,7 +115,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	private void andPredicateGroupProcess(CriteriaBuilder cb, List<Predicate> predicateList, Multimap<String, Predicate> andMap) {
-		Iterator<String> iter = andMap.keys().iterator();
+		Iterator<String> iter = andMap.asMap().keySet().iterator();
 		while (iter.hasNext()) {
 			String key = iter.next();
 			Collection<Predicate> andPredicates = andMap.get(key);
@@ -124,7 +124,7 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 	}
 
 	private void orPredicateGroupProcess(CriteriaBuilder cb, List<Predicate> predicateList, Multimap<String, Predicate> orMap) {
-		Iterator<String> iter = orMap.keys().iterator();
+		Iterator<String> iter = orMap.asMap().keySet().iterator();
 		while (iter.hasNext()) {
 			String key = iter.next();
 			Collection<Predicate> orPredicates = orMap.get(key);
