@@ -6,13 +6,15 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public abstract class RestrictionBean<T, X> implements Serializable {
+public class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean selection;
 	private X value;
 	private String field;
 
-	protected  abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
+	protected Predicate restriction(CriteriaBuilder cb, Root<T> p) {
+		return null;
+	}
 
 	public boolean isSelection() {
 		return selection;
