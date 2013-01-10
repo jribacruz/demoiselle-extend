@@ -32,8 +32,11 @@ public class CriteriaPersistence<T, I> extends JPACrud<T, I> {
 		return query.getResultList();
 	}
 
+	/*
+	 * Retorna o tipo do bean atraves da classe criteria registrada no contexto
+	 */
 	@Override
 	protected Class<T> getBeanClass() {
-		return Reflections.<T>getGenericTypeArgument(context.getCriteriaClass(), 0);
+		return Reflections.<T> getGenericTypeArgument(context.getCriteriaClass(), 0);
 	}
 }
