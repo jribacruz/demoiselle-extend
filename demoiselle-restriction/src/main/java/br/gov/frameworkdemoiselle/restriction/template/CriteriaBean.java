@@ -18,6 +18,8 @@ public class CriteriaBean<T> implements Serializable {
 	@Inject
 	private CriteriaContext context;
 
+	private boolean paginated;
+
 	@SuppressWarnings("unused")
 	@PostConstruct
 	private void init() {
@@ -30,6 +32,14 @@ public class CriteriaBean<T> implements Serializable {
 
 	public List<Order> orderBy(CriteriaBuilder cb, Root<T> p) {
 		return null;
+	}
+
+	public boolean isPaginated() {
+		return paginated;
+	}
+
+	public void setPaginated(boolean paginated) {
+		this.paginated = paginated;
 	}
 
 }
