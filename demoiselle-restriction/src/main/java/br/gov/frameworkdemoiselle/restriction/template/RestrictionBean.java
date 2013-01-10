@@ -13,6 +13,13 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	private X value;
 	private String field;
 
+	/**
+	 * Metodo que contem um fragmento de restrição.
+	 * 
+	 * @param cb
+	 * @param p
+	 * @return Predicate
+	 */
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
 	public boolean isSelected() {
