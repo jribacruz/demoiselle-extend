@@ -5,12 +5,14 @@ import java.io.Serializable;
 import br.gov.frameworkdemoiselle.restriction.template.CriteriaBean;
 
 public interface CriteriaContext extends Serializable {
-	public <T> Class<? extends CriteriaBean<T>> getCriteriaClass();
+	public Class<? extends CriteriaBean<?>> getCriteriaClass();
 
-	public <T> void registerCriteriaClass(Class<? extends CriteriaBean<T>> criteriaClass);
+	public void registerCriteriaClass(Class<? extends CriteriaBean<?>> criteriaClass);
 
-	public <T> CriteriaBean<T> getCriteria(Class<?> criteriaClass);
+	public CriteriaBean<?> getCriteria(Class<?> criteriaClass);
 
-	public <T> void registerCriteria(Class<?> criteriaClass, CriteriaBean<T> criteriaBean);
+	public void registerCriteria(Class<?> criteriaClass, CriteriaBean<?> criteriaBean);
+
+	public boolean isPaginated();
 
 }
