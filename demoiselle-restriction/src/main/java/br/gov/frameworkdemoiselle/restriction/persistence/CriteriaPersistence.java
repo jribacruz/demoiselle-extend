@@ -9,11 +9,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import br.gov.frameworkdemoiselle.restriction.context.CriteriaContext;
+import br.gov.frameworkdemoiselle.restriction.qualifier.PersistenceQualifier;
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.template.JPACrud;
 import br.gov.frameworkdemoiselle.util.Reflections;
 
 @PersistenceController
+@PersistenceQualifier
 public class CriteriaPersistence<T, I> extends JPACrud<T, I> {
 	private static final long serialVersionUID = 1L;
 
