@@ -1,8 +1,11 @@
 package br.gov.frameworkdemoiselle.restriction.utils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 import javax.faces.convert.Converter;
+
+import org.apache.commons.lang.StringUtils;
 
 import br.gov.frameworkdemoiselle.restriction.converter.EnumConverter;
 import br.gov.frameworkdemoiselle.restriction.converter.StringConverter;
@@ -30,9 +33,22 @@ public class RestrictionUtils {
 		}
 		return new StringConverter();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public  static <T,X> RestrictionBean<T, X> getRestrictionBean(Field field, CriteriaBean<T> bean) {
+	public static <T, X> RestrictionBean<T, X> getRestrictionBean(Field field, CriteriaBean<T> bean) {
 		return (RestrictionBean<T, X>) Reflections.getFieldValue(field, bean);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static <T, X> boolean isEmptyValue(RestrictionBean<T, X> bean) {
+		if (bean.getValue().getClass() == String.class) {
+			String value = (String) bean.getValue();
+			return StringUtils.isEmpty(value);
+		} else if (Collection.class.isAssignableFrom(bean.getValue().getClass())) {
+			Collection collection = (Collection) bean.getValue();
+			return collection.isEmpty();
+		}
+
+		return true;
 	}
 }
