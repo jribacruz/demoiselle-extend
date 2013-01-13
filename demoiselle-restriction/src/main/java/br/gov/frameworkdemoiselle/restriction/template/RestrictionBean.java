@@ -9,7 +9,7 @@ import javax.persistence.criteria.Root;
 public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private boolean selected;
+	private boolean selection;
 	private X value;
 	private String field;
 
@@ -22,12 +22,12 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	 */
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
-	public boolean isSelected() {
-		return selected;
+	public boolean isSelection() {
+		return selection;
 	}
 
-	public void setSelected(boolean selected) {
-		this.selected = selected;
+	public void setSelection(boolean selection) {
+		this.selection = selection;
 	}
 
 	public X getValue() {
