@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.FIELD)
 public @interface Converter {
-	Class<? extends Converter> converter();
+	Class<? extends javax.faces.convert.Converter> converter();
 
 	@SuppressWarnings("rawtypes")
 	Class<? extends Enum> targetClass() default Enum.class;
