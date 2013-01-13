@@ -6,6 +6,7 @@ import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.inject.Inject;
 
+import br.gov.frameworkdemoiselle.restriction.context.CriteriaContext;
 import br.gov.frameworkdemoiselle.restriction.qualifier.PersistenceQualifier;
 import br.gov.frameworkdemoiselle.template.JPACrud;
 
@@ -20,6 +21,9 @@ public class JPADecorator<T, I> extends JPACrud<T, I> {
 	@Inject
 	@PersistenceQualifier
 	private JPACrud<T, I> proxy;
+
+	@Inject
+	private CriteriaContext context;
 
 	@Override
 	public void insert(T entity) {
@@ -43,7 +47,6 @@ public class JPADecorator<T, I> extends JPACrud<T, I> {
 
 	@Override
 	public List<T> findAll() {
-		return dao.findAll();
+		return context.getCriteriaClass() != null ? proxy.findAll() : dao.findAll();
 	}
-
 }
