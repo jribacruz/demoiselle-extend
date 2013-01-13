@@ -1,19 +1,28 @@
 package br.gov.frameworkdemoiselle.restriction.internal.implementation;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 
 import org.primefaces.model.SortOrder;
 
-import br.gov.frameworkdemoiselle.annotation.ViewScoped;
 import br.gov.frameworkdemoiselle.restriction.Parameter;
 
-@ViewScoped
+@SessionScoped
 public class ParameterImpl implements Parameter {
 	private static final long serialVersionUID = 1L;
 
 	private Map<String, String> filters;
 	private SortOrder sortOrder;
 	private String sortField;
+
+	@SuppressWarnings("unused")
+	@PostConstruct
+	private void init() {
+		this.filters = new HashMap<String, String>();
+	}
 
 	@Override
 	public Map<String, String> filters() {
@@ -43,6 +52,13 @@ public class ParameterImpl implements Parameter {
 	@Override
 	public void setField(String sortField) {
 		this.sortField = sortField;
+	}
+
+	@Override
+	public void clear() {
+		this.filters.clear();
+		this.sortField = null;
+		this.sortOrder = null;
 	}
 
 }

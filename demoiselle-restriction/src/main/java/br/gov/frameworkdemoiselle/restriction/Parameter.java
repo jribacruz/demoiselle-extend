@@ -18,5 +18,7 @@ public interface Parameter extends Serializable {
 	public String sortField();
 
 	public void setField(String sortField);
+	
+	public void clear();
 
 }
