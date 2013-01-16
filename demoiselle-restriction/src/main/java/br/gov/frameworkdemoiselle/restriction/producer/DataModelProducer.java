@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.pagination.Pagination;
-import br.gov.frameworkdemoiselle.restriction.Parameter;
 import br.gov.frameworkdemoiselle.restriction.context.CriteriaContext;
 import br.gov.frameworkdemoiselle.restriction.model.DataModel;
 import br.gov.frameworkdemoiselle.restriction.template.CriteriaBean;
@@ -25,8 +24,6 @@ public class DataModelProducer implements Serializable {
 	@Inject
 	private CriteriaContext context;
 
-	@Inject
-	private Parameter parameter;
 
 	public <T, C extends CriteriaBean<T>> DataModel<T, C> create(InjectionPoint ip) {
 		return getDataModel(getListMB(ip), this.<T, C> getCriteriaClass(ip.getMember()));
@@ -58,9 +55,9 @@ public class DataModelProducer implements Serializable {
 
 				context.registerCriteriaClass(criteriaClass);
 
-				parameter.setField(sortField);
-				parameter.setOrder(sortOrder);
-				parameter.setFilters(filters);
+//				parameter.setField(sortField);
+//				parameter.setOrder(sortOrder);
+//				parameter.setFilters(filters);
 
 				Pagination pagination = listBean.getPagination();
 				pagination.setFirstResult(first);
