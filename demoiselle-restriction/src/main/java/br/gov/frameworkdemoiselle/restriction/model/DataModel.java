@@ -2,6 +2,8 @@ package br.gov.frameworkdemoiselle.restriction.model;
 
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -15,6 +17,13 @@ public abstract class DataModel<T, C extends CriteriaBean<T>> extends LazyDataMo
 	private SortOrder sortOrder;
 
 	private String sortField;
+
+	private C criteriaBean;
+
+	@SuppressWarnings({ "unused" })
+	@PostConstruct
+	private void init() {
+	}
 
 	public Map<String, String> getFilters() {
 		return filters;
@@ -39,5 +48,28 @@ public abstract class DataModel<T, C extends CriteriaBean<T>> extends LazyDataMo
 	public void setSortField(String sortField) {
 		this.sortField = sortField;
 	}
+
+	public C getCriteriaBean() {
+		return criteriaBean;
+	}
+
+	public void setCriteriaBean(C criteriaBean) {
+		this.criteriaBean = criteriaBean;
+	}
+
+	//
+	// public Set<Predicate> process(CriteriaBuilder cb, Root<T> p) {
+	// Set<Predicate> predicates = new HashSet<Predicate>();
+	// for (Field field : criteriaBean.getClass().getDeclaredFields()) {
+	// for (Processor<T> processor : processors) {
+	// Predicate predicate = processor.apply(field, criteriaBean, cb, p,
+	// filters);
+	// if (predicate != null) {
+	// predicates.add(predicate);
+	// }
+	// }
+	// }
+	// return predicates;
+	// }
 
 }

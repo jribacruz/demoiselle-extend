@@ -8,12 +8,10 @@ import java.util.Map;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
 
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.pagination.Pagination;
-import br.gov.frameworkdemoiselle.restriction.CriteriaContext;
 import br.gov.frameworkdemoiselle.restriction.model.DataModel;
 import br.gov.frameworkdemoiselle.restriction.template.CriteriaBean;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
@@ -22,9 +20,6 @@ import br.gov.frameworkdemoiselle.util.Reflections;
 
 public class DataModelProducer implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private CriteriaContext context;
 
 	@Produces
 	@Default
@@ -56,13 +51,12 @@ public class DataModelProducer implements Serializable {
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 
-				this.setCriteriaBean(context.<T, C> getCriteriaBean(criteriaClass));
+				// this.setCriteriaBean(context.<T, C>
+				// getCriteriaBean(criteriaClass));
 
 				this.setFilters(filters);
 				this.setSortField(sortField);
 				this.setSortOrder(sortOrder);
-
-				context.setDataModel(this);
 
 				Pagination pagination = listBean.getPagination();
 				pagination.setFirstResult(first);
