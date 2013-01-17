@@ -62,6 +62,8 @@ public class DataModelProducer implements Serializable {
 				this.setSortField(sortField);
 				this.setSortOrder(sortOrder);
 
+				context.setDataModel(this);
+
 				Pagination pagination = listBean.getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
