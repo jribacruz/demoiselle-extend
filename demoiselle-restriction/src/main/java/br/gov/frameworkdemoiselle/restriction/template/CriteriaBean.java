@@ -10,7 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
-import br.gov.frameworkdemoiselle.restriction.context.CriteriaContext;
+import br.gov.frameworkdemoiselle.restriction.CriteriaContext;
 
 public class CriteriaBean<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class CriteriaBean<T> implements Serializable {
 	@SuppressWarnings("unused")
 	@PostConstruct
 	private void init() {
-		context.registerCriteria(this.getClass(), this);
+		this.context.addCriteria(this.getClass(), this);
 	}
 
 	/**
