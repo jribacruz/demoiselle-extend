@@ -5,13 +5,15 @@ import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.pagination.Pagination;
-import br.gov.frameworkdemoiselle.restriction.context.CriteriaContext;
+import br.gov.frameworkdemoiselle.restriction.CriteriaContext;
 import br.gov.frameworkdemoiselle.restriction.model.DataModel;
 import br.gov.frameworkdemoiselle.restriction.template.CriteriaBean;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
@@ -24,7 +26,8 @@ public class DataModelProducer implements Serializable {
 	@Inject
 	private CriteriaContext context;
 
-
+	@Produces
+	@Default
 	public <T, C extends CriteriaBean<T>> DataModel<T, C> create(InjectionPoint ip) {
 		return getDataModel(getListMB(ip), this.<T, C> getCriteriaClass(ip.getMember()));
 	}
@@ -53,11 +56,11 @@ public class DataModelProducer implements Serializable {
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 
-				context.registerCriteriaClass(criteriaClass);
+				this.setCriteriaBean(context.<T, C> getCriteriaBean(criteriaClass));
 
-//				parameter.setField(sortField);
-//				parameter.setOrder(sortOrder);
-//				parameter.setFilters(filters);
+				this.setFilters(filters);
+				this.setSortField(sortField);
+				this.setSortOrder(sortOrder);
 
 				Pagination pagination = listBean.getPagination();
 				pagination.setFirstResult(first);
