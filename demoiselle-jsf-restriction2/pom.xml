@@ -6,7 +6,7 @@
 
 	<groupId>br.gov.frameworkdemoiselle</groupId>
 	<artifactId>demoiselle-jsf-restriction2</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.2.2</version>
 	<packaging>jar</packaging>
 
 	<name></name>
