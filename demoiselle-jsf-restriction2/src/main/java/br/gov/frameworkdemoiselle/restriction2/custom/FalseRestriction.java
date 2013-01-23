@@ -14,4 +14,9 @@ public class FalseRestriction<T> extends RestrictionBean<T, String> {
 		return hasField() ? cb.isFalse(p.<Boolean> get(getField())) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "FalseRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

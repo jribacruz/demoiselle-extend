@@ -14,4 +14,9 @@ public class GreaterThanRestriction<T, X extends Number> extends RestrictionBean
 		return getValue() != null && hasField() ? cb.gt(p.<Number> get(getField()), getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "GreaterThanRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

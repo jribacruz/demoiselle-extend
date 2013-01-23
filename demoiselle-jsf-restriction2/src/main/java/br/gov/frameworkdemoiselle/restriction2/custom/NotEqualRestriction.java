@@ -14,4 +14,9 @@ public class NotEqualRestriction<T, X> extends RestrictionBean<T, X> {
 		return getValue() != null && hasField() ? cb.notEqual(p.get(getField()), getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "NotEqualRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

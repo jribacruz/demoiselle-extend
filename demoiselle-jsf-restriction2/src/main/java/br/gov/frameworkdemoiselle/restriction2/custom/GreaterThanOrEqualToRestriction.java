@@ -13,4 +13,10 @@ public class GreaterThanOrEqualToRestriction<T, X extends Number> extends Restri
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
 		return getValue() != null && hasField() ? cb.ge(p.<Number> get(getField()), getValue()) : null;
 	}
+
+	@Override
+	public String toString() {
+		return "GreaterThanOrEqualToRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

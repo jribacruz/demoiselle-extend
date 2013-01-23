@@ -16,4 +16,9 @@ public class InRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 		return p.get(getField()).in(getValue());
 	}
 
+	@Override
+	public String toString() {
+		return "InRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

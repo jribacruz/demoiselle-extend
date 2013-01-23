@@ -13,7 +13,12 @@ public class EmptyRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.isEmpty(p.<Collection<X>>get(getField()));
+		return cb.isEmpty(p.<Collection<X>> get(getField()));
+	}
+
+	@Override
+	public String toString() {
+		return "EmptyRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
 	}
 
 }

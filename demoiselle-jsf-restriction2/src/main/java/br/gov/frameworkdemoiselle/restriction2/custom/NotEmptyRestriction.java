@@ -8,12 +8,17 @@ import javax.persistence.criteria.Root;
 
 import br.gov.frameworkdemoiselle.restriction2.template.RestrictionBean;
 
-public class NotEmptyRestriction<T,X> extends RestrictionBean<T, Collection<X>> {
+public class NotEmptyRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return cb.isNotEmpty(p.<Collection<X>>get(getField()));
+		return cb.isNotEmpty(p.<Collection<X>> get(getField()));
+	}
+
+	@Override
+	public String toString() {
+		return "NotEmptyRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
 	}
 
 }

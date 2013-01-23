@@ -14,4 +14,9 @@ public class LessThanOrEqualToRestriction<T, X extends Number> extends Restricti
 		return getValue() != null && hasField() ? cb.le(p.<Number> get(getField()), getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "LessThanOrEqualToRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

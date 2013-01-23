@@ -14,4 +14,9 @@ public class EqualRestriction<T, X> extends RestrictionBean<T, X> {
 		return getValue() != null && hasField() ? cb.equal(p.get(getField()), getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "EqualRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

@@ -15,4 +15,10 @@ public class NotContainsRestriction<T> extends RestrictionBean<T, Collection<T>>
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
 		return getValue() != null ? cb.not(p.in(getValue())) : null;
 	}
+
+	@Override
+	public String toString() {
+		return "NotContainsRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

@@ -16,4 +16,9 @@ public class NotInRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 		return cb.not(p.get(getField()).in(getValue()));
 	}
 
+	@Override
+	public String toString() {
+		return "NotInRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

@@ -14,4 +14,9 @@ public class LessThanRestriction<T, X extends Number> extends RestrictionBean<T,
 		return getValue() != null && hasField() ? cb.lt(p.<Number> get(getField()), getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "LessThanRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

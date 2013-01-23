@@ -14,4 +14,9 @@ public class NotNullRestriction<T> extends RestrictionBean<T, String> {
 		return hasField() ? cb.isNotNull(p.get(getField())) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "NotNullRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

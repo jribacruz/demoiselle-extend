@@ -16,4 +16,9 @@ public class MemberRestriction<T, X> extends RestrictionBean<T, X> {
 		return cb.isMember(getValue(), p.<Collection<X>> get(getField()));
 	}
 
+	@Override
+	public String toString() {
+		return "MemberRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

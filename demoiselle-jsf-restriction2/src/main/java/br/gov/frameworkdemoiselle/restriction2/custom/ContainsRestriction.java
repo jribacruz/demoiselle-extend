@@ -16,4 +16,9 @@ public class ContainsRestriction<T> extends RestrictionBean<T, Collection<T>> {
 		return getValue() != null ? p.in(getValue()) : null;
 	}
 
+	@Override
+	public String toString() {
+		return "ContainsRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

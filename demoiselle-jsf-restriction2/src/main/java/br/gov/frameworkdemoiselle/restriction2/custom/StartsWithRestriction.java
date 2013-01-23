@@ -7,12 +7,18 @@ import javax.persistence.criteria.Root;
 import br.gov.frameworkdemoiselle.restriction2.template.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class LikeLeftRestriction<T> extends RestrictionBean<T, String> {
+public class StartsWithRestriction<T> extends RestrictionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return !Strings.isEmpty(getValue()) && hasField() ? cb.like(cb.lower(p.<String> get(getField())), "%" + getValue().toLowerCase()) : null;
+		return !Strings.isEmpty(getValue()) && hasField() ? cb.like(cb.lower(p.<String> get(getField())), getValue().toLowerCase() + "%")
+				: null;
+	}
+
+	@Override
+	public String toString() {
+		return "LikeRightRestriction [value=" + value + ", field=" + field + ", selection=" + selection + "]";
 	}
 
 }
