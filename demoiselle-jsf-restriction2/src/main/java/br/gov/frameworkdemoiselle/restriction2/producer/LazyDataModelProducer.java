@@ -1,5 +1,7 @@
 package br.gov.frameworkdemoiselle.restriction2.producer;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +25,18 @@ public class LazyDataModelProducer {
 	@CriteriaBy(value = CriteriaBean.class)
 	public <T> LazyDataModel<T> create(InjectionPoint ip) {
 
-		logger.info("Inicializando LazyDataModel para classe {} ", new Object[] { ip.getMember() });
+		logger.info("Inicializando LazyDataModel para classe {} ", new Object[] { getCriteriaClass(ip.getMember()).getName() });
 
-		return getLazyDataModel();
+		return getLazyDataModel(getCriteriaClass(ip.getMember()));
 	}
 
-	private <T> LazyDataModel<T> getLazyDataModel() {
+	@SuppressWarnings("rawtypes")
+	private Class<? extends CriteriaBean> getCriteriaClass(Member member) {
+		return ((Field) member).getAnnotation(CriteriaBy.class).value();
+	}
+
+	@SuppressWarnings("rawtypes")
+	private <T> LazyDataModel<T> getLazyDataModel(final Class<? extends CriteriaBean> criteriaClass) {
 		return new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
