@@ -1,10 +1,16 @@
 package br.gov.frameworkdemoiselle.restriction2.base;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.criteria.Predicate;
+
+import org.apache.commons.lang.StringUtils;
 
 import br.gov.frameworkdemoiselle.restriction2.annotations.Attribute;
 import br.gov.frameworkdemoiselle.restriction2.annotations.Converter;
@@ -17,7 +23,6 @@ import br.gov.frameworkdemoiselle.restriction2.template.RestrictionBean;
 import br.gov.frameworkdemoiselle.restriction2.utils.ReflectionUtils;
 import br.gov.frameworkdemoiselle.util.Beans;
 import br.gov.frameworkdemoiselle.util.Reflections;
-import br.gov.frameworkdemoiselle.util.Strings;
 
 public class RestrictionMap {
 
@@ -94,26 +99,37 @@ public class RestrictionMap {
 		return this.filters.get(attribute);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T, X> RestrictionBean<T, X> getRestrictionBean() {
-
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T, X> Set<RestrictionBean> getRestrictionBeans() {
+		Set<RestrictionBean> beans = new HashSet<RestrictionBean>();
 		Method getter = ReflectionUtils.getGetter(criteriaClass, this.field);
 		if (getter != null) {
 			RestrictionBean<T, X> restrictionBean = (RestrictionBean<T, X>) ReflectionUtils.invoke(getter, this.criteriaBean);
-			if (hasAttribute && this.attributes.length == 1) {
-				if (isDataTableColumn()) {
-					String attribute = this.attributes[0];
-					restrictionBean.setValue((X) getDataTableColumnValue(attribute));
-				} else {
-					if (hasValue) {
-						restrictionBean.setValue((X) getValue());
+			if (hasAttribute) {
+				if (this.attributes.length == 1) {
+					restrictionBean.setField(this.attributes[0]);
+					if (isDataTableColumn()) {
+						restrictionBean.setValue((X) getDataTableColumnValue(this.attributes[0]));
+					} else {
+						if (hasValue) {
+							restrictionBean.setValue((X) getValue());
+						}
 					}
+					beans.add(restrictionBean);
+				} else {
+					for (int i = 0; i < this.attributes.length; i++) {
+						RestrictionBean<T, X> orBean = Reflections.instantiate(restrictionBean.getClass());
+						orBean.setField(this.attributes[i]);
+						orBean.setValue(restrictionBean.getValue());
+						beans.add(orBean);
+					}
+
 				}
 			}
-			return restrictionBean;
+			return beans;
 		}
 
-		return null;
+		return beans;
 	}
 
 	public boolean isSelectionMode() {
@@ -146,6 +162,16 @@ public class RestrictionMap {
 
 	public void setAttributes(String[] attributes) {
 		this.attributes = attributes;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static <T, X> boolean isValueEmpty(RestrictionBean<T, X> bean) {
+		if (bean.getValue().getClass() == String.class) {
+			return StringUtils.isEmpty((String) bean.getValue());
+		} else if (Collection.class.isAssignableFrom(bean.getValue().getClass())) {
+			return ((Collection) bean.getValue()).isEmpty();
+		}
+		return true;
 	}
 
 	@Override
