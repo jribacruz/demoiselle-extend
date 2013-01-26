@@ -120,16 +120,18 @@ public class RestrictionMap {
 					for (int i = 0; i < this.attributes.length; i++) {
 						RestrictionBean<T, X> orBean = Reflections.instantiate(restrictionBean.getClass());
 						orBean.setField(this.attributes[i]);
-						orBean.setValue(restrictionBean.getValue());
+						if (hasValue) {
+							orBean.setValue((X) getValue());
+						} else {
+							orBean.setValue(restrictionBean.getValue());
+						}
 						orBean.setSelection(restrictionBean.isSelection());
 						beans.add(orBean);
 					}
 
 				}
 			}
-			return beans;
 		}
-
 		return beans;
 	}
 
@@ -167,10 +169,12 @@ public class RestrictionMap {
 
 	@SuppressWarnings("rawtypes")
 	public static <T, X> boolean isValueEmpty(RestrictionBean<T, X> bean) {
-		if (bean.getValue().getClass() == String.class) {
-			return StringUtils.isEmpty((String) bean.getValue());
-		} else if (Collection.class.isAssignableFrom(bean.getValue().getClass())) {
-			return ((Collection) bean.getValue()).isEmpty();
+		if (bean != null && bean.getValue() != null) {
+			if (bean.getValue().getClass() == String.class) {
+				return StringUtils.isEmpty((String) bean.getValue());
+			} else if (Collection.class.isAssignableFrom(bean.getValue().getClass())) {
+				return ((Collection) bean.getValue()).isEmpty();
+			}
 		}
 		return true;
 	}
