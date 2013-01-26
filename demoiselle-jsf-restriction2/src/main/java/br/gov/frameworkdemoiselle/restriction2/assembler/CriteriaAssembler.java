@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 
 import br.gov.frameworkdemoiselle.restriction2.Linker;
 import br.gov.frameworkdemoiselle.restriction2.base.RestrictionMap;
+import br.gov.frameworkdemoiselle.restriction2.linkers.NonRequiredRestrictionLinker;
 import br.gov.frameworkdemoiselle.restriction2.linkers.RequiredRestrictionLinker;
+import br.gov.frameworkdemoiselle.restriction2.linkers.SelectionModeRestrictionLinker;
 import br.gov.frameworkdemoiselle.restriction2.template.CriteriaBean;
 import br.gov.frameworkdemoiselle.restriction2.template.RestrictionBean;
 
@@ -31,6 +33,8 @@ public class CriteriaAssembler<T> implements Serializable {
 	public CriteriaAssembler() {
 		this.restrictionLinkers = new HashSet<Linker<T>>();
 		restrictionLinkers.add(new RequiredRestrictionLinker<T>());
+		restrictionLinkers.add(new SelectionModeRestrictionLinker<T>());
+		restrictionLinkers.add(new NonRequiredRestrictionLinker<T>());
 	}
 
 	@SuppressWarnings("rawtypes")
