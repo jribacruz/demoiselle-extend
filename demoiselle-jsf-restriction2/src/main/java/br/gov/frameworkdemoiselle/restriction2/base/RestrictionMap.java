@@ -121,6 +121,7 @@ public class RestrictionMap {
 						RestrictionBean<T, X> orBean = Reflections.instantiate(restrictionBean.getClass());
 						orBean.setField(this.attributes[i]);
 						orBean.setValue(restrictionBean.getValue());
+						orBean.setSelection(restrictionBean.isSelection());
 						beans.add(orBean);
 					}
 
