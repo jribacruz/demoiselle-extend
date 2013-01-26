@@ -18,16 +18,22 @@ public class RequiredRestrictionLinker<T> implements Linker<T> {
 	public Set<Predicate> link(CriteriaBuilder cb, Root<T> p, RestrictionMap map) {
 		Set<Predicate> predicates = new HashSet<Predicate>();
 		if (map.isRequired()) {
+			Set<Predicate> orPredicates = new HashSet<Predicate>();
 			for (RestrictionBean bean : map.getRestrictionBeans()) {
-				if (!RestrictionMap.isValueEmpty(bean)) {
-					Predicate predicate = bean.restriction(cb, p);
-					if (predicate != null) {
-						predicates.add(predicate);
-					}
+				Predicate predicate = bean.restriction(cb, p);
+				if (predicate != null) {
+					orPredicates.add(predicate);
 				}
 			}
+			if (!orPredicates.isEmpty()) {
+				if (map.getRestrictionBeans().size() > 1) {
+					predicates.add(cb.or(orPredicates.toArray(new Predicate[] {})));
+				} else {
+					predicates.addAll(orPredicates);
+				}
+			}
+
 		}
 		return predicates;
 	}
-
 }
