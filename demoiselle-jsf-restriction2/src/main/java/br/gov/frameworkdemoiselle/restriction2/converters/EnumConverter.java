@@ -4,6 +4,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
+import org.apache.commons.lang.StringUtils;
+
 public class EnumConverter implements Converter {
 
 	@SuppressWarnings("rawtypes")
@@ -17,6 +19,11 @@ public class EnumConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
+		if (targetClass != null) {
+			if (!StringUtils.isEmpty(value)) {
+				return Enum.valueOf(targetClass, value);
+			}
+		}
 		return null;
 	}
 
