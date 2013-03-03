@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD })
-public @interface PredicateGroup {
-	String name();
+@Target(value = { ElementType.FIELD, ElementType.METHOD })
+public @interface Attribute {
+	String value();
 
-	OperatorType operator() default OperatorType.AND;
+	boolean dataTableColumn() default false;
 }
