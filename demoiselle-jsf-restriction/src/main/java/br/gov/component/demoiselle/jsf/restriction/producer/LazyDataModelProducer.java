@@ -17,7 +17,6 @@ import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
-import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -57,6 +56,7 @@ public class LazyDataModelProducer implements Serializable {
 		return new LazyDataModel<T>() {
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 				criteriaContext.setFilters(filters);
@@ -67,7 +67,8 @@ public class LazyDataModelProducer implements Serializable {
 				Pagination pagination = listMB.getPagination();
 				pagination.setFirstResult(first);
 				pagination.setPageSize(pageSize);
-				List<T> list = Utils.invokeMethodReturnCollection(listMB, "handleResultList");
+				listMB.clear();
+				List<T> list = listMB.getResultList();
 				this.setRowCount(pagination.getTotalResults());
 				this.setPageSize(pageSize);
 				return list;
