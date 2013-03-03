@@ -49,8 +49,6 @@ public class CriteriaProcessor implements Serializable {
 		processProjection(cb, cq, p);
 		processRestriction(cb, cq, p);
 		processOrder(cb, cq, p);
-		processGroupBy(cb, cq, p);
-		processHaving(cb, cq, p);
 
 		TypedQuery<T> query = em.createQuery(cq);
 		preparePagination(beanClass, query);
@@ -59,26 +57,14 @@ public class CriteriaProcessor implements Serializable {
 		return query.getResultList();
 	}
 
-	public <T, I> T load(Class<T> beanClass, I id) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<T> cq = cb.createQuery(beanClass);
-		Root<T> p = cq.from(beanClass);
-		//		processProjection(cb, cq, p, false);
-		processRestriction(beanClass, id, cb, cq, p);
-
-		TypedQuery<T> query = em.createQuery(cq);
-		processorContext.clear();
-		return query.getSingleResult();
-	}
-
 	protected <T> Long countAll(Class<T> beanClass) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);
 		cq.select(cb.count(p));
-		//this.<T, Long> processProjection(cb, cq, p, true);
+		// this.<T, Long> processProjection(cb, cq, p, true);
 		processRestriction(cb, cq, p);
-		//cq.where(getPredicateList().toArray(new Predicate[] {}));
+		// cq.where(getPredicateList().toArray(new Predicate[] {}));
 
 		TypedQuery<Long> query = em.createQuery(cq);
 		return query.getSingleResult();
@@ -132,20 +118,6 @@ public class CriteriaProcessor implements Serializable {
 			cq.orderBy(orders);
 		}
 
-	}
-
-	protected <T, X> void processHaving(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		List<Predicate> predicates = processorContext.getHaving(cb, p);
-		if (predicates != null && !predicates.isEmpty()) {
-			cq.having(predicates.toArray(new Predicate[] {}));
-		}
-	}
-
-	protected <T, X> void processGroupBy(CriteriaBuilder cb, CriteriaQuery<X> cq, Root<T> p) {
-		List<Expression<?>> expressions = processorContext.groupBy(cb, p);
-		if (expressions != null && !expressions.isEmpty()) {
-			cq.groupBy(expressions);
-		}
 	}
 
 	private <T, I> Predicate prepareLoadRestriction(Class<T> beanClass, I id, CriteriaBuilder cb, Root<T> p) {

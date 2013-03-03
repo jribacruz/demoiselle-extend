@@ -14,9 +14,9 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
 import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
-import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
+import br.gov.component.demoiselle.jsf.restriction.qualifier.CriteriaBy;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -33,21 +33,17 @@ public class LazyDataModelProducer implements Serializable {
 	@SuppressWarnings("rawtypes")
 	@Produces
 	@Default
-	public <T> LazyDataModel getLazyDataModel(final InjectionPoint ip) {
+	@CriteriaBy(value = AbstractCriteriaBean.class)
+	public <T> LazyDataModel<T> getLazyDataModel(final InjectionPoint ip) {
 		final Field field = (Field) ip.getMember();
 		final AbstractListPageBean listPageBean = getListMB(ip);
-		final Class<? extends AbstractCriteriaBean> criteria = getCriteriaClass(field);
+		final Class<? extends AbstractCriteriaBean> criteria = field.getAnnotation(CriteriaBy.class).value();
 		return getLazyDataModelInstance(listPageBean, criteria);
 	}
 
 	@SuppressWarnings("rawtypes")
 	private AbstractListPageBean getListMB(InjectionPoint ip) {
 		return (AbstractListPageBean) Beans.getReference(ip.getMember().getDeclaringClass());
-	}
-
-	@SuppressWarnings("rawtypes")
-	private Class<? extends AbstractCriteriaBean> getCriteriaClass(Field field) {
-		return field.isAnnotationPresent(Criteria.class) ? field.getAnnotation(Criteria.class).value() : null;
 	}
 
 	@SuppressWarnings("rawtypes")
