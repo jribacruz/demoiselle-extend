@@ -7,7 +7,7 @@ import javax.decorator.Delegate;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
-import br.gov.component.demoiselle.jsf.restriction.processor.CriteriaProcessor;
+import br.gov.component.demoiselle.jsf.restriction.processor.JPAProcessor;
 import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.template.JPACrud;
 
@@ -21,7 +21,7 @@ public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 	private JPACrud<T, I> dao;
 
 	@Inject
-	private CriteriaProcessor processor;
+	private JPAProcessor processor;
 
 	/**
 	 * Intercepta o método findAll() da classe JPACrud e verifica se há um

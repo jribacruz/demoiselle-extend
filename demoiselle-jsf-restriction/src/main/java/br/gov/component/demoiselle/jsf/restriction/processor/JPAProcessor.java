@@ -11,7 +11,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -23,7 +22,7 @@ import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.pagination.PaginationContext;
 
 @SessionScoped
-public class CriteriaProcessor implements Serializable {
+public class JPAProcessor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
