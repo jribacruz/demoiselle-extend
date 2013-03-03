@@ -55,14 +55,6 @@ public abstract class AbstractCriteriaBean<T> implements Serializable {
 		return null;
 	}
 
-	protected List<Expression<?>> groupBy(CriteriaBuilder cb, Root<T> p) {
-		return null;
-	}
-
-	protected List<Predicate> having(CriteriaBuilder cb, Root<T> p) {
-		return null;
-	}
-
 	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 	private List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> p) {
 		List<Predicate> predicateList = new ArrayList<Predicate>();
