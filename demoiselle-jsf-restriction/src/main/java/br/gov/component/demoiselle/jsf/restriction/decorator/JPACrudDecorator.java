@@ -31,7 +31,7 @@ public abstract class JPACrudDecorator<T, I> extends JPACrud<T, I> {
 	 */
 	@Override
 	public List<T> findAll() {
-		return processor.hasCriteria() ? processor.getResultList(Utils.<T> getDomainBeanClass(dao)) : dao.findAll();
+		return processor.hasCriteria() ? processor.findAll(Utils.<T> getDomainBeanClass(dao)) : dao.findAll();
 	}
 
 }
