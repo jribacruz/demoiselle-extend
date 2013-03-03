@@ -12,35 +12,11 @@ import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 public class CriteriaContextImpl implements CriteriaContext {
 	private static final long serialVersionUID = 1L;
 
-	private int pageSize;
-
-	private String query;
-
 	private String sortField;
 
 	private SortOrder sortOrder;
 
 	private Map<String, String> filters;
-
-	@Override
-	public int getPageSize() {
-		return this.pageSize;
-	}
-
-	@Override
-	public void setPageSize(int size) {
-		this.pageSize = size;
-	}
-
-	@Override
-	public void setQuery(String query) {
-		this.query = query;
-	}
-
-	@Override
-	public String getQuery() {
-		return this.query;
-	}
 
 	@Override
 	public void setSortOrder(SortOrder sortOrder) {
@@ -74,8 +50,6 @@ public class CriteriaContextImpl implements CriteriaContext {
 
 	@Override
 	public void clear() {
-		this.pageSize = 0;
-		this.query = null;
 		this.sortField = null;
 		this.sortOrder = null;
 		this.filters.clear();

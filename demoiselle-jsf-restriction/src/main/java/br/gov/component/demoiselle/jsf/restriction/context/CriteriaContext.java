@@ -6,14 +6,6 @@ import java.util.Map;
 import org.primefaces.model.SortOrder;
 
 public interface CriteriaContext extends Serializable {
-	int getPageSize();
-
-	void setPageSize(int size);
-
-	void setQuery(String query);
-
-	public String getQuery();
-
 	void setSortOrder(SortOrder sortOrder);
 
 	SortOrder getSortOrder();
