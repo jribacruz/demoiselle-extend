@@ -17,7 +17,6 @@ import br.gov.component.demoiselle.jsf.restriction.AbstractCriteriaBean;
 import br.gov.component.demoiselle.jsf.restriction.annotation.Criteria;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
-import br.gov.component.demoiselle.jsf.restriction.exception.AnnotationCriteriaNotFoundException;
 import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
 import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
@@ -37,16 +36,9 @@ public class LazyDataModelProducer implements Serializable {
 	@Default
 	public <T> LazyDataModel getLazyDataModel(final InjectionPoint ip) {
 		final Field field = (Field) ip.getMember();
-		validateCriteriaPresence(field);
 		final AbstractListPageBean listPageBean = getListMB(ip);
 		final Class<? extends AbstractCriteriaBean> criteria = getCriteriaClass(field);
 		return getLazyDataModelInstance(listPageBean, criteria);
-	}
-
-	private void validateCriteriaPresence(Field field) {
-		if (!field.isAnnotationPresent(Criteria.class)) {
-			throw new AnnotationCriteriaNotFoundException("Annotation @Criteria não encontrada no campo: " + field.getName());
-		}
 	}
 
 	@SuppressWarnings("rawtypes")
