@@ -15,7 +15,6 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.gov.component.demoiselle.jsf.restriction.context.CriteriaContext;
 import br.gov.component.demoiselle.jsf.restriction.context.CriteriaProcessorContext;
 import br.gov.component.demoiselle.jsf.restrictions.util.Utils;
 import br.gov.frameworkdemoiselle.pagination.Pagination;
@@ -24,9 +23,6 @@ import br.gov.frameworkdemoiselle.pagination.PaginationContext;
 @SessionScoped
 public class JPAProcessor implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private CriteriaContext context;
 
 	@Inject
 	private CriteriaProcessorContext processorContext;
@@ -41,7 +37,7 @@ public class JPAProcessor implements Serializable {
 
 	private List<Predicate> predicateList;
 
-	public <T> List<T> getResultList(Class<T> beanClass) {
+	public <T> List<T> findAll(Class<T> beanClass) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
@@ -76,16 +72,11 @@ public class JPAProcessor implements Serializable {
 	}
 
 	private <T> void preparePagination(Class<T> beanClass, TypedQuery<T> query) {
-		if (context.getPageSize() == 0) {
-			final Pagination pagination = this.<T> getPagination(beanClass);
-			if (pagination != null) {
-				pagination.setTotalResults(this.<T> countAll(beanClass).intValue());
-				query.setFirstResult(pagination.getFirstResult());
-				query.setMaxResults(pagination.getPageSize());
-			}
-		} else {
-			query.setMaxResults(context.getPageSize());
-			context.setPageSize(0);
+		final Pagination pagination = this.<T> getPagination(beanClass);
+		if (pagination != null) {
+			pagination.setTotalResults(this.<T> countAll(beanClass).intValue());
+			query.setFirstResult(pagination.getFirstResult());
+			query.setMaxResults(pagination.getPageSize());
 		}
 	}
 
