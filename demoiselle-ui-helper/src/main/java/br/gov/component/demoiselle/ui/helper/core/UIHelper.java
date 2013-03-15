@@ -23,27 +23,27 @@ public class UIHelper implements Serializable {
 	private MessageContext messageContext;
 
 
-	protected void update(String id) {
+	public void update(String id) {
 		requestContext.update(id);
 	}
 
-	protected void execute(String command) {
+	public void execute(String command) {
 		requestContext.execute(command);
 	}
 
-	protected void update(String formId, String id) {
+	public void update(String formId, String id) {
 		requestContext.update(formId.concat(":").concat(id));
 	}
 
-	protected void addMessage(String message) {
+	public void addMessage(String message) {
 		messageContext.add(new DefaultMessage(message), SeverityType.INFO);
 	}
 
-	protected void addMessage(String message, Object... params) {
+	public void addMessage(String message, Object... params) {
 		messageContext.add(new DefaultMessage(message, params), SeverityType.INFO);
 	}
 
-	protected boolean isValidationFailed() {
+	public boolean isValidationFailed() {
 		return facesContext.isValidationFailed();
 	}
 

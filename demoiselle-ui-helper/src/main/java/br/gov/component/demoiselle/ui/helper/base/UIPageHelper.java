@@ -1,5 +1,7 @@
 package br.gov.component.demoiselle.ui.helper.base;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import br.gov.component.demoiselle.ui.helper.annotations.UICrudHelper;
@@ -9,13 +11,15 @@ import br.gov.component.demoiselle.ui.helper.core.UIHelper;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.ResourceBundle;
 
-public class UIPageHelper<T> extends UIHelper {
+public class UIPageHelper<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private UIPageConfig config;
 	@Inject
 	private ResourceBundle bundle;
+	@Inject
+	private UIHelper helper;
 
 	private Class<T> beanClass;
 
@@ -28,7 +32,7 @@ public class UIPageHelper<T> extends UIHelper {
 	 * 
 	 */
 	public String updateUIAfterSave() {
-		if (!isValidationFailed()) {
+		if (!helper.isValidationFailed()) {
 			hideDialog();
 			updateDataTable();
 			addSaveMessage();
@@ -40,7 +44,7 @@ public class UIPageHelper<T> extends UIHelper {
 	}
 
 	public String updateUIAfterInsert() {
-		if (!isValidationFailed()) {
+		if (!helper.isValidationFailed()) {
 			hideDialog();
 			updateDataTable();
 			addInsertMessage();
@@ -52,7 +56,7 @@ public class UIPageHelper<T> extends UIHelper {
 	}
 
 	public String updateUIAfterUpdate() {
-		if (!isValidationFailed()) {
+		if (!helper.isValidationFailed()) {
 			hideDialog();
 			updateDataTable();
 			addUpdateMessage();
@@ -67,7 +71,7 @@ public class UIPageHelper<T> extends UIHelper {
 	 * Atualiza os componentes visuais apos deletar
 	 */
 	public String updateUIAfterDelete() {
-		if (!isValidationFailed()) {
+		if (!helper.isValidationFailed()) {
 			updateDataTable();
 			addDeleteMessage();
 			updateDataTableToolbar();
@@ -78,7 +82,7 @@ public class UIPageHelper<T> extends UIHelper {
 	}
 
 	public String updateUIAfterDeleteSelection() {
-		if (!isValidationFailed()) {
+		if (!helper.isValidationFailed()) {
 			updateDataTable();
 			addDeleteSelectionMessage();
 			updateDataTableToolbar();
@@ -111,18 +115,18 @@ public class UIPageHelper<T> extends UIHelper {
 	 * Atualiza o dataTable
 	 */
 	public void updateDataTable() {
-		update(getFormDataTableId(), getDataTableId());
+		helper.update(getFormDataTableId(), getDataTableId());
 	}
 
 	/**
 	 * Atualiza o corpo do dialog
 	 */
 	public void updateDialogBody() {
-		update(getFormDialogId(), getDialogBodyId());
+		helper.update(getFormDialogId(), getDialogBodyId());
 	}
 
 	public void updateDataTableToolbar() {
-		update(getFormToolbarId(), getToolbarId());
+		helper.update(getFormToolbarId(), getToolbarId());
 	}
 
 	/**
@@ -157,35 +161,35 @@ public class UIPageHelper<T> extends UIHelper {
 	 * Exibe uma notificação
 	 */
 	public void showGrowl() {
-		this.update(config.getGrowlId());
+		helper.update(config.getGrowlId());
 	}
 
 	private void addSaveMessage() {
-		addMessage(getOnSaveMessage(), getClassName());
+		helper.addMessage(getOnSaveMessage(), getClassName());
 	}
 
 	private void addDeleteMessage() {
-		addMessage(getOnDeleteMessage(), getClassName());
+		helper.addMessage(getOnDeleteMessage(), getClassName());
 	}
 
 	private void addDeleteSelectionMessage() {
-		addMessage(getOnDeleteSelectionMessage(), getClassName());
+		helper.addMessage(getOnDeleteSelectionMessage(), getClassName());
 	}
 
 	private void addInsertMessage() {
-		addMessage(getOnInsertMessage(), getClassName());
+		helper.addMessage(getOnInsertMessage(), getClassName());
 	}
 
 	private void addUpdateMessage() {
-		addMessage(getOnUpdateMessage(), getClassName());
+		helper.addMessage(getOnUpdateMessage(), getClassName());
 	}
 
 	public void showDialog(String wvar) {
-		execute(wvar.concat(".show()"));
+		helper.execute(wvar.concat(".show()"));
 	}
 
 	public void hideDialog(String wvar) {
-		execute(wvar.concat(".hide()"));
+		helper.execute(wvar.concat(".hide()"));
 	}
 
 	/* Ids */
