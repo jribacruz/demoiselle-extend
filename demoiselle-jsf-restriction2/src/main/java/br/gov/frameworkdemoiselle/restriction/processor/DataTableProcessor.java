@@ -20,14 +20,14 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.ArrayListMultimap;
 
-public class RestrictionProcessor<T> implements Processor<T> {
+public class DataTableProcessor<T> implements Processor<T> {
 
 	private DefaultLazyModel<T> defaultLazyCriteria;
 
 	@SuppressWarnings("rawtypes")
 	private ArrayListMultimap<Field, RestrictionBean> beansMap;
 
-	public RestrictionProcessor(DefaultLazyModel<T> defaultLazyCriteria) {
+	public DataTableProcessor(DefaultLazyModel<T> defaultLazyCriteria) {
 		super();
 		this.beansMap = ArrayListMultimap.create();
 		this.defaultLazyCriteria = defaultLazyCriteria;
