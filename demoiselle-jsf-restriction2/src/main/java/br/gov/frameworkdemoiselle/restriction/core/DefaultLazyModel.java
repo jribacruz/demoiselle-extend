@@ -10,9 +10,8 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.restriction.builder.JPABuilder;
+import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
 import br.gov.frameworkdemoiselle.restriction.orderer.DataTableOrder;
-import br.gov.frameworkdemoiselle.restriction.processor.RestrictionProcessor;
-import br.gov.frameworkdemoiselle.util.Reflections;
 
 public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -20,20 +19,24 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 	@Inject
 	protected JPABuilder<T> builder;
 
-	protected Class<T> beanClass;
+	@Inject
+	private ModelContext context;
+
+	protected Criteria<T> criteria;
 
 	@Override
 	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-		this.setRowCount(builder.countAll(getBeanClass(), new RestrictionProcessor<T>(this)));
-		return builder
-				.findAll(getBeanClass(), first, pageSize, new DataTableOrder(sortField, sortOrder), new RestrictionProcessor<T>(this));
+		context.setDefaultLazyModel(this);
+		this.setRowCount(builder.countAll());
+		return builder.findAll(first, pageSize, new DataTableOrder(sortField, sortOrder));
 	}
 
-	protected Class<T> getBeanClass() {
-		if (this.beanClass == null) {
-			this.beanClass = Reflections.getGenericTypeArgument(this.getClass(), 0);
-		}
-		return this.beanClass;
+	public Criteria<T> getCriteria() {
+		return criteria;
+	}
+
+	public void setCriteria(Criteria<T> criteria) {
+		this.criteria = criteria;
 	}
 
 }

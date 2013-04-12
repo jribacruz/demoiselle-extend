@@ -6,16 +6,16 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import br.gov.frameworkdemoiselle.restriction.builder.JPABuilder;
-import br.gov.frameworkdemoiselle.restriction.models.DataTableLazyModel;
-import br.gov.frameworkdemoiselle.util.Reflections;
+import br.gov.frameworkdemoiselle.restriction.core.Criteria;
+import br.gov.frameworkdemoiselle.restriction.custom.models.DataTableLazyModel;
 
 public class DataTableLazyCriteriaProducer {
 
 	@Produces
 	@Default
-	public <T> DataTableLazyModel<T> create(InjectionPoint ip, @New JPABuilder<T> builder) {
-		Class<T> beanClass = Reflections.getGenericTypeArgument(ip.getMember(), 0);
-		return new DataTableLazyModel<T>(beanClass, builder);
+	public <T> DataTableLazyModel<T> create(InjectionPoint ip, @New JPABuilder<T> builder, @New Criteria<T> defaultCriteria) {
+		Criteria<T> criteria = defaultCriteria;
+		return new DataTableLazyModel<T>(criteria);
 	}
 
 }
