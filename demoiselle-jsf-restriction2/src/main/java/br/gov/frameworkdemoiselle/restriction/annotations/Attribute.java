@@ -9,6 +9,4 @@ import java.lang.annotation.Target;
 @Target(value = { ElementType.FIELD, ElementType.ANNOTATION_TYPE })
 public @interface Attribute {
 	String[] names();
-
-	String value() default "";
 }
