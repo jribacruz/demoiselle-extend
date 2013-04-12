@@ -1,7 +1,7 @@
 package br.gov.frameworkdemoiselle.restriction.models;
 
-import br.gov.frameworkdemoiselle.restriction.DefaultLazyCriteria;
 import br.gov.frameworkdemoiselle.restriction.builder.JPABuilder;
+import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyCriteria;
 import br.gov.frameworkdemoiselle.restriction.custom.LikeRestriction;
 
 public class DataTableLazyCriteria<T> extends DefaultLazyCriteria<T> {

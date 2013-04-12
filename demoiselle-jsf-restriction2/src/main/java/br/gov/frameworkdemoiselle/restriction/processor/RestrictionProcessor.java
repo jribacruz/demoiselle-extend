@@ -12,9 +12,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.gov.frameworkdemoiselle.restriction.DefaultLazyCriteria;
 import br.gov.frameworkdemoiselle.restriction.Processor;
 import br.gov.frameworkdemoiselle.restriction.annotations.QueryBy;
+import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyCriteria;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;

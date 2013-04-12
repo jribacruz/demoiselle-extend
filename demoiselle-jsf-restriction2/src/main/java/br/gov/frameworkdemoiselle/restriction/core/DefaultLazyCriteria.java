@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction;
+package br.gov.frameworkdemoiselle.restriction.core;
 
 import java.io.Serializable;
 import java.util.List;
