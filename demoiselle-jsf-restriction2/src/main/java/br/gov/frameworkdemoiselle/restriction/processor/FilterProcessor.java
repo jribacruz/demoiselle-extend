@@ -21,7 +21,7 @@ public class FilterProcessor implements Processor {
 	}
 
 	@Override
-	public <T, X> void apply(CriteriaBuilder cb, Root<X> p, List<Predicate> predicates) {
+	public <X> void apply(CriteriaBuilder cb, Root<X> p, List<Predicate> predicates) {
 		if (!filters.isEmpty()) {
 
 			Iterator<String> iterator = filters.keySet().iterator();

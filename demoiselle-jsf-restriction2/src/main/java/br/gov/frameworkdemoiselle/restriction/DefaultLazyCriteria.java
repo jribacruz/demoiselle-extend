@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -25,9 +28,9 @@ public class DefaultLazyCriteria<T> extends LazyDataModel<T> implements Serializ
 
 	@Override
 	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-		this.setRowCount(builder.countAll(getBeanClass(), new FilterProcessor(filters), new RestrictionProcessor()));
+		this.setRowCount(builder.countAll(getBeanClass(), new FilterProcessor(filters), new RestrictionProcessor<T>(this)));
 		return builder.findAll(getBeanClass(), first, pageSize, new DataTableOrderer(sortField, sortOrder), new FilterProcessor(filters),
-				new RestrictionProcessor());
+				new RestrictionProcessor<T>(this));
 	}
 
 	protected Class<T> getBeanClass() {
@@ -35,6 +38,10 @@ public class DefaultLazyCriteria<T> extends LazyDataModel<T> implements Serializ
 			this.beanClass = Reflections.getGenericTypeArgument(this.getClass(), 0);
 		}
 		return this.beanClass;
+	}
+
+	public Predicate defaultQuery(CriteriaBuilder cb, Root<T> p) {
+		return null;
 	}
 
 }
