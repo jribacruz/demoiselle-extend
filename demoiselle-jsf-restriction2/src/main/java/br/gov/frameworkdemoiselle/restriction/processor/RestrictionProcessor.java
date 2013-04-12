@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 
 import br.gov.frameworkdemoiselle.restriction.Processor;
 import br.gov.frameworkdemoiselle.restriction.annotations.QueryBy;
-import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyCriteria;
+import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyModel;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
@@ -22,12 +22,12 @@ import com.google.common.collect.ArrayListMultimap;
 
 public class RestrictionProcessor<T> implements Processor<T> {
 
-	private DefaultLazyCriteria<T> defaultLazyCriteria;
+	private DefaultLazyModel<T> defaultLazyCriteria;
 
 	@SuppressWarnings("rawtypes")
 	private ArrayListMultimap<Field, RestrictionBean> beansMap;
 
-	public RestrictionProcessor(DefaultLazyCriteria<T> defaultLazyCriteria) {
+	public RestrictionProcessor(DefaultLazyModel<T> defaultLazyCriteria) {
 		super();
 		this.beansMap = ArrayListMultimap.create();
 		this.defaultLazyCriteria = defaultLazyCriteria;
@@ -63,11 +63,6 @@ public class RestrictionProcessor<T> implements Processor<T> {
 					predicates.add(predicate);
 				}
 			}
-		}
-
-		Predicate predicate = defaultLazyCriteria.defaultQuery(cb, p);
-		if (predicate != null) {
-			predicates.add(predicate);
 		}
 	}
 
