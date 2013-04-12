@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD, ElementType.TYPE })
-public @interface OrderBy {
-	String[] asc();
+@Target(value = { ElementType.FIELD, ElementType.ANNOTATION_TYPE })
+public @interface Attribute {
+	String[] names();
 
-	String[] desc();
+	String value() default "";
 }
