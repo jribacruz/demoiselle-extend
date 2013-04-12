@@ -60,4 +60,9 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 		return StringUtils.upperCase(str);
 	}
 
+	@Override
+	public String toString() {
+		return "RestrictionBean [value=" + value + ", field=" + field + ", selection=" + selection + "]";
+	}
+
 }

@@ -32,8 +32,10 @@ public class JPABuilder<T> implements Serializable {
 		filterProcessor.apply(cb, p, predicates);
 		restrictionProcessor.apply(cb, p, predicates);
 		cq.orderBy(orderer.apply(cb, p));
-
-		cq.where(predicates.toArray(new Predicate[] {}));
+		
+		if(!predicates.isEmpty()) {
+			cq.where(predicates.toArray(new Predicate[] {}));
+		}
 
 		TypedQuery<T> query = em.createQuery(cq);
 		query.setFirstResult(first);

@@ -38,7 +38,7 @@ public class RestrictionProcessor<T> implements Processor<T> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void apply(CriteriaBuilder cb, Root<T> p, List<Predicate> predicates) {
 
-		Iterator<Field> iterator = beansMap.keys().iterator();
+		Iterator<Field> iterator = beansMap.keySet().iterator();
 		while (iterator.hasNext()) {
 			Field field = iterator.next();
 			List<RestrictionBean> values = beansMap.get(field);
@@ -52,7 +52,9 @@ public class RestrictionProcessor<T> implements Processor<T> {
 						listPredicates.add(predicate);
 					}
 				}
-				predicates.add(cb.or(listPredicates.toArray(new Predicate[] {})));
+				if (!listPredicates.isEmpty()) {
+					predicates.add(cb.or(listPredicates.toArray(new Predicate[] {})));
+				}
 
 			} else if (values.size() == 1) {
 				RestrictionBean restrictionBean = values.get(0);
