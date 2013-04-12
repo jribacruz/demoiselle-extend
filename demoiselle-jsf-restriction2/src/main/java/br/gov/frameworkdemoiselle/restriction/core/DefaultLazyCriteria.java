@@ -28,8 +28,8 @@ public class DefaultLazyCriteria<T> extends LazyDataModel<T> implements Serializ
 
 	@Override
 	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-		this.setRowCount(builder.countAll(getBeanClass(), new FilterProcessor(filters), new RestrictionProcessor<T>(this)));
-		return builder.findAll(getBeanClass(), first, pageSize, new DataTableOrderer(sortField, sortOrder), new FilterProcessor(filters),
+		this.setRowCount(builder.countAll(getBeanClass(), new FilterProcessor<T>(filters), new RestrictionProcessor<T>(this)));
+		return builder.findAll(getBeanClass(), first, pageSize, new DataTableOrderer(sortField, sortOrder), new FilterProcessor<T>(filters),
 				new RestrictionProcessor<T>(this));
 	}
 

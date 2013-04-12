@@ -1,12 +1,11 @@
 package br.gov.frameworkdemoiselle.restriction.processor;
 
 import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -19,45 +18,108 @@ import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class RestrictionProcessor<T> implements Processor {
+import com.google.common.collect.ArrayListMultimap;
+
+public class RestrictionProcessor<T> implements Processor<T> {
 
 	private DefaultLazyCriteria<T> defaultLazyCriteria;
 
 	@SuppressWarnings("rawtypes")
-	private Map<Field, RestrictionBean> beans;
+	private ArrayListMultimap<Field, RestrictionBean> beansMap;
 
-	@SuppressWarnings("rawtypes")
 	public RestrictionProcessor(DefaultLazyCriteria<T> defaultLazyCriteria) {
 		super();
-		this.beans = new HashMap<Field, RestrictionBean>();
+		this.beansMap = ArrayListMultimap.create();
 		this.defaultLazyCriteria = defaultLazyCriteria;
+
 		init();
 	}
 
-	@SuppressWarnings("rawtypes")
-	public <X> void apply(CriteriaBuilder cb, Root<X> p, List<Predicate> predicates) {
-		Iterator<Field> iterator = beans.keySet().iterator();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void apply(CriteriaBuilder cb, Root<T> p, List<Predicate> predicates) {
+
+		Iterator<Field> iterator = beansMap.keys().iterator();
 		while (iterator.hasNext()) {
 			Field field = iterator.next();
-			RestrictionBean bean = beans.get(field);
-			this.setValue(bean, field);
+			List<RestrictionBean> values = beansMap.get(field);
+			if (values.size() > 1) {
+				List<Predicate> listPredicates = new ArrayList<Predicate>();
+				Iterator<RestrictionBean> iterator2 = values.iterator();
+				while (iterator2.hasNext()) {
+					RestrictionBean restrictionBean = iterator2.next();
+					Predicate predicate = restrictionBean.restriction(cb, p);
+					if (predicate != null) {
+						listPredicates.add(predicate);
+					}
+				}
+				predicates.add(cb.or(listPredicates.toArray(new Predicate[] {})));
+
+			} else if (values.size() == 1) {
+				RestrictionBean restrictionBean = values.get(0);
+				Predicate predicate = restrictionBean.restriction(cb, p);
+				if (predicate != null) {
+					predicates.add(predicate);
+				}
+			}
+		}
+
+		Predicate predicate = defaultLazyCriteria.defaultQuery(cb, p);
+		if (predicate != null) {
+			predicates.add(predicate);
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	/**
+	 * Inicializa o map de beans com todos os RestrictionsBeans do
+	 * defaultLazyCriteria
+	 * 
+	 */
+	@SuppressWarnings({ "rawtypes" })
 	protected void init() {
-		if (beans.isEmpty()) {
+		if (beansMap.isEmpty()) {
+			/*
+			 * Percorre o bean defaultLazyCriteria e retorna todos os atributos
+			 * não estaticos
+			 */
 			for (Field field : Reflections.getNonStaticDeclaredFields(defaultLazyCriteria.getClass())) {
+				/*
+				 * Testa se o campo é do tipo(ou extend) RestrictionBean
+				 */
 				if (RestrictionBean.class.isAssignableFrom(field.getType())) {
 					RestrictionBean bean = (RestrictionBean) Reflections.getFieldValue(field, defaultLazyCriteria);
 					if (bean != null) {
-						beans.put(field, bean);
+						if (field.isAnnotationPresent(QueryBy.class)) {
+							String[] fieldNames = field.getAnnotation(QueryBy.class).attributes();
+							/*
+							 * Percorre a lista de atributos e adiciona no
+							 * multimap
+							 */
+							for (int i = 0; i < fieldNames.length; i++) {
+								beansMap.put(field, createRestrictionBeanCopy(bean, field, fieldNames[i]));
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected RestrictionBean createRestrictionBeanCopy(RestrictionBean bean, Field field, String fieldName) {
+		RestrictionBean beanCopy = Reflections.instantiate(bean.getClass());
+		beanCopy.setValue(bean.getValue());
+		beanCopy.setSelection(bean.isSelection());
+		beanCopy.setField(fieldName);
+		setValue(beanCopy, field);
+		return beanCopy;
+	}
+
+	/**
+	 * Seta o valor no RestrictionBean e converter caso necessário
+	 * 
+	 * @param bean
+	 * @param field
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void setValue(RestrictionBean bean, Field field) {
 		String value = field.getAnnotation(QueryBy.class).value();
@@ -74,8 +136,21 @@ public class RestrictionProcessor<T> implements Processor {
 				bean.setValue(new Integer(value));
 			} else if (attributeClass == Boolean.class) {
 				bean.setValue(new Boolean(value));
+			} else if (attributeClass == BigDecimal.class) {
+				bean.setValue(new BigDecimal(value));
+			} else if (attributeClass == BigInteger.class) {
+				bean.setValue(new BigInteger(value));
+			} else if (attributeClass == Double.class) {
+				bean.setValue(new Double(value));
+			} else if (attributeClass == Float.class) {
+				bean.setValue(new Float(value));
+			} else if (attributeClass == Character.class) {
+				if (value.length() > 0) {
+					bean.setValue(new Character(value.toCharArray()[0]));
+				}
+			} else if (attributeClass == Short.class) {
+				bean.setValue(new Short(value));
 			}
 		}
-
 	}
 }

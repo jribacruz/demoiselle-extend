@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD })
 public @interface QueryBy {
-	String[] attribute();
+	String[] attributes();
 
 	String value() default "";
 }

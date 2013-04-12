@@ -21,8 +21,8 @@ public class JPABuilder<T> implements Serializable {
 	@Inject
 	private EntityManager em;
 
-	public List<T> findAll(Class<T> beanClass, int first, int pageSize, Orderer orderer, Processor filterProcessor,
-			Processor restrictionProcessor) {
+	public List<T> findAll(Class<T> beanClass, int first, int pageSize, Orderer orderer, Processor<T> filterProcessor,
+			Processor<T> restrictionProcessor) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(beanClass);
 		Root<T> p = cq.from(beanClass);
@@ -42,7 +42,7 @@ public class JPABuilder<T> implements Serializable {
 		return query.getResultList();
 	}
 
-	public int countAll(Class<T> beanClass, Processor filterProcessor, Processor restrictionProcessor) {
+	public int countAll(Class<T> beanClass, Processor<T> filterProcessor, Processor<T> restrictionProcessor) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<T> p = cq.from(beanClass);

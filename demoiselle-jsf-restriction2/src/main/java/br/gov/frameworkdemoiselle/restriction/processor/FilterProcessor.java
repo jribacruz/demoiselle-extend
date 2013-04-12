@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 import br.gov.frameworkdemoiselle.restriction.Processor;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class FilterProcessor implements Processor {
+public class FilterProcessor<T> implements Processor<T> {
 
 	private Map<String, String> filters;
 
@@ -21,7 +21,7 @@ public class FilterProcessor implements Processor {
 	}
 
 	@Override
-	public <X> void apply(CriteriaBuilder cb, Root<X> p, List<Predicate> predicates) {
+	public void apply(CriteriaBuilder cb, Root<T> p, List<Predicate> predicates) {
 		if (!filters.isEmpty()) {
 
 			Iterator<String> iterator = filters.keySet().iterator();
