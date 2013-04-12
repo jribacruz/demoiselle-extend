@@ -1,12 +1,12 @@
 package br.gov.frameworkdemoiselle.restriction.models;
 
 import br.gov.frameworkdemoiselle.restriction.builder.JPABuilder;
-import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyCriteria;
+import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyModel;
 
-public class MutipleSelectionLazyCriteria<T> extends DefaultLazyCriteria<T> {
+public class SingleSelectionLazyModel<T> extends DefaultLazyModel<T> {
 	private static final long serialVersionUID = 1L;
 	
-	public MutipleSelectionLazyCriteria(Class<T> beanClass, JPABuilder<T> builder) {
+	public SingleSelectionLazyModel(Class<T> beanClass, JPABuilder<T> builder) {
 		this.beanClass = beanClass;
 		this.builder = builder;
 	}

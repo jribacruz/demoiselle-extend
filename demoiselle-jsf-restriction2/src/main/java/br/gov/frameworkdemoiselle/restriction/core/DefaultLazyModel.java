@@ -18,7 +18,7 @@ import br.gov.frameworkdemoiselle.restriction.processor.FilterProcessor;
 import br.gov.frameworkdemoiselle.restriction.processor.RestrictionProcessor;
 import br.gov.frameworkdemoiselle.util.Reflections;
 
-public class DefaultLazyCriteria<T> extends LazyDataModel<T> implements Serializable {
+public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
