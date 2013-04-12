@@ -3,6 +3,8 @@ package br.gov.frameworkdemoiselle.restriction.type;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -16,7 +18,7 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
 	protected String field;
-	protected Boolean selection;
+	protected Map<String, Boolean> selection = new HashMap<String, Boolean>();
 
 	public abstract Predicate restriction(CriteriaBuilder cb, Root<T> p);
 
@@ -36,11 +38,11 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 		this.field = field;
 	}
 
-	public Boolean isSelection() {
+	public Map<String, Boolean> getSelection() {
 		return selection;
 	}
 
-	public void setSelection(Boolean selection) {
+	public void setSelection(Map<String, Boolean> selection) {
 		this.selection = selection;
 	}
 
