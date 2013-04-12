@@ -6,11 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import br.gov.frameworkdemoiselle.restriction.core.Criteria;
+import br.gov.frameworkdemoiselle.restriction.custom.criteria.DefaultDataTableCriteria;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD, ElementType.TYPE })
-public @interface CriteriaBy {
+@Target(value = { ElementType.FIELD })
+public @interface InitModel {
 
 	@SuppressWarnings("rawtypes")
-	Class<? extends Criteria> value();
+	Class<? extends Criteria> criteria() default DefaultDataTableCriteria.class;
+
+	Attribute[] attributes();
+
+	Order[] order() default {};
 }
