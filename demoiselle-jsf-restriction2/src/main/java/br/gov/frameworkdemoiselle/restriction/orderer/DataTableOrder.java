@@ -14,13 +14,13 @@ import com.google.common.collect.Lists;
 import br.gov.frameworkdemoiselle.restriction.Orderer;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class DataTableOrderer implements Orderer {
+public class DataTableOrder implements Orderer {
 
 	private String sortField;
 
 	private SortOrder sortOrder;
 
-	public DataTableOrderer(String sortField, SortOrder sortOrder) {
+	public DataTableOrder(String sortField, SortOrder sortOrder) {
 		super();
 		this.sortField = sortField;
 		this.sortOrder = sortOrder;
