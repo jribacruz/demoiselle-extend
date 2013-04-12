@@ -39,4 +39,8 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 		this.criteria = criteria;
 	}
 
+	public int size() {
+		return this.getRowCount();
+	}
+
 }

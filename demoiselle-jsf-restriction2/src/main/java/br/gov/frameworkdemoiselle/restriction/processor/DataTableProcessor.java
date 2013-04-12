@@ -12,7 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.gov.frameworkdemoiselle.restriction.Processor;
-import br.gov.frameworkdemoiselle.restriction.annotations.QueryBy;
+import br.gov.frameworkdemoiselle.restriction.annotations.Attribute;
 import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyModel;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Reflections;
@@ -85,8 +85,8 @@ public class DataTableProcessor<T> implements Processor<T> {
 				if (RestrictionBean.class.isAssignableFrom(field.getType())) {
 					RestrictionBean bean = (RestrictionBean) Reflections.getFieldValue(field, defaultLazyCriteria);
 					if (bean != null) {
-						if (field.isAnnotationPresent(QueryBy.class)) {
-							String[] fieldNames = field.getAnnotation(QueryBy.class).attributes();
+						if (field.isAnnotationPresent(Attribute.class)) {
+							String[] fieldNames = field.getAnnotation(Attribute.class).names();
 							/*
 							 * Percorre a lista de atributos e adiciona no
 							 * multimap
@@ -119,7 +119,7 @@ public class DataTableProcessor<T> implements Processor<T> {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void setValue(RestrictionBean bean, Field field) {
-		String value = field.getAnnotation(QueryBy.class).value();
+		String value = field.getAnnotation(Attribute.class).value();
 
 		if (!Strings.isEmpty(value)) {
 			Class attributeClass = Reflections.getGenericTypeArgument(bean.getClass(), 1);
