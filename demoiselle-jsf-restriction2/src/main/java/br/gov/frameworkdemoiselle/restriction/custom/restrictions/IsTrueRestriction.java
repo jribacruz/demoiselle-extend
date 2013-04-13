@@ -1,17 +1,30 @@
 package br.gov.frameworkdemoiselle.restriction.custom.restrictions;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public class IsTrueRestriction<T> extends RestrictionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
-		return hasField() ? cb.isTrue(p.<Boolean> get(getField())) : null;
+	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
+		if (this.selection == null || this.selection == Boolean.TRUE) {
+			Iterator<String> iterator = this.fields.iterator();
+			while (iterator.hasNext()) {
+				String fieldName = iterator.next();
+				if (!Strings.isEmpty(fieldName)) {
+					this.predicates.add(cb.isTrue(p.<Boolean> get(fieldName)));
+				}
+			}
+		}
+		return this.predicates;
 	}
 
 }
