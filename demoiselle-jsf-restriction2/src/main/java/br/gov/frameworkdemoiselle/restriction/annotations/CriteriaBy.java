@@ -10,12 +10,9 @@ import br.gov.frameworkdemoiselle.restriction.custom.criteria.DefaultDataTableCr
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD })
-public @interface InitModel {
+public @interface CriteriaBy {
 
 	@SuppressWarnings("rawtypes")
-	Class<? extends Criteria> criteria() default DefaultDataTableCriteria.class;
+	Class<? extends Criteria> value() default DefaultDataTableCriteria.class;
 
-	Attribute[] attributes();
-
-	Order[] order() default {};
 }
