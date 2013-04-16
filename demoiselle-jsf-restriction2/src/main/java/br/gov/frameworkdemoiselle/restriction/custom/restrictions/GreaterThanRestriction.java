@@ -26,7 +26,7 @@ public class GreaterThanRestriction<T, X extends Number> extends RestrictionBean
 				}
 			}
 		}
-		return Sets.newHashSet(this.predicates.toArray(new Predicate[] {}));
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
 	}
 
 }

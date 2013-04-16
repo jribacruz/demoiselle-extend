@@ -7,10 +7,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.collect.Sets;
-
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
+
+import com.google.common.collect.Sets;
 
 public class LikeRestriction<T> extends RestrictionBean<T, String> {
 	private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class LikeRestriction<T> extends RestrictionBean<T, String> {
 				}
 			}
 		}
-		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
 	}
 
 }

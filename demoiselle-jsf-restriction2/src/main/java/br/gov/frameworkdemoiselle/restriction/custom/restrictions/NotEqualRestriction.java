@@ -26,7 +26,7 @@ public class NotEqualRestriction<T, X> extends RestrictionBean<T, X> {
 				}
 			}
 		}
-		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
 	}
 
 }

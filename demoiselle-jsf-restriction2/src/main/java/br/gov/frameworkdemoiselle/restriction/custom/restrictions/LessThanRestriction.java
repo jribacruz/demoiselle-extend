@@ -26,7 +26,7 @@ public class LessThanRestriction<T, X extends Number> extends RestrictionBean<T,
 				}
 			}
 		}
-		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
 	}
 
 }

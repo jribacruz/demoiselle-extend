@@ -27,7 +27,7 @@ public class EndWithRestriction<T> extends RestrictionBean<T, String> {
 				}
 			}
 		}
-		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
 	}
 
 }

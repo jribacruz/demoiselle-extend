@@ -17,6 +17,6 @@ public class NotContainsRestriction<T> extends RestrictionBean<T, Collection<T>>
 		if (this.value != null && !this.value.isEmpty()) {
 			this.predicates.add(cb.not(p.in(getValue())));
 		}
-		return this.predicates;
+		return !this.predicates.isEmpty() ? this.predicates : null;
 	}
 }

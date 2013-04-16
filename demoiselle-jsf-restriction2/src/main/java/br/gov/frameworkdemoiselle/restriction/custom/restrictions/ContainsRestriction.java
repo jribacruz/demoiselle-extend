@@ -17,7 +17,7 @@ public class ContainsRestriction<T> extends RestrictionBean<T, Collection<T>> {
 		if (this.value != null && !this.value.isEmpty()) {
 			this.predicates.add(p.in(this.value));
 		}
-		return this.predicates;
+		return !this.predicates.isEmpty() ? this.predicates : null;
 	}
 
 }
