@@ -14,6 +14,7 @@ public class NotContainsRestriction<T> extends RestrictionBean<T, Collection<T>>
 
 	@Override
 	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
+		this.predicates.clear();
 		if (this.value != null && !this.value.isEmpty()) {
 			this.predicates.add(cb.not(p.in(getValue())));
 		}

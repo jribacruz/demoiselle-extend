@@ -17,6 +17,7 @@ public class GreaterThanRestriction<T, X extends Number> extends RestrictionBean
 
 	@Override
 	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
+		this.predicates.clear();
 		if (this.selection == null || this.selection == Boolean.TRUE) {
 			Iterator<String> iterator = this.fields.iterator();
 			while (iterator.hasNext()) {
