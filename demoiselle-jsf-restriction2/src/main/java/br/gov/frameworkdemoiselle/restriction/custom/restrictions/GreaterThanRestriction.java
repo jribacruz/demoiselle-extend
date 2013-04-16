@@ -7,6 +7,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.google.common.collect.Sets;
+
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -24,7 +26,7 @@ public class GreaterThanRestriction<T, X extends Number> extends RestrictionBean
 				}
 			}
 		}
-		return this.predicates;
+		return Sets.newHashSet(this.predicates.toArray(new Predicate[] {}));
 	}
 
 }

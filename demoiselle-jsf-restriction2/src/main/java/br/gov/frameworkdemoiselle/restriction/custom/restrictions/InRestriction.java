@@ -8,6 +8,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.google.common.collect.Sets;
+
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
@@ -25,7 +27,7 @@ public class InRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 				}
 			}
 		}
-		return this.predicates;
+		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
 	}
 
 }

@@ -11,6 +11,8 @@ import javax.persistence.criteria.Root;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
+import com.google.common.collect.Sets;
+
 public class IsEmptyRestriction<T, X> extends RestrictionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +27,7 @@ public class IsEmptyRestriction<T, X> extends RestrictionBean<T, Collection<X>> 
 				}
 			}
 		}
-		return this.predicates;
+		return Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {})));
 	}
 
 }
