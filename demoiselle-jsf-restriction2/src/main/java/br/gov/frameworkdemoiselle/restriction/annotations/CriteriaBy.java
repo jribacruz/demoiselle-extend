@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.gov.frameworkdemoiselle.restriction.core.Criteria;
+import br.gov.frameworkdemoiselle.restriction.core.AbstractCriteria;
 import br.gov.frameworkdemoiselle.restriction.custom.criteria.DefaultDataTableCriteria;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -13,6 +13,6 @@ import br.gov.frameworkdemoiselle.restriction.custom.criteria.DefaultDataTableCr
 public @interface CriteriaBy {
 
 	@SuppressWarnings("rawtypes")
-	Class<? extends Criteria> value() default DefaultDataTableCriteria.class;
+	Class<? extends AbstractCriteria> value() default DefaultDataTableCriteria.class;
 
 }

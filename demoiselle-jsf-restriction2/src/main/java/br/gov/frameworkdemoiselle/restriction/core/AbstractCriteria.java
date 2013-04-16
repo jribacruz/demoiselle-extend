@@ -75,7 +75,7 @@ public abstract class AbstractCriteria<T> implements Serializable {
 		this.beanClass = beanClass;
 	}
 
-	public Class<T> getBeanClass() {
+	protected Class<T> getBeanClass() {
 		return beanClass;
 	}
 
