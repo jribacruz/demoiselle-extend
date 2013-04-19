@@ -4,14 +4,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.gov.frameworkdemoiselle.restriction.AbstractCriteria;
 import br.gov.frameworkdemoiselle.restriction.annotations.Attribute;
-import br.gov.frameworkdemoiselle.restriction.custom.criteria.DefaultDataTableCriteria;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
 public class Reflections {
 	@SuppressWarnings("rawtypes")
-	public static <T> List<RestrictionBean> getRestrictionBeans(DefaultDataTableCriteria<T> criteriaInstance) {
+	public static <T> List<RestrictionBean> getRestrictionBeans(AbstractCriteria<T> criteriaInstance) {
 		List<RestrictionBean> beans = new ArrayList<RestrictionBean>();
 
 		for (Field field : br.gov.frameworkdemoiselle.util.Reflections.getNonStaticDeclaredFields(criteriaInstance.getClass())) {
@@ -38,14 +38,5 @@ public class Reflections {
 		}
 	}
 
-	public static <T> boolean criteriaHasField(DefaultDataTableCriteria<T> criteria, String name) {
-		try {
-			criteria.getClass().getField(name);
-			return true;
-		} catch (SecurityException e) {
-			return false;
-		} catch (NoSuchFieldException e) {
-			return false;
-		}
-	}
+
 }
