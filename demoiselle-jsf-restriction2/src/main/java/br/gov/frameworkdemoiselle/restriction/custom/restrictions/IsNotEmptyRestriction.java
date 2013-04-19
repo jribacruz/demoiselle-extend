@@ -20,7 +20,7 @@ public class IsNotEmptyRestriction<T, X> extends RestrictionBean<T, Collection<X
 	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (this.selection == null || this.selection == Boolean.TRUE) {
-			Iterator<String> iterator = this.fields.iterator();
+			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (!Strings.isEmpty(fieldName)) {

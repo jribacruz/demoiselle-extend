@@ -19,7 +19,7 @@ public class LessThanRestriction<T, X extends Number> extends RestrictionBean<T,
 	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (this.selection == null || this.selection == Boolean.TRUE) {
-			Iterator<String> iterator = this.fields.iterator();
+			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (this.value != null && !Strings.isEmpty(fieldName)) {
