@@ -5,13 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.gov.frameworkdemoiselle.restriction.AbstractCriteria;
+import br.gov.frameworkdemoiselle.restriction.CriteriaBean;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD })
 public @interface CriteriaBy {
 
-	@SuppressWarnings("rawtypes")
-	Class<? extends AbstractCriteria> value();
+	Class<? extends CriteriaBean<?>> value();
 
 }

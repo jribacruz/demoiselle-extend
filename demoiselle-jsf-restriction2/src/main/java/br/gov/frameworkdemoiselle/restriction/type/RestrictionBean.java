@@ -2,6 +2,7 @@ package br.gov.frameworkdemoiselle.restriction.type;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +29,18 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	}
 
 	public Set<String> getFields() {
-		return fields;
+//		Iterator<String> iterator = this.fields.iterator();
+//		while (iterator.hasNext()) {
+//			String fieldName = iterator.next();
+//			String[] fieldsStrings = StringUtils.split(fieldName, ":");
+//			if (fieldsStrings.length > 1) {
+//				iterator.remove();
+//				for (int i = 0; i < fieldsStrings.length; i++) {
+//					this.fields.add(fieldsStrings[i]);
+//				}
+//			}
+//		}
+		return this.fields;
 	}
 
 	public void setFields(Set<String> fields) {

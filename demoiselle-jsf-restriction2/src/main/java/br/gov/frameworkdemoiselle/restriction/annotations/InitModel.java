@@ -6,7 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD, ElementType.ANNOTATION_TYPE })
-public @interface QueryAttribute {
-	String[] value();
+@Target(value = { ElementType.FIELD })
+public @interface InitModel {
+
+	String[] asc() default {};
+
+	String[] desc() default {};
+
+	String[] queryAttributes();
+
+	int maxResults() default 0;
 }

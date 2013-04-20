@@ -4,16 +4,16 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.gov.frameworkdemoiselle.restriction.AbstractCriteria;
+import br.gov.frameworkdemoiselle.restriction.CriteriaBean;
 import br.gov.frameworkdemoiselle.restriction.annotations.Attribute;
 import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
 public class Reflections {
 	@SuppressWarnings("rawtypes")
-	public static <T> List<RestrictionBean> getRestrictionBeans(AbstractCriteria<T> criteriaInstance) {
+	public static <T> List<RestrictionBean> getRestrictionBeans(CriteriaBean<T> criteriaInstance) {
 		List<RestrictionBean> beans = new ArrayList<RestrictionBean>();
-
+		
 		for (Field field : br.gov.frameworkdemoiselle.util.Reflections.getNonStaticDeclaredFields(criteriaInstance.getClass())) {
 			if (RestrictionBean.class.isAssignableFrom(field.getType())) {
 				RestrictionBean bean = (RestrictionBean) br.gov.frameworkdemoiselle.util.Reflections.getFieldValue(field, criteriaInstance);

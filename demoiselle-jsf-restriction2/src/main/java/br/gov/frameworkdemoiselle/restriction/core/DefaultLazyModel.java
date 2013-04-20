@@ -2,21 +2,21 @@ package br.gov.frameworkdemoiselle.restriction.core;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.util.Reflections;
 
-public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
+public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -24,24 +24,9 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 
 	private Class<T> beanClass;
 
-	private int first;
+	protected int first;
 
-	private int pageSize;
-
-	public DefaultLazyModel(EntityManager em) {
-		super();
-		this.em = em;
-	}
-
-	@Override
-	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-		this.first = first;
-		this.pageSize = pageSize;
-
-		this.setRowCount(this.countAll());
-
-		return this.findAll();
-	}
+	protected int pageSize;
 
 	public int size() {
 		return this.getRowCount();
@@ -51,6 +36,9 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(getBeanClass());
 		Root<T> p = cq.from(getBeanClass());
+
+		cq.where(this.getPredicates(cb, p));
+		cq.orderBy(this.getOrders(cb, p));
 
 		TypedQuery<T> query = this.em.createQuery(cq);
 		query.setFirstResult(first);
@@ -65,6 +53,7 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 		Root<T> p = cq.from(getBeanClass());
 
 		cq.select(cb.count(p));
+		cq.where(this.getPredicates(cb, p));
 
 		TypedQuery<Long> query = this.em.createQuery(cq);
 
@@ -77,5 +66,9 @@ public class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializabl
 		}
 		return this.beanClass;
 	}
+
+	protected abstract Predicate[] getPredicates(CriteriaBuilder cb, Root<T> p);
+
+	protected abstract List<Order> getOrders(CriteriaBuilder cb, Root<T> p);
 
 }
