@@ -92,6 +92,9 @@ public class ModelContext<T> implements Serializable {
 	}
 
 	public String[] getQueryAttributes() {
+		if (this.queryAttributes == null) {
+			return new String[] {};
+		}
 		return queryAttributes;
 	}
 

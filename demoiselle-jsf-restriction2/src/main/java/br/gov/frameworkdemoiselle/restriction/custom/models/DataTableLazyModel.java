@@ -12,15 +12,19 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
 import br.gov.frameworkdemoiselle.restriction.core.DefaultLazyModel;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 	private static final long serialVersionUID = 1L;
 
 	private ModelContext<T> context;
+
+	private String query;
 
 	public DataTableLazyModel(ModelContext<T> context, EntityManager em) {
 		super();
@@ -43,6 +47,11 @@ public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 	protected Predicate[] getPredicates(CriteriaBuilder cb, Root<T> p) {
 		Set<Predicate> predicates = new HashSet<Predicate>();
 
+		Set<Predicate> predicatesQuery = this.processQueryAttributes(cb, p);
+		if (!predicatesQuery.isEmpty()) {
+			predicates.add(cb.or(predicatesQuery.toArray(new Predicate[] {})));
+		}
+
 		return predicates.toArray(new Predicate[] {});
 	}
 
@@ -60,17 +69,28 @@ public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 		return orders;
 	}
 
-	public void setQuery(String query) {
-		context.setQuery(query);
+	public String getQuery() {
+		return query;
 	}
 
-	public String getQuery() {
-		return context.getQuery();
+	public void setQuery(String query) {
+		this.query = query;
 	}
 
 	@Override
 	protected Class<T> getBeanClass() {
 		return context.getBeanClass();
+	}
+
+	private Set<Predicate> processQueryAttributes(CriteriaBuilder cb, Root<T> p) {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		if (context.getQueryAttributes().length > 0 && !Strings.isEmpty(this.query)) {
+			for (int i = 0; i < context.getQueryAttributes().length; i++) {
+				predicates.add(cb.like(cb.lower(p.<String> get(context.getQueryAttributes()[i])), "%" + StringUtils.lowerCase(this.query)
+						+ "%"));
+			}
+		}
+		return predicates;
 	}
 
 }
