@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -21,9 +22,10 @@ public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 
 	private ModelContext<T> context;
 
-	public DataTableLazyModel(ModelContext<T> context) {
+	public DataTableLazyModel(ModelContext<T> context, EntityManager em) {
 		super();
 		this.context = context;
+		this.em = em;
 	}
 
 	@Override
@@ -47,6 +49,14 @@ public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 	@Override
 	protected List<Order> getOrders(CriteriaBuilder cb, Root<T> p) {
 		List<Order> orders = new ArrayList<Order>();
+
+		if (!context.getAsc(cb, p).isEmpty()) {
+			orders.addAll(context.getAsc(cb, p));
+		}
+		if (!context.getDesc(cb, p).isEmpty()) {
+			orders.addAll(context.getDesc(cb, p));
+		}
+
 		return orders;
 	}
 
@@ -56,6 +66,11 @@ public class DataTableLazyModel<T> extends DefaultLazyModel<T> {
 
 	public String getQuery() {
 		return context.getQuery();
+	}
+
+	@Override
+	protected Class<T> getBeanClass() {
+		return context.getBeanClass();
 	}
 
 }

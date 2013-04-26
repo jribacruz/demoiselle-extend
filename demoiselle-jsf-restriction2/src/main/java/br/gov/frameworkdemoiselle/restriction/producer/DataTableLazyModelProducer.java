@@ -5,6 +5,7 @@ import java.lang.reflect.Member;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.persistence.EntityManager;
 
 import br.gov.frameworkdemoiselle.restriction.CriteriaBean;
 import br.gov.frameworkdemoiselle.restriction.annotations.CriteriaBy;
@@ -15,12 +16,18 @@ import br.gov.frameworkdemoiselle.restriction.custom.models.DataTableLazyModel;
 public class DataTableLazyModelProducer {
 
 	@Produces
-	public <T> DataTableLazyModel<T> create(InjectionPoint ip) {
+	public <T> DataTableLazyModel<T> create(InjectionPoint ip, EntityManager em) {
 		ModelContext<T> context = new ModelContext<T>();
 		this.initModel(context, ip.getMember());
 		this.initCriteria(context, ip.getMember());
-		DataTableLazyModel<T> dataTableLazyModel = new DataTableLazyModel<T>(context);
+		initBeanClass(context, ip.getMember());
+		DataTableLazyModel<T> dataTableLazyModel = new DataTableLazyModel<T>(context, em);
 		return dataTableLazyModel;
+	}
+
+	private <T> void initBeanClass(ModelContext<T> context, Member member) {
+		Field field = (Field) member;
+		context.setFieldBeanClass(field);
 	}
 
 	private <T> void initModel(ModelContext<T> context, Member member) {

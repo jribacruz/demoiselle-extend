@@ -1,10 +1,19 @@
 package br.gov.frameworkdemoiselle.restriction.context;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
 
 import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.restriction.CriteriaBean;
+import br.gov.frameworkdemoiselle.util.Reflections;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public class ModelContext<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,18 +32,51 @@ public class ModelContext<T> implements Serializable {
 
 	private String query;
 
+	private Class<T> beanClass;
+
+	private Field fieldBeanClass;
+
 	private Class<? extends CriteriaBean<T>> criteriaClass;
 
-	public String[] getAsc() {
-		return asc;
+	public List<Order> getAsc(CriteriaBuilder cb, Root<T> p) {
+		List<Order> list = new ArrayList<Order>();
+
+		if (this.asc != null) {
+			for (int i = 0; i < this.asc.length; i++) {
+				if (!Strings.isEmpty(asc[i])) {
+					list.add(cb.asc(p.get(asc[i])));
+				}
+			}
+		}
+
+		if (!Strings.isEmpty(this.sortField) && this.sortOrder == SortOrder.ASCENDING) {
+			list.add(cb.asc(p.get(this.sortField)));
+		}
+
+		return list;
 	}
 
 	public void setAsc(String[] asc) {
 		this.asc = asc;
 	}
 
-	public String[] getDesc() {
-		return desc;
+	public List<Order> getDesc(CriteriaBuilder cb, Root<T> p) {
+		List<Order> list = new ArrayList<Order>();
+
+		if (this.desc != null) {
+			for (int i = 0; i < this.desc.length; i++) {
+				if (!Strings.isEmpty(desc[i])) {
+					list.add(cb.desc(p.get(desc[i])));
+				}
+			}
+		}
+
+		if (!Strings.isEmpty(this.sortField) && this.sortOrder == SortOrder.DESCENDING) {
+			list.add(cb.desc(p.get(this.sortField)));
+		}
+
+		return list;
+
 	}
 
 	public void setDesc(String[] desc) {
@@ -87,6 +129,17 @@ public class ModelContext<T> implements Serializable {
 
 	public void setCriteriaClass(Class<? extends CriteriaBean<T>> criteriaClass) {
 		this.criteriaClass = criteriaClass;
+	}
+
+	public void setFieldBeanClass(Field fieldBeanClass) {
+		this.fieldBeanClass = fieldBeanClass;
+	}
+
+	public Class<T> getBeanClass() {
+		if (this.beanClass == null) {
+			this.beanClass = Reflections.getGenericTypeArgument(this.fieldBeanClass, 0);
+		}
+		return this.beanClass;
 	}
 
 }
