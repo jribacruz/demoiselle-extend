@@ -8,14 +8,14 @@ import java.util.List;
 import br.gov.frameworkdemoiselle.configuration.ConfigurationException;
 import br.gov.frameworkdemoiselle.restriction.CriteriaBean;
 import br.gov.frameworkdemoiselle.restriction.annotations.Attribute;
-import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
+import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Beans;
 import br.gov.frameworkdemoiselle.util.Strings;
 
 public class Reflections {
 	@SuppressWarnings("rawtypes")
-	public static <T> List<RestrictionBean> getRestrictionBeans(Class<? extends CriteriaBean<T>> criteriaClass) {
-		List<RestrictionBean> beans = new ArrayList<RestrictionBean>();
+	public static <T> List<CriterionBean> getRestrictionBeans(Class<? extends CriteriaBean<T>> criteriaClass) {
+		List<CriterionBean> beans = new ArrayList<CriterionBean>();
 		CriteriaBean<T> bean = Beans.getReference(criteriaClass);
 //		
 //		for (Field field : br.gov.frameworkdemoiselle.util.Reflections.getNonStaticDeclaredFields(criteriaInstance.getClass())) {
@@ -31,7 +31,7 @@ public class Reflections {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void setValues(RestrictionBean bean, Field field) {
+	private static void setValues(CriterionBean bean, Field field) {
 		if (field.isAnnotationPresent(Attribute.class)) {
 			String[] attributes = field.getAnnotation(Attribute.class).value();
 			for (int i = 0; i < attributes.length; i++) {
@@ -43,15 +43,15 @@ public class Reflections {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static <T> RestrictionBean getRestrictionBean(CriteriaBean<T> criteriaBean, Class<?> fieldClass) {
-		RestrictionBean value = null;
+	public static <T> CriterionBean getRestrictionBean(CriteriaBean<T> criteriaBean, Class<?> fieldClass) {
+		CriterionBean value = null;
 
 		try {
 			Method method;
 			String methodName = "get" + Strings.firstToUpper(fieldClass.getSimpleName());
 
 			method = criteriaBean.getClass().getMethod(methodName, null);
-			value = (RestrictionBean) method.invoke(criteriaBean, null);
+			value = (CriterionBean) method.invoke(criteriaBean, null);
 //			if (!fieldClass.isPrimitive()) {
 //				method = criteriaBean.getClass().getMethod(methodName, String.class, fieldClass);
 //				value = method.invoke(criteriaBean, key, null);

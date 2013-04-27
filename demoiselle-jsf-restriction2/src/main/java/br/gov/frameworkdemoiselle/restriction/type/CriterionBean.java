@@ -2,23 +2,34 @@ package br.gov.frameworkdemoiselle.restriction.type;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.collect.Sets;
 
-public abstract class RestrictionBean<T, X> implements Serializable {
+import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
+
+public abstract class CriterionBean<T, X> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected X value;
 	protected Set<String> fields = new HashSet<String>();
 	protected Boolean selection = null;
-	protected Set<Predicate> predicates = new HashSet<Predicate>();
+	protected EPredicate predicates = new EPredicate();
 
-	public abstract Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p);
+	public CriterionBean() {
+		super();
+	}
+
+	public CriterionBean(X value, String... fields) {
+		super();
+		this.value = value;
+		this.fields = Sets.newHashSet(fields);
+	}
+
+	public abstract Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p);
 
 	public X getValue() {
 		return value;
@@ -29,17 +40,6 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 	}
 
 	public Set<String> getFields() {
-//		Iterator<String> iterator = this.fields.iterator();
-//		while (iterator.hasNext()) {
-//			String fieldName = iterator.next();
-//			String[] fieldsStrings = StringUtils.split(fieldName, ":");
-//			if (fieldsStrings.length > 1) {
-//				iterator.remove();
-//				for (int i = 0; i < fieldsStrings.length; i++) {
-//					this.fields.add(fieldsStrings[i]);
-//				}
-//			}
-//		}
 		return this.fields;
 	}
 
@@ -54,14 +54,6 @@ public abstract class RestrictionBean<T, X> implements Serializable {
 
 	public void setSelection(Boolean selection) {
 		this.selection = selection;
-	}
-
-	protected String lower(String str) {
-		return StringUtils.lowerCase(str);
-	}
-
-	protected String upper(String str) {
-		return StringUtils.upperCase(str);
 	}
 
 }

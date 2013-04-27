@@ -2,16 +2,22 @@ package br.gov.frameworkdemoiselle.restriction.core;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
+
+import br.gov.frameworkdemoiselle.restriction.base.EOrder;
+import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
+import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
+import br.gov.frameworkdemoiselle.restriction.custom.criterions.LikeCriterion;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -22,8 +28,33 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 	protected int pageSize;
 
+	protected ModelContext<T> context;
+
+	protected String query;
+
+	protected EPredicate predicates;
+
+	protected EOrder orders;
+
+	public DefaultLazyModel() {
+		super();
+		this.predicates = new EPredicate();
+		this.orders = new EOrder();
+	}
+
 	public int size() {
 		return this.getRowCount();
+	}
+
+	@Override
+	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
+		this.first = first;
+		this.pageSize = pageSize;
+		context.setSortField(sortField);
+		context.setSortOrder(sortOrder);
+
+		this.setRowCount(this.countAll());
+		return this.findAll();
 	}
 
 	protected List<T> findAll() {
@@ -31,12 +62,8 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 		CriteriaQuery<T> cq = cb.createQuery(this.getBeanClass());
 		Root<T> p = cq.from(this.getBeanClass());
 
-		Predicate[] predicates = this.getPredicates(cb, p);
-		if (predicates.length > 0) {
-			cq.where(this.getPredicates(cb, p));
-		}
-
-		cq.orderBy(this.getOrders(cb, p));
+		this.processPredicates(cb, p);
+		this.predicates.apply(cq);
 
 		TypedQuery<T> query = this.em.createQuery(cq);
 		query.setFirstResult(first);
@@ -51,21 +78,31 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 		Root<T> p = cq.from(this.getBeanClass());
 
 		cq.select(cb.count(p));
-		Predicate[] predicates = this.getPredicates(cb, p);
-		
-		if (predicates.length > 0) {
-			cq.where(this.getPredicates(cb, p));
-		}
+		this.processPredicates(cb, p);
+		this.predicates.apply(cq);
 
 		TypedQuery<Long> query = this.em.createQuery(cq);
 
 		return query.getSingleResult().intValue();
 	}
 
-	protected abstract Predicate[] getPredicates(CriteriaBuilder cb, Root<T> p);
+	protected void processPredicates(CriteriaBuilder cb, Root<T> p) {
+		this.predicates.clear();
+		if (!Strings.isEmpty(query)) {
+			LikeCriterion<T> c = new LikeCriterion<T>(query, context.getQueryAttributes());
+			this.predicates.addAll(c.criterion(cb, p));
+		}
+	}
 
-	protected abstract List<Order> getOrders(CriteriaBuilder cb, Root<T> p);
+	public String getQuery() {
+		return query;
+	}
 
-	protected abstract Class<T> getBeanClass();
+	public void setQuery(String query) {
+		this.query = query;
+	}
 
+	protected Class<T> getBeanClass() {
+		return context.getBeanClass();
+	}
 }

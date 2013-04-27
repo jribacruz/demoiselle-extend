@@ -1,5 +1,6 @@
-package br.gov.frameworkdemoiselle.restriction.custom.restrictions;
+package br.gov.frameworkdemoiselle.restriction.custom.criterions;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -9,25 +10,26 @@ import javax.persistence.criteria.Root;
 
 import com.google.common.collect.Sets;
 
-import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
+import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class StartWithRestriction<T> extends RestrictionBean<T, String> {
+public class InCriterion<T, X> extends CriterionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
+	public Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (this.selection == null || this.selection == Boolean.TRUE) {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (this.value != null && !Strings.isEmpty(this.value) && !Strings.isEmpty(fieldName)) {
-					this.predicates.add(cb.like(cb.lower(p.<String> get(fieldName)), this.value.toLowerCase() + "%"));
+				if (this.value != null && !this.value.isEmpty() && !Strings.isEmpty(fieldName)) {
+					Predicate predicate = p.get(fieldName).in(this.value);
+					this.predicates.add(predicate);
 				}
 			}
 		}
-		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.asPredicate())) : null;
 	}
 
 }

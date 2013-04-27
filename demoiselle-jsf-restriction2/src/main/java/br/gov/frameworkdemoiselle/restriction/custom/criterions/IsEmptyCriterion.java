@@ -1,5 +1,6 @@
-package br.gov.frameworkdemoiselle.restriction.custom.restrictions;
+package br.gov.frameworkdemoiselle.restriction.custom.criterions;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -7,27 +8,28 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.collect.Sets;
-
-import br.gov.frameworkdemoiselle.restriction.type.RestrictionBean;
+import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class IsTrueRestriction<T> extends RestrictionBean<T, String> {
+import com.google.common.collect.Sets;
+
+public class IsEmptyCriterion<T, X> extends CriterionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Set<Predicate> restriction(CriteriaBuilder cb, Root<T> p) {
+	public Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (this.selection == null || this.selection == Boolean.TRUE) {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (!Strings.isEmpty(fieldName)) {
-					this.predicates.add(cb.isTrue(p.<Boolean> get(fieldName)));
+					Predicate predicate = cb.isEmpty(p.<Collection<X>> get(fieldName));
+					this.predicates.add(predicate);
 				}
 			}
 		}
-		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.toArray(new Predicate[] {}))) : null;
+		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.asPredicate())) : null;
 	}
 
 }
