@@ -15,5 +15,5 @@ public @interface InitModel {
 
 	String[] queryAttributes();
 
-	int maxResults() default 0;
+	int maxResults() default 10;
 }
