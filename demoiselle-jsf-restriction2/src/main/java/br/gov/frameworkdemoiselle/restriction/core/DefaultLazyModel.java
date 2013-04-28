@@ -73,7 +73,7 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 		return query.getResultList();
 	}
-	
+
 	protected List<T> findAll(int maxResults) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(this.getBeanClass());
@@ -85,7 +85,7 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 		this.context.getOrders().apply(cb, cq, p);
 
 		TypedQuery<T> query = this.em.createQuery(cq);
-//		query.setFirstResult(first);
+		// query.setFirstResult(first);
 		query.setMaxResults(pageSize);
 
 		return query.getResultList();
@@ -124,9 +124,24 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 	protected Class<T> getBeanClass() {
 		return context.getBeanClass();
 	}
-	
+
 	public List<T> complete(String query) {
 		this.query = query;
 		return this.findAll(context.getMaxResults());
+	}
+
+	public List<T> list() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<T> cq = cb.createQuery(this.getBeanClass());
+		Root<T> p = cq.from(this.getBeanClass());
+
+		this.processPredicates(cb, p);
+		this.predicates.apply(cq);
+
+		this.context.getOrders().apply(cb, cq, p);
+
+		TypedQuery<T> query = this.em.createQuery(cq);
+
+		return query.getResultList();
 	}
 }
