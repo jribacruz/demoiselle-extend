@@ -1,6 +1,7 @@
 package br.gov.frameworkdemoiselle.restriction.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +9,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
-import br.gov.frameworkdemoiselle.restriction.base.EOrder;
 import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
 import br.gov.frameworkdemoiselle.restriction.custom.criterions.LikeCriterion;
@@ -34,12 +35,12 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 	protected EPredicate predicates;
 
-	protected EOrder orders;
+	protected List<Order> orders;
 
 	public DefaultLazyModel() {
 		super();
 		this.predicates = new EPredicate();
-		this.orders = new EOrder();
+		this.orders = new ArrayList<Order>();
 	}
 
 	public int size() {
@@ -50,8 +51,7 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
 		this.first = first;
 		this.pageSize = pageSize;
-		context.setSortField(sortField);
-		context.setSortOrder(sortOrder);
+		context.setSortOrder(sortOrder, sortField);
 
 		this.setRowCount(this.countAll());
 		return this.findAll();
@@ -64,6 +64,8 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 		this.processPredicates(cb, p);
 		this.predicates.apply(cq);
+
+		this.context.getOrders().apply(cb, cq, p);
 
 		TypedQuery<T> query = this.em.createQuery(cq);
 		query.setFirstResult(first);

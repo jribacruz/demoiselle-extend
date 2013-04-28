@@ -9,7 +9,7 @@ import javax.persistence.criteria.Root;
 public abstract class CriteriaBean<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public Predicate restriction(CriteriaBuilder cb, Root<T> p) {
+	public Predicate criterion(CriteriaBuilder cb, Root<T> p) {
 		return null;
 	}
 }
