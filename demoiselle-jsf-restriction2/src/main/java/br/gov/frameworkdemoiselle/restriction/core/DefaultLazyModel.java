@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -14,6 +15,8 @@ import javax.persistence.criteria.Root;
 
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+
+import com.google.common.collect.Sets;
 
 import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
@@ -32,6 +35,8 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 	protected ModelContext<T> context;
 
 	protected String query;
+
+	protected String queryAttribute;
 
 	protected EPredicate predicates;
 
@@ -108,7 +113,7 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 	protected void processPredicates(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (!Strings.isEmpty(query)) {
-			LikeCriterion<T> c = new LikeCriterion<T>(query, context.getQueryAttributes());
+			LikeCriterion<T> c = new LikeCriterion<T>(query, this.resolveQueryAttributes());
 			this.predicates.addAll(c.criterion(cb, p));
 		}
 	}
@@ -119,6 +124,21 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 	public void setQuery(String query) {
 		this.query = query;
+	}
+
+	public String getQueryAttribute() {
+		return queryAttribute;
+	}
+
+	public void setQueryAttribute(String queryAttribute) {
+		this.queryAttribute = queryAttribute;
+	}
+
+	protected Set<String> resolveQueryAttributes() {
+		if (!Strings.isEmpty(this.queryAttribute)) {
+			return Sets.newHashSet(this.queryAttribute);
+		}
+		return Sets.newHashSet(context.getQueryAttributes());
 	}
 
 	protected Class<T> getBeanClass() {

@@ -23,6 +23,10 @@ public class LikeCriterion<T> extends CriterionBean<T, String> {
 		super(value, fields);
 	}
 
+	public LikeCriterion(String value, Set<String> fields) {
+		super(value, fields);
+	}
+
 	@Override
 	public Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();

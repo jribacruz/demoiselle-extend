@@ -29,6 +29,12 @@ public abstract class CriterionBean<T, X> implements Serializable {
 		this.fields = Sets.newHashSet(fields);
 	}
 
+	public CriterionBean(X value, Set<String> fields) {
+		super();
+		this.value = value;
+		this.fields = fields;
+	}
+
 	public abstract Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p);
 
 	public X getValue() {
