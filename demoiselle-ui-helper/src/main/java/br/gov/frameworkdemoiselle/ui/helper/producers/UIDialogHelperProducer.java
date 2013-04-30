@@ -19,8 +19,7 @@ public class UIDialogHelperProducer {
 		String id = field.getAnnotation(UIDialog.class).id();
 		String bodyId = field.getAnnotation(UIDialog.class).bodyId();
 		String wvar = field.getAnnotation(UIDialog.class).widgetVar();
-		UIDialogHelper helper = new UIDialogHelper(context, formId, id, bodyId, wvar);
-		return helper;
+		return new UIDialogHelper(context, formId, id, bodyId, wvar);
 	}
 
 }

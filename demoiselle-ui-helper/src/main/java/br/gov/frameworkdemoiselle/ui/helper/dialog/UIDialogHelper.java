@@ -11,7 +11,6 @@ import br.gov.frameworkdemoiselle.util.Strings;
 public class UIDialogHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Inject
 	private RequestContext context;
 
 	protected String formId;
