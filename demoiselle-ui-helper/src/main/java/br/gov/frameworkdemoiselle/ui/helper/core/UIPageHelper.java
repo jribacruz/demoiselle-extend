@@ -9,12 +9,17 @@ import org.primefaces.context.RequestContext;
 import br.gov.frameworkdemoiselle.ui.helper.UIHelper;
 import br.gov.frameworkdemoiselle.ui.helper.annotations.UIDataTable;
 import br.gov.frameworkdemoiselle.ui.helper.annotations.UIDialog;
+import br.gov.frameworkdemoiselle.ui.helper.config.UIHelperConfiguration;
+import br.gov.frameworkdemoiselle.util.Strings;
 
 public class UIPageHelper implements UIHelper {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private RequestContext context;
+
+	@Inject
+	private UIHelperConfiguration configuration;
 
 	@Override
 	public void update(String... ids) {
@@ -72,6 +77,12 @@ public class UIPageHelper implements UIHelper {
 			String id = this.getClass().getAnnotation(UIDataTable.class).id();
 			this.update(":".concat(formId).concat(":").concat(id));
 			this.afterUpdateDataTableCallback();
+		}
+	}
+
+	public void growl() {
+		if (!Strings.isEmpty(this.configuration.getGrowlId())) {
+			this.context.update(this.configuration.getGrowlId());
 		}
 	}
 
