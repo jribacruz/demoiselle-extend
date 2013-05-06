@@ -1,6 +1,5 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsEmptyCriterion<T, X> extends CriterionBean<T, Collection<X>> {
+public class LikeCriterion<T> extends CriterionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,8 +22,8 @@ public class IsEmptyCriterion<T, X> extends CriterionBean<T, Collection<X>> {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (!Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isEmpty(p.<Collection<X>> get(fieldName));
+				if (!Strings.isEmpty(this.value) && !Strings.isEmpty(fieldName)) {
+					Predicate predicate = cb.like(cb.lower(p.<String> get(fieldName)), "%" + this.value.toLowerCase() + "%");
 					this.predicates.add(predicate);
 				}
 			}

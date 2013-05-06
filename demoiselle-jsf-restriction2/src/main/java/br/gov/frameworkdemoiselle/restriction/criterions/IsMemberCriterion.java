@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsNotMemberCriterion<T, X> extends CriterionBean<T, X> {
+public class IsMemberCriterion<T, X> extends CriterionBean<T, X> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -24,7 +24,7 @@ public class IsNotMemberCriterion<T, X> extends CriterionBean<T, X> {
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (this.value != null && !Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isNotMember(this.value, p.<Collection<X>> get(fieldName));
+					Predicate predicate = cb.isMember(this.value, p.<Collection<X>> get(fieldName));
 					this.predicates.add(predicate);
 				}
 			}

@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.models;
+package br.gov.frameworkdemoiselle.restriction.models;
 
 import javax.persistence.EntityManager;
 

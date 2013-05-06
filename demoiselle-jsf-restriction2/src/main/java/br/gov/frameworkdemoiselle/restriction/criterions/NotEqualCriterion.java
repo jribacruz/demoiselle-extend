@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -12,7 +12,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsNullCriterion<T> extends CriterionBean<T, String> {
+public class NotEqualCriterion<T, X> extends CriterionBean<T, X> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -22,12 +22,13 @@ public class IsNullCriterion<T> extends CriterionBean<T, String> {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (!Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isNotNull(p.get(fieldName));
+				if (this.value != null && !Strings.isEmpty(fieldName)) {
+					Predicate predicate = cb.notEqual(p.get(fieldName), this.value);
 					this.predicates.add(predicate);
 				}
 			}
 		}
 		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.asPredicate())) : null;
 	}
+
 }

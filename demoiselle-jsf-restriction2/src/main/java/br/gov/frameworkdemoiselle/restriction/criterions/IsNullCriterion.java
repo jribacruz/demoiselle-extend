@@ -1,6 +1,5 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsMemberCriterion<T, X> extends CriterionBean<T, X> {
+public class IsNullCriterion<T> extends CriterionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,13 +22,12 @@ public class IsMemberCriterion<T, X> extends CriterionBean<T, X> {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (this.value != null && !Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isMember(this.value, p.<Collection<X>> get(fieldName));
+				if (!Strings.isEmpty(fieldName)) {
+					Predicate predicate = cb.isNotNull(p.get(fieldName));
 					this.predicates.add(predicate);
 				}
 			}
 		}
 		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.asPredicate())) : null;
 	}
-
 }

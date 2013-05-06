@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -7,12 +7,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.google.common.collect.Sets;
+
 import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-import com.google.common.collect.Sets;
-
-public class LessThanOrEqualToCriterion<T, X extends Number> extends CriterionBean<T, X> {
+public class EqualCriterion<T, X> extends CriterionBean<T, X> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,7 +23,7 @@ public class LessThanOrEqualToCriterion<T, X extends Number> extends CriterionBe
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (this.value != null && !Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.le(p.<Number> get(fieldName), this.value);
+					Predicate predicate = cb.equal(p.get(fieldName), getValue());
 					this.predicates.add(predicate);
 				}
 			}

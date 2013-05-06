@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Iterator;
 import java.util.Set;

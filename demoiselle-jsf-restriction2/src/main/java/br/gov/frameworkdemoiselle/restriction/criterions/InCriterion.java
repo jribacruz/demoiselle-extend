@@ -1,5 +1,6 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import com.google.common.collect.Sets;
 import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class IsFalseCriterion<T> extends CriterionBean<T, String> {
+public class InCriterion<T, X> extends CriterionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -22,8 +23,8 @@ public class IsFalseCriterion<T> extends CriterionBean<T, String> {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (!Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isFalse(p.<Boolean> get(fieldName));
+				if (this.value != null && !this.value.isEmpty() && !Strings.isEmpty(fieldName)) {
+					Predicate predicate = p.get(fieldName).in(this.value);
 					this.predicates.add(predicate);
 				}
 			}

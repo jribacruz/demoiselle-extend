@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -12,7 +12,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsTrueCriterion<T> extends CriterionBean<T, String> {
+public class StartWithCriterion<T> extends CriterionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -22,8 +22,8 @@ public class IsTrueCriterion<T> extends CriterionBean<T, String> {
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (!Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isTrue(p.<Boolean> get(fieldName));
+				if (this.value != null && !Strings.isEmpty(this.value) && !Strings.isEmpty(fieldName)) {
+					Predicate predicate = cb.like(cb.lower(p.<String> get(fieldName)), this.value.toLowerCase() + "%");
 					this.predicates.add(predicate);
 				}
 			}

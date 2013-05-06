@@ -1,4 +1,4 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -7,12 +7,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.collect.Sets;
-
 import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class GreaterThanCriterion<T, X extends Number> extends CriterionBean<T, X> {
+import com.google.common.collect.Sets;
+
+public class IsNotNullCriterion<T> extends CriterionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -22,8 +22,8 @@ public class GreaterThanCriterion<T, X extends Number> extends CriterionBean<T, 
 			Iterator<String> iterator = this.getFields().iterator();
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
-				if (this.value != null && !Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.gt(p.<Number> get(fieldName), this.value);
+				if (!Strings.isEmpty(fieldName)) {
+					Predicate predicate = cb.isNotNull(p.get(fieldName));
 					this.predicates.add(predicate);
 				}
 			}

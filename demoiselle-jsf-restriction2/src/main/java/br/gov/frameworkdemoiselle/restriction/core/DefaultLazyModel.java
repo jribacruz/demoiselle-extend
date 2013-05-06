@@ -18,7 +18,7 @@ import org.primefaces.model.SortOrder;
 
 import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
-import br.gov.frameworkdemoiselle.restriction.custom.criterions.LikeCriterion;
+import br.gov.frameworkdemoiselle.restriction.criterions.LikeCriterion;
 import br.gov.frameworkdemoiselle.util.Beans;
 import br.gov.frameworkdemoiselle.util.Strings;
 

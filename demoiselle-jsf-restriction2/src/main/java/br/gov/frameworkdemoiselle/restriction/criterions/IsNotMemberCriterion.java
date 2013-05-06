@@ -1,5 +1,6 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -7,12 +8,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.collect.Sets;
-
 import br.gov.frameworkdemoiselle.restriction.type.CriterionBean;
 import br.gov.frameworkdemoiselle.util.Strings;
 
-public class GreaterThanOrEqualToCriterion<T, X extends Number> extends CriterionBean<T, X> {
+import com.google.common.collect.Sets;
+
+public class IsNotMemberCriterion<T, X> extends CriterionBean<T, X> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,11 +24,12 @@ public class GreaterThanOrEqualToCriterion<T, X extends Number> extends Criterio
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (this.value != null && !Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.ge(p.<Number> get(fieldName), this.value);
+					Predicate predicate = cb.isNotMember(this.value, p.<Collection<X>> get(fieldName));
 					this.predicates.add(predicate);
 				}
 			}
 		}
 		return !this.predicates.isEmpty() ? Sets.newHashSet(cb.or(this.predicates.asPredicate())) : null;
 	}
+
 }

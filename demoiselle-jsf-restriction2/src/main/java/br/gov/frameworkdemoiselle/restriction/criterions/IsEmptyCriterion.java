@@ -1,5 +1,6 @@
-package br.gov.frameworkdemoiselle.restriction.custom.criterions;
+package br.gov.frameworkdemoiselle.restriction.criterions;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import br.gov.frameworkdemoiselle.util.Strings;
 
 import com.google.common.collect.Sets;
 
-public class IsNotNullCriterion<T> extends CriterionBean<T, String> {
+public class IsEmptyCriterion<T, X> extends CriterionBean<T, Collection<X>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -23,7 +24,7 @@ public class IsNotNullCriterion<T> extends CriterionBean<T, String> {
 			while (iterator.hasNext()) {
 				String fieldName = iterator.next();
 				if (!Strings.isEmpty(fieldName)) {
-					Predicate predicate = cb.isNotNull(p.get(fieldName));
+					Predicate predicate = cb.isEmpty(p.<Collection<X>> get(fieldName));
 					this.predicates.add(predicate);
 				}
 			}

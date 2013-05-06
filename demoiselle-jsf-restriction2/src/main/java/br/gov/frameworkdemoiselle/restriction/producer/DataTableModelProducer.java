@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 
 import br.gov.frameworkdemoiselle.restriction.annotations.InitModel;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
-import br.gov.frameworkdemoiselle.restriction.custom.models.DataTableLazyModel;
+import br.gov.frameworkdemoiselle.restriction.models.DataTableLazyModel;
 
 public class DataTableModelProducer {
 
