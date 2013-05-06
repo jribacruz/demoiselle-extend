@@ -164,4 +164,8 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 
 		return query.getResultList();
 	}
+
+	public void clear() {
+		this.query = new String();
+	}
 }
