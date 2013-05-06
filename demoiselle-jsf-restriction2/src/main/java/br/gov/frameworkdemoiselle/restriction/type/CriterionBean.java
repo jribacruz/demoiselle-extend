@@ -8,8 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.collect.Sets;
-
 import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
 
 public abstract class CriterionBean<T, X> implements Serializable {
@@ -21,12 +19,6 @@ public abstract class CriterionBean<T, X> implements Serializable {
 
 	public CriterionBean() {
 		super();
-	}
-
-	public CriterionBean(X value, String... fields) {
-		super();
-		this.value = value;
-		this.fields = Sets.newHashSet(fields);
 	}
 
 	public CriterionBean(X value, Set<String> fields) {

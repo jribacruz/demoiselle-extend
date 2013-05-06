@@ -16,12 +16,13 @@ import javax.persistence.criteria.Root;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
-import com.google.common.collect.Sets;
-
 import br.gov.frameworkdemoiselle.restriction.base.EPredicate;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
 import br.gov.frameworkdemoiselle.restriction.custom.criterions.LikeCriterion;
+import br.gov.frameworkdemoiselle.util.Beans;
 import br.gov.frameworkdemoiselle.util.Strings;
+
+import com.google.common.collect.Sets;
 
 public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -110,10 +111,13 @@ public abstract class DefaultLazyModel<T> extends LazyDataModel<T> implements Se
 		return query.getSingleResult().intValue();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void processPredicates(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
 		if (!Strings.isEmpty(query)) {
-			LikeCriterion<T> c = new LikeCriterion<T>(query, this.resolveQueryAttributes());
+			LikeCriterion<T> c = Beans.getReference(LikeCriterion.class);
+			c.setValue(query);
+			c.setFields(this.resolveQueryAttributes());
 			this.predicates.addAll(c.criterion(cb, p));
 		}
 	}

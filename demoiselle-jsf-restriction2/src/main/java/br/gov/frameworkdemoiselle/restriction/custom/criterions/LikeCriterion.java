@@ -15,18 +15,6 @@ import com.google.common.collect.Sets;
 public class LikeCriterion<T> extends CriterionBean<T, String> {
 	private static final long serialVersionUID = 1L;
 
-	public LikeCriterion() {
-		super();
-	}
-
-	public LikeCriterion(String value, String... fields) {
-		super(value, fields);
-	}
-
-	public LikeCriterion(String value, Set<String> fields) {
-		super(value, fields);
-	}
-
 	@Override
 	public Set<Predicate> criterion(CriteriaBuilder cb, Root<T> p) {
 		this.predicates.clear();
