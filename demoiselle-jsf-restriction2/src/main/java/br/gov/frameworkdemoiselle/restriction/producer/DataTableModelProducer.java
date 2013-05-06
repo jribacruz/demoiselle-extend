@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import br.gov.frameworkdemoiselle.restriction.annotations.InitModel;
 import br.gov.frameworkdemoiselle.restriction.context.ModelContext;
 import br.gov.frameworkdemoiselle.restriction.models.DataTableLazyModel;
+import br.gov.frameworkdemoiselle.restriction.models.MultipleSelectionDataTableLazyModel;
 
 public class DataTableModelProducer {
 
@@ -19,6 +20,15 @@ public class DataTableModelProducer {
 		this.initModel(context, ip.getMember());
 		initBeanClass(context, ip.getMember());
 		DataTableLazyModel<T> dataTableLazyModel = new DataTableLazyModel<T>(context, em);
+		return dataTableLazyModel;
+	}
+
+	@Produces
+	public <T> MultipleSelectionDataTableLazyModel<T> create2(InjectionPoint ip, EntityManager em) {
+		ModelContext<T> context = new ModelContext<T>();
+		this.initBeanClass(context, ip.getMember());
+		initBeanClass(context, ip.getMember());
+		MultipleSelectionDataTableLazyModel<T> dataTableLazyModel = new MultipleSelectionDataTableLazyModel<T>(context, em);
 		return dataTableLazyModel;
 	}
 
@@ -36,4 +46,5 @@ public class DataTableModelProducer {
 			context.setQueryAttributes(field.getAnnotation(InitModel.class).queryAttributes());
 		}
 	}
+
 }
