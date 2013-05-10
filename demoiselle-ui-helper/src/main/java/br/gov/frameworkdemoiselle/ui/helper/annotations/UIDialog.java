@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 @Target(value = { ElementType.TYPE, ElementType.FIELD })
 public @interface UIDialog {
 
-	String formId();
+	String formId() default "";
 
-	String id();
+	String id() default "";
 
-	String widgetVar();
+	String widgetVar() default "";
 
-	String bodyId();
+	String bodyId() default "";
 }

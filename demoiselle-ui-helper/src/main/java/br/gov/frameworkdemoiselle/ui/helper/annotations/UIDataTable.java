@@ -8,6 +8,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD })
 public @interface UIDataTable {
-	String formId();
-	String id();
+	String formId() default "";
+
+	String id() default "";
+
+	String emptyMessage() default "{demoiselle.ui.datatable.empty.message}";
+
 }
