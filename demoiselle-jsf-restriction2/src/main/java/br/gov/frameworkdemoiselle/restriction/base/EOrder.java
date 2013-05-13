@@ -47,7 +47,7 @@ public class EOrder implements Serializable {
 			list.add(cb.desc(p.get(att)));
 		}
 		cq.orderBy(list);
-		this.orders.clear();
+		//this.orders.clear();
 	}
 
 }
