@@ -26,7 +26,7 @@ public class DataTableModelProducer {
 	@Produces
 	public <T> MultipleSelectionDataTableLazyModel<T> create2(InjectionPoint ip, EntityManager em) {
 		ModelContext<T> context = new ModelContext<T>();
-		this.initBeanClass(context, ip.getMember());
+		this.initModel(context, ip.getMember());
 		initBeanClass(context, ip.getMember());
 		MultipleSelectionDataTableLazyModel<T> dataTableLazyModel = new MultipleSelectionDataTableLazyModel<T>(context, em);
 		return dataTableLazyModel;
