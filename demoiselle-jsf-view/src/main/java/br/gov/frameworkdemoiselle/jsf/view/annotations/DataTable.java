@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
 public @interface DataTable {
-	String formId() default "";
+	String formId();
 
-	String id() default "";
+	String id();
 }

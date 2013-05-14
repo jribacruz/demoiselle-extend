@@ -8,11 +8,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
 public @interface Dialog {
-	String formId() default "";
+	String formId();
 
-	String id() default "";
+	String id();
 
-	String bodyId() default "";
+	String bodyId();
 
-	String widgetVar() default "";
+	String widgetVar();
 }
