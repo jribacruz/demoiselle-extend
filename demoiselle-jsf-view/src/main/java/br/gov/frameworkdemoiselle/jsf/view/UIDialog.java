@@ -1,5 +1,7 @@
 package br.gov.frameworkdemoiselle.jsf.view;
 
-public interface UIDialog {
+import java.io.Serializable;
+
+public interface UIDialog<T> extends Serializable {
 
 }

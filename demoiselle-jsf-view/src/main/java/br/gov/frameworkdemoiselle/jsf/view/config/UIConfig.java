@@ -16,7 +16,7 @@ public class UIConfig {
 	private String dialogIdSuffix;
 
 	@Name("dialog.widgetvar.suffix")
-	private String dialogWidgetvarSuffix;
+	private String dialogWidgetVarSuffix;
 
 	@Name("form.datatable.id.suffix")
 	private String formDataTableIdSuffix;
@@ -51,12 +51,12 @@ public class UIConfig {
 		this.dialogIdSuffix = dialogIdSuffix;
 	}
 
-	public String getDialogWidgetvarSuffix() {
-		return dialogWidgetvarSuffix;
+	public String getDialogWidgetVarSuffix() {
+		return dialogWidgetVarSuffix;
 	}
 
-	public void setDialogWidgetvarSuffix(String dialogWidgetvarSuffix) {
-		this.dialogWidgetvarSuffix = dialogWidgetvarSuffix;
+	public void setDialogWidgetVarSuffix(String dialogWidgetVarSuffix) {
+		this.dialogWidgetVarSuffix = dialogWidgetVarSuffix;
 	}
 
 	public String getFormDataTableIdSuffix() {

@@ -2,6 +2,7 @@ package br.gov.frameworkdemoiselle.jsf.view.produces;
 
 import java.lang.reflect.Field;
 
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import br.gov.frameworkdemoiselle.jsf.view.UIDialog;
@@ -11,6 +12,7 @@ import br.gov.frameworkdemoiselle.util.Reflections;
 
 public class UIDialogProducer {
 
+	@Produces
 	public <T> UIDialog<T> create(InjectionPoint ip) {
 		Field field = (Field) ip.getMember();
 
