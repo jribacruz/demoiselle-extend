@@ -38,18 +38,39 @@
 package br.gov.frameworkdemoiselle.component.checker.bootstrap;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.slf4j.Logger;
 
+import br.gov.frameworkdemoiselle.component.checker.annotations.CheckOnDelete;
+import br.gov.frameworkdemoiselle.component.checker.annotations.CheckOnInsert;
+import br.gov.frameworkdemoiselle.component.checker.annotations.CheckOnSave;
+import br.gov.frameworkdemoiselle.component.checker.annotations.CheckOnUpdate;
 import br.gov.frameworkdemoiselle.internal.producer.LoggerProducer;
+import br.gov.frameworkdemoiselle.stereotype.BusinessController;
+import br.gov.frameworkdemoiselle.template.DelegateCrud;
+import br.gov.frameworkdemoiselle.util.Reflections;
 
 public class CheckerBootstrap implements Extension {
 	private Logger logger;
 
 	public <X> void process(@Observes ProcessAnnotatedType<X> pat) {
+		if (pat.getAnnotatedType().getJavaClass().isAnnotationPresent(BusinessController.class)
+				&& Reflections.isOfType(pat.getAnnotatedType().getJavaClass(), DelegateCrud.class)) {
 
+			/*
+			 * Percorre o BC em busca de metodos anotados com as anotações de
+			 * checagem
+			 */
+			for (AnnotatedMethod<?> am : pat.getAnnotatedType().getMethods()) {
+				if (am.getAnnotation(CheckOnSave.class) != null || am.getAnnotation(CheckOnDelete.class) != null
+						|| am.getAnnotation(CheckOnInsert.class) != null || am.getAnnotation(CheckOnUpdate.class) != null) {
+
+				}
+			}
+		}
 	}
 
 	protected Logger getLogger() {
